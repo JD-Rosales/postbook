@@ -22,9 +22,10 @@
     // 
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@/ui*": ["./src/components/ui/*"],
-      "@/lib*": ["./src/lib/*"],
+      "@src/*": ["./*"],
+      "@ui/*": ["./src/components/ui/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@pages/*": ["./src/pages/*"],
     }
   },
   "include": ["src"],
