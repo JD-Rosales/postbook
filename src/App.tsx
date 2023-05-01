@@ -1,5 +1,12 @@
+import { Link } from "react-router-dom";
+
 function App() {
-  return <></>;
+  return (
+    <>
+      <Link to={"/login"}>Login</Link>
+      <Link to={"/signup"}>Signup</Link>
+    </>
+  );
 }
 
 export default App;
