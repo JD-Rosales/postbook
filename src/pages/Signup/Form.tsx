@@ -12,14 +12,13 @@ const Form: React.FC<FormProps> = ({}) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    password_confirmation: "",
   });
-
   const [passwordShown, setPasswordShown] = useState(false);
 
   const handlePasswordShown = () => {
     setPasswordShown((prev) => !prev);
   };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
@@ -41,6 +40,7 @@ const Form: React.FC<FormProps> = ({}) => {
           value={formData.email}
           onChange={handleChange}
         />
+
         <Input
           className="mt-4"
           type={passwordShown ? "text" : "password"}
@@ -54,8 +54,21 @@ const Form: React.FC<FormProps> = ({}) => {
           onChange={handleChange}
         />
 
+        <Input
+          className="mt-4"
+          type={passwordShown ? "text" : "password"}
+          placeholder="Confirm password"
+          name="password_confirmation"
+          icon={passwordShown ? MdOutlineVisibility : MdOutlineVisibilityOff}
+          iconPosition="end"
+          iconClick={handlePasswordShown}
+          required
+          value={formData.password_confirmation}
+          onChange={handleChange}
+        />
+
         <Button className="mt-6" variant={"default"} fullWidth>
-          Login
+          Signup
         </Button>
       </form>
       <div className="relative flex py-5 items-center">
@@ -68,11 +81,11 @@ const Form: React.FC<FormProps> = ({}) => {
         className="mt-0"
         variant={"secondary"}
         onClick={() => {
-          navigate("/signup");
+          navigate("/login");
         }}
         fullWidth
       >
-        Create an Account
+        Login
       </Button>
     </>
   );
