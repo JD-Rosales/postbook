@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@ui/input";
 import { Button } from "@ui/button";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
-import axios from "axios";
 import { useGetUser, useLogin } from "@src/hooks/useAuth";
 
 interface FormProps {}
@@ -12,10 +11,6 @@ interface FormProps {}
 const Form: React.FC<FormProps> = ({}) => {
   const { data } = useGetUser();
   const { mutate: loginUser } = useLogin();
-  // const { isLoading, data } = useQuery({
-  //   queryKey: ["todos"],
-  //   queryFn: () => axios.get("https://jsonplaceholder.typicode.com/todos/"),
-  // });
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -38,17 +33,12 @@ const Form: React.FC<FormProps> = ({}) => {
     e.preventDefault();
 
     loginUser(formData);
-
-    // axios
-    //   .post(import.meta.env.VITE_API_URL + "/login", formData)
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     localStorage.setItem("token", JSON.stringify(response.data.token));
-    //   })
-    //   .catch((error) => {
-    //     console.warn(error);
-    //   });
   };
+
+  useEffect(() => {
+    console.log("DATA:", data);
+  }, [data]);
+
   return (
     <>
       <form className="h-fit" onSubmit={handleSubmit}>
