@@ -1,5 +1,6 @@
 import Form from "./Form";
 import Image from "./Image";
+
 interface indexProps {}
 
 const index: React.FC<indexProps> = ({}) => {

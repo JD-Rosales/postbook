@@ -4,10 +4,19 @@ import { Button } from "@ui/button";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
+import axios from "axios";
+import { useGetUser, useLogin } from "@src/hooks/useAuth";
 
 interface FormProps {}
 
 const Form: React.FC<FormProps> = ({}) => {
+  const { data } = useGetUser();
+  const { mutate: loginUser } = useLogin();
+  // const { isLoading, data } = useQuery({
+  //   queryKey: ["todos"],
+  //   queryFn: () => axios.get("https://jsonplaceholder.typicode.com/todos/"),
+  // });
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -27,6 +36,18 @@ const Form: React.FC<FormProps> = ({}) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    loginUser(formData);
+
+    // axios
+    //   .post(import.meta.env.VITE_API_URL + "/login", formData)
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     localStorage.setItem("token", JSON.stringify(response.data.token));
+    //   })
+    //   .catch((error) => {
+    //     console.warn(error);
+    //   });
   };
   return (
     <>
@@ -74,6 +95,12 @@ const Form: React.FC<FormProps> = ({}) => {
       >
         Create an Account
       </Button>
+
+      {/* <div>
+        {data?.data.map((todo: any) => {
+          return <p key={todo.id}>{todo.title}</p>;
+        })}
+      </div> */}
     </>
   );
 };
