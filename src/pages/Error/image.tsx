@@ -1,6 +1,4 @@
-interface imageProps {}
-
-const image: React.FC<imageProps> = ({}) => {
+const image: React.FC = () => {
   return (
     <div>
       <style

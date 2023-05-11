@@ -20,5 +20,8 @@ export const useLogin = () => {
   return useMutation({
     mutationKey: ["login"],
     mutationFn: login,
+    onSuccess: (data) => {
+      localStorage.setItem('token', data.token)
+    }
   });
 };

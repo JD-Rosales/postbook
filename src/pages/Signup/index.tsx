@@ -1,8 +1,7 @@
 import Form from "./Form";
 import Image from "./Image";
-interface indexProps {}
 
-const index: React.FC<indexProps> = ({}) => {
+const index: React.FC= () => {
   return (
     <>
       <div className="h-full flex flex-row">

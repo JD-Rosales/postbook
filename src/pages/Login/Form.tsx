@@ -6,9 +6,7 @@ import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
 import { useGetUser, useLogin } from "@src/hooks/useAuth";
 
-interface FormProps {}
-
-const Form: React.FC<FormProps> = ({}) => {
+const Form: React.FC = () => {
   const { data } = useGetUser();
   const { mutate: loginUser } = useLogin();
 
@@ -36,7 +34,7 @@ const Form: React.FC<FormProps> = ({}) => {
   };
 
   useEffect(() => {
-    console.log("DATA:", data);
+    if(data) console.log("DATA:", data);
   }, [data]);
 
   return (

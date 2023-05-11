@@ -5,9 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
 
-interface FormProps {}
-
-const Form: React.FC<FormProps> = ({}) => {
+const Form: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",

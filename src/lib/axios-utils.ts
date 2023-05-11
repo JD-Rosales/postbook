@@ -15,11 +15,12 @@ export const request = ({ ...options }: AxiosRequestConfig) => {
     )}`;
 
   const onSuccess = (response: AxiosResponse) => {
-    console.log("response: ", response);
-    return response;
+    // success callback here
+
+    return response.data;
   };
   const onError = (error: AxiosError) => {
-    // error logginng here
+    // error callback here
 
     console.warn(error);
     return error;

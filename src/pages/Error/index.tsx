@@ -1,9 +1,8 @@
 import { useRouteError, isRouteErrorResponse } from "react-router-dom";
 import Image from "./image";
 
-interface indexProps {}
-
-const index: React.FC<indexProps> = ({}) => {
+const index: React.FC = () => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const error = useRouteError();
   let errorMessage: string;
 
