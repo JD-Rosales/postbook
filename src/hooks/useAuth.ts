@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { request } from '@lib/axios-interceptor';
+import { request, ErrorResponse } from '@lib/axios-interceptor';
 
 const getUser = () => {
   return request({ url: '/user' });
@@ -22,8 +22,6 @@ export const useLogin = () => {
     onSuccess: (data) => {
       localStorage.setItem('token', data.token);
     },
-    onError: (error) => {
-      console.log('LOGIN ERROR: ', error);
-    },
+    onError: (error: ErrorResponse) => error,
   });
 };

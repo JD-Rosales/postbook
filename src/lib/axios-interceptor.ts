@@ -4,10 +4,16 @@ const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
+export interface ErrorResponse {
+  message: {
+    [key: string]: string[];
+  };
+}
+
 const tokenString = localStorage.getItem('token');
 const token = tokenString ? JSON.stringify(tokenString) : null;
 
-export const request = ({ ...options }: AxiosRequestConfig) => {
+export const request = async ({ ...options }: AxiosRequestConfig) => {
   if (token)
     client.defaults.headers.common.Authorization = `Bearer ${token.replace(
       /\\|"/g,
@@ -22,7 +28,7 @@ export const request = ({ ...options }: AxiosRequestConfig) => {
   const onError = (error: AxiosError) => {
     // error callback here
 
-    throw error as AxiosError;
+    throw error?.response?.data;
   };
 
   return client(options).then(onSuccess).catch(onError);

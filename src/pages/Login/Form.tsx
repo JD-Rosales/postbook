@@ -3,12 +3,22 @@ import { Input } from '@ui/input';
 import { Button } from '@ui/button';
 import { useNavigate } from 'react-router-dom';
 import { MdOutlineVisibility } from 'react-icons/md';
+import { FiAlertTriangle } from 'react-icons/fi';
 import { MdOutlineVisibilityOff } from 'react-icons/md';
-import { useGetUser, useLogin } from '@src/hooks/useAuth';
+import { useLogin } from '@src/hooks/useAuth';
+import { isString, isObject } from '@lib/typeValidation';
 
 const Form: React.FC = () => {
-  const user = useGetUser();
   const loginUser = useLogin();
+
+  useEffect(() => {
+    if (loginUser.error && isObject(loginUser.error?.message)) {
+      console.log();
+      if ('email' in loginUser.error.message) {
+        console.log('Yah its working');
+      }
+    }
+  }, [loginUser]);
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -33,16 +43,6 @@ const Form: React.FC = () => {
     loginUser.mutate(formData);
   };
 
-  useEffect(() => {
-    console.log('USER: ', user.data);
-  }, [user]);
-
-  useEffect(() => {
-    if (loginUser.error) {
-      console.log('ERROR: ', loginUser.error);
-    }
-  }, [loginUser.error]);
-
   return (
     <>
       <form className='h-fit' onSubmit={handleSubmit}>
@@ -52,7 +52,6 @@ const Form: React.FC = () => {
           placeholder='Email'
           name='email'
           required
-          error
           value={formData.email}
           onChange={handleChange}
         />
@@ -69,7 +68,12 @@ const Form: React.FC = () => {
           onChange={handleChange}
         />
 
-        <p>{JSON.stringify(loginUser.status)}</p>
+        {loginUser.error && isString(loginUser.error.message) && (
+          <p className='mt-3 pl-2 text-left text-sm text-rose-600 flex items-center'>
+            <FiAlertTriangle className='mr-2' />
+            {JSON.stringify(loginUser.error.message).replace(/"/g, '')}
+          </p>
+        )}
 
         <Button
           className='mt-6'
@@ -85,7 +89,6 @@ const Form: React.FC = () => {
         <span className='flex-shrink mx-4 text-gray-400'>or</span>
         <div className='flex-grow border-t border-gray-200'></div>
       </div>
-
       <Button
         className='mt-0'
         variant={'secondary'}
