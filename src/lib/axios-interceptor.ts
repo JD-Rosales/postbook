@@ -3,11 +3,8 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
-
-export interface ErrorResponse {
-  message: {
-    [key: string]: string[];
-  };
+export interface ErrResponse {
+  [key: string]: string;
 }
 
 const tokenString = localStorage.getItem('token');
@@ -22,12 +19,10 @@ export const request = async ({ ...options }: AxiosRequestConfig) => {
 
   const onSuccess = (response: AxiosResponse) => {
     // success callback here
-
     return response.data;
   };
   const onError = (error: AxiosError) => {
     // error callback here
-
     throw error?.response?.data;
   };
 

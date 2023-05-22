@@ -6,19 +6,15 @@ import { MdOutlineVisibility } from 'react-icons/md';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { MdOutlineVisibilityOff } from 'react-icons/md';
 import { useLogin } from '@src/hooks/useAuth';
-import { isString, isObject } from '@lib/typeValidation';
 
 const Form: React.FC = () => {
   const loginUser = useLogin();
 
   useEffect(() => {
-    if (loginUser.error && isObject(loginUser.error?.message)) {
-      console.log();
-      if ('email' in loginUser.error.message) {
-        console.log('Yah its working');
-      }
+    if (loginUser.error) {
+      console.log('ERROR: ', loginUser.error.message);
     }
-  }, [loginUser]);
+  }, [loginUser.error]);
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -68,10 +64,10 @@ const Form: React.FC = () => {
           onChange={handleChange}
         />
 
-        {loginUser.error && isString(loginUser.error.message) && (
+        {loginUser.error && (
           <p className='mt-3 pl-2 text-left text-sm text-rose-600 flex items-center'>
             <FiAlertTriangle className='mr-2' />
-            {JSON.stringify(loginUser.error.message).replace(/"/g, '')}
+            {loginUser.error.message}
           </p>
         )}
 
