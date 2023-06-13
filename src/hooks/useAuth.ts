@@ -13,7 +13,7 @@ export const useGetUser = () => {
 };
 
 const login = (data: { email: string; password: string }) => {
-  return request({ url: '/login', method: 'post', data });
+  return request({ url: '/user/login', method: 'post', data });
 };
 
 export const useLogin = () => {
@@ -22,6 +22,17 @@ export const useLogin = () => {
     onSuccess: (data) => {
       localStorage.setItem('token', data.token);
     },
+    onError: (error: ErrResponse) => error,
+  });
+};
+
+const register = (data: { email: string; password: string }) => {
+  return request({ url: '/user/register', method: 'post', data });
+};
+
+export const useRegister = () => {
+  return useMutation({
+    mutationFn: register,
     onError: (error: ErrResponse) => error,
   });
 };

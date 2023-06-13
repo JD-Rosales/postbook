@@ -21,7 +21,7 @@ export const request = async ({ ...options }: AxiosRequestConfig) => {
     // success callback here
     return response.data;
   };
-  const onError = (error: AxiosError) => {
+  const onError = (error: AxiosError): ErrResponse => {
     // error callback here
     throw error?.response?.data;
   };
