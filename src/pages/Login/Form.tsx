@@ -5,16 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { MdOutlineVisibility } from 'react-icons/md';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { MdOutlineVisibilityOff } from 'react-icons/md';
-import { useLogin } from '@src/hooks/useAuth';
+import { useLogin, useGetUser } from '@src/hooks/useAuth';
 
 const Form: React.FC = () => {
   const loginUser = useLogin();
-
-  useEffect(() => {
-    if (loginUser.error) {
-      console.log('ERROR: ', loginUser.error.message);
-    }
-  }, [loginUser.error]);
+  const userDetails = useGetUser();
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -38,6 +33,12 @@ const Form: React.FC = () => {
 
     loginUser.mutate(formData);
   };
+
+  useEffect(() => {
+    if (loginUser.isSuccess) {
+      navigate('/');
+    }
+  }, [loginUser.isSuccess, navigate]);
 
   return (
     <>
@@ -95,6 +96,8 @@ const Form: React.FC = () => {
       >
         Create an Account
       </Button>
+
+      <p>{userDetails?.data?.data?.email}</p>
     </>
   );
 };

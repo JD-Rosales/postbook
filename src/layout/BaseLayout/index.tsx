@@ -1,14 +1,9 @@
-import { Outlet } from "react-router-dom";
-import App from "../../App";
-interface indexProps {}
-
-const index: React.FC<indexProps> = ({}) => {
+const Index: React.FC = () => {
   return (
     <>
-      <App />
-      <Outlet />
+      <div>You are authenticated!</div>
     </>
   );
 };
 
-export default index;
+export default Index;

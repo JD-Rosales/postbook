@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
+import { RouterProvider } from 'react-router-dom';
+import Router from './routes/router';
+import Spinner from '@components/Spinner';
 
 function App() {
   return (
     <>
-      <Link to={"/login"}>Login</Link>
-      <Link to={"/signup"}>Signup</Link>
+      <RouterProvider fallbackElement={<Spinner />} router={Router()} />
     </>
   );
 }

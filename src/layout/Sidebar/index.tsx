@@ -1,7 +1,5 @@
-interface indexProps {}
-
-const index: React.FC<indexProps> = ({}) => {
-  return <div>Sidebar</div>;
+const index: React.FC = () => {
+  return <></>;
 };
 
 export default index;

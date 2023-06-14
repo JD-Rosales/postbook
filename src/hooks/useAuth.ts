@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { request, ErrResponse } from '@lib/axios-interceptor';
 
 const getUser = () => {
@@ -6,9 +6,11 @@ const getUser = () => {
 };
 
 export const useGetUser = () => {
-  return useQuery({
-    queryKey: ['user'],
-    queryFn: getUser,
+  return useQuery(['user'], getUser, {
+    onSuccess: (data) => {
+      if (data.token) localStorage.setItem('token', data.token);
+    },
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -17,10 +19,13 @@ const login = (data: { email: string; password: string }) => {
 };
 
 export const useLogin = () => {
-  return useMutation({
-    mutationFn: login,
+  const queryClient = useQueryClient();
+  return useMutation(login, {
     onSuccess: (data) => {
       localStorage.setItem('token', data.token);
+      // queryClient.invalidateQueries(['user']);
+      const data2 = { data: data.data };
+      queryClient.setQueriesData(['user'], data2);
     },
     onError: (error: ErrResponse) => error,
   });

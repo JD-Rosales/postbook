@@ -8,7 +8,7 @@ export interface ErrResponse {
 }
 
 const tokenString = localStorage.getItem('token');
-const token = tokenString ? JSON.stringify(tokenString) : null;
+const token = tokenString ? JSON.stringify(tokenString) : '';
 
 export const request = async ({ ...options }: AxiosRequestConfig) => {
   if (token)

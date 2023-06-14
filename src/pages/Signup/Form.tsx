@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Input } from '@ui/input';
 import { Button } from '@ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -32,12 +32,6 @@ const Form: React.FC = () => {
     registerUser.mutate(formData);
   };
 
-  useEffect(() => {
-    if (registerUser.isSuccess) {
-      console.log('login success');
-      navigate('/');
-    }
-  }, [registerUser.isSuccess, navigate]);
   return (
     <>
       <form className='h-fit' onSubmit={handleSubmit}>
@@ -84,7 +78,12 @@ const Form: React.FC = () => {
           </p>
         )}
 
-        <Button className='mt-6' variant={'default'} fullWidth>
+        <Button
+          className='mt-6'
+          variant={'default'}
+          loading={registerUser.isLoading}
+          fullWidth
+        >
           Signup
         </Button>
       </form>
