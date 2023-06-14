@@ -5,11 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { MdOutlineVisibility } from 'react-icons/md';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { MdOutlineVisibilityOff } from 'react-icons/md';
-import { useLogin, useGetUser } from '@src/hooks/useAuth';
+import { useLogin } from '@src/hooks/useAuth';
 
 const Form: React.FC = () => {
   const loginUser = useLogin();
-  const userDetails = useGetUser();
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -96,8 +95,6 @@ const Form: React.FC = () => {
       >
         Create an Account
       </Button>
-
-      <p>{userDetails?.data?.data?.email}</p>
     </>
   );
 };
