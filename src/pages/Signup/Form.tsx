@@ -74,7 +74,7 @@ const Form: React.FC = () => {
         {registerUser.isError && (
           <p className='mt-3 pl-2 text-left text-sm text-rose-600 flex items-center'>
             <FiAlertTriangle className='mr-2' />
-            {registerUser.error.message}
+            {registerUser.error?.message}
           </p>
         )}
 

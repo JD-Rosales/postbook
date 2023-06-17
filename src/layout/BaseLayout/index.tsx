@@ -5,7 +5,7 @@ const Index: React.FC = () => {
   const navigate = useNavigate();
   return (
     <>
-      <div className='mt-5 text-center'>
+      <div className='bg-slate-500 h-full'>
         <h1 className='text-xl'>You are authenticated!</h1>
         <Button
           className='mt-6'
