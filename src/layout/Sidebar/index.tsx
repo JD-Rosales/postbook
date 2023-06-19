@@ -1,13 +1,13 @@
 import { Separator } from '@ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
-import { useState } from 'react';
+import { useContext } from 'react';
+import { SidebarContext } from '@src/contexts/SidebarContext';
 
 const Index: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(true);
-
+  const { isOpen } = useContext(SidebarContext);
   return (
     <aside
-      className={`bg-primary static top-0 right-0 h-full z-40 w-64 ${
+      className={`bg-primary static top-0 left-0 h-full z-40 w-64 ${
         isOpen ? 'block' : 'hidden'
       }`}
     >
@@ -23,15 +23,6 @@ const Index: React.FC = () => {
           </span>
         </div>
         <Separator />
-
-        <button
-          className='text-white'
-          onClick={() => {
-            setIsOpen((isOpen) => !isOpen);
-          }}
-        >
-          Toggle Sidebar
-        </button>
       </div>
     </aside>
   );

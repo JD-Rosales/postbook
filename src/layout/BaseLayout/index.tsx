@@ -1,16 +1,19 @@
 import { lazy } from 'react';
 import { Outlet } from 'react-router-dom';
+import SidebarContextProvider from '@src/contexts/SidebarContext';
 
 const Sidebar = lazy(() => import('../Sidebar'));
 
 const Index: React.FC = () => {
   return (
     <>
-      <Sidebar />
+      <SidebarContextProvider>
+        <Sidebar />
 
-      <div className='w-full text-center bg-slate-700'>
-        <Outlet />
-      </div>
+        <div className='w-full text-center'>
+          <Outlet />
+        </div>
+      </SidebarContextProvider>
     </>
   );
 };

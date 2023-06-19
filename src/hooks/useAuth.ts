@@ -11,6 +11,7 @@ export const useGetUser = () => {
       if (data.token) localStorage.setItem('token', data.token);
     },
     refetchOnWindowFocus: false,
+    retry: 2,
   });
 };
 
