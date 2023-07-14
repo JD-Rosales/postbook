@@ -10,7 +10,7 @@ const Index: React.FC = () => {
       <SidebarContextProvider>
         <Sidebar />
 
-        <div className='w-full text-center'>
+        <div className='p-4'>
           <Outlet />
         </div>
       </SidebarContextProvider>

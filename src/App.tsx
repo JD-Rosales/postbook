@@ -4,7 +4,7 @@ import Spinner from '@components/Spinner';
 
 function App() {
   return (
-    <div className='App flex h-full w-full'>
+    <div className='App'>
       <RouterProvider fallbackElement={<Spinner />} router={Router()} />
     </div>
   );

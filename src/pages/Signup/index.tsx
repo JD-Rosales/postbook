@@ -3,7 +3,7 @@ import Image from './Image';
 
 const index: React.FC = () => {
   return (
-    <div className='h-full w-full flex flex-row'>
+    <div className='h-screen w-full flex flex-row'>
       <div className='w-1/2 hidden md:flex justify-center items-center'>
         <Image className='w-9/12' />
       </div>
