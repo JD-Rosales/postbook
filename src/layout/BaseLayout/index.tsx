@@ -9,7 +9,7 @@ const Index: React.FC = () => {
         <div className='pb-20 md:pb-0 md:pl-64'>
           <Sidebar />
 
-          <div className='p-2'>
+          <div className='px-2'>
             <Outlet />
           </div>
         </div>

@@ -9,6 +9,7 @@ const ErrorPage = lazy(() => import('@pages/Error'));
 const Signup = lazy(() => import('@pages/Signup'));
 const Login = lazy(() => import('@pages/Login'));
 const Home = lazy(() => import('@pages/Home'));
+const Profile = lazy(() => import('@pages/Profile'));
 const Test = lazy(() => import('@pages/Test'));
 
 const Router = () => {
@@ -30,6 +31,10 @@ const Router = () => {
         {
           path: '',
           element: <Home />,
+        },
+        {
+          path: ':profile',
+          element: <Profile />,
         },
         {
           path: 'test',

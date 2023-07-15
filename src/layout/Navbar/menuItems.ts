@@ -7,6 +7,10 @@ const menuItems = [
     title: 'TEST',
     url: '/test',
   },
+  {
+    title: 'PROFILE',
+    url: '/profile',
+  },
 ];
 
 export default menuItems;
