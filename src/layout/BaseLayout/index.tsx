@@ -1,17 +1,17 @@
-import { lazy } from 'react';
 import { Outlet } from 'react-router-dom';
 import SidebarContextProvider from '@src/contexts/SidebarContext';
-
-const Sidebar = lazy(() => import('../Sidebar'));
+import Sidebar from '../Navbar';
 
 const Index: React.FC = () => {
   return (
     <>
       <SidebarContextProvider>
-        <Sidebar />
+        <div className='pb-20 md:pb-0 md:pl-64'>
+          <Sidebar />
 
-        <div className='p-4'>
-          <Outlet />
+          <div className='p-2'>
+            <Outlet />
+          </div>
         </div>
       </SidebarContextProvider>
     </>

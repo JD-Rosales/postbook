@@ -18,6 +18,7 @@ const Router = () => {
     {
       path: '/',
       element: UserDetails.isLoading ? (
+        // Spinner not center to be fix later
         <Spinner />
       ) : UserDetails.isSuccess ? (
         <BaseLayout />
