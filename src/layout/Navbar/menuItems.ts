@@ -4,10 +4,6 @@ const menuItems = [
     url: '/',
   },
   {
-    title: 'TEST',
-    url: '/test',
-  },
-  {
     title: 'PROFILE',
     url: '/profile',
   },

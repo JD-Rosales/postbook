@@ -1,6 +1,18 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import { Button } from '@ui/button';
-import { AiFillCamera } from 'react-icons/ai';
+import { Label } from '@ui/label';
+import { Input } from '@ui/input';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from '@ui/dialog';
+
+import { AiFillCamera, AiFillEdit } from 'react-icons/ai';
 import { RiUserFollowFill } from 'react-icons/ri';
 
 const Index = () => {
@@ -29,10 +41,75 @@ const Index = () => {
         Jake D. Rosales
       </span>
       <div className=' flex justify-center'>
-        <Button className='mt-4 pl-14 pr-12 py-5 font-bold' variant={'default'}>
+        <Button className='mt-4 mr-1 py-5 font-bold' variant={'default'}>
+          <RiUserFollowFill className='mr-2 w-5 h-5' />
           FOLLOW
-          <RiUserFollowFill className='ml-2 w-5 h-5' />
         </Button>
+
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className='mt-4 ml-1 py-5 font-bold' variant={'default'}>
+              <AiFillEdit className='mr-2 w-5 h-5' />
+              EDIT PROFILE
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>EDIT PROFILE</DialogTitle>
+              <DialogDescription>
+                Make changes to your profile here. Click save when you're done.
+              </DialogDescription>
+            </DialogHeader>
+            <div className='grid gap-4 py-4'>
+              <div className='grid grid-cols-4 gap-4 items-center'>
+                <div className='col-span-1 text-right'>
+                  <Label htmlFor='firstName'>First Name:</Label>
+                </div>
+                <div className='col-span-3'>
+                  <Input
+                    className=''
+                    type='text'
+                    placeholder='First Name'
+                    name='firstName'
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className='grid grid-cols-4 gap-4 items-center'>
+                <div className='col-span-1 text-right'>
+                  <Label htmlFor='middleName'>Middle Name:</Label>
+                </div>
+                <div className='col-span-3'>
+                  <Input
+                    className=''
+                    type='text'
+                    placeholder='Middle Name'
+                    name='middleName'
+                  />
+                </div>
+              </div>
+
+              <div className='grid grid-cols-4 gap-4 items-center'>
+                <div className='col-span-1 text-right'>
+                  <Label htmlFor='lastName'>Last Name:</Label>
+                </div>
+                <div className='col-span-3'>
+                  <Input
+                    className=''
+                    type='text'
+                    placeholder='Last Name'
+                    name='lastName'
+                  />
+                </div>
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button type='submit'>Save changes</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

@@ -3,14 +3,14 @@ import { lazy } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Spinner from '@components/Spinner';
 import { useGetUser } from '@src/hooks/useAuth';
+import Home from '@pages/Home';
+import Profile from '@pages/Profile';
+import Test from '@pages/Test';
 
 const BaseLayout = lazy(() => import('../layout/BaseLayout'));
 const ErrorPage = lazy(() => import('@pages/Error'));
 const Signup = lazy(() => import('@pages/Signup'));
 const Login = lazy(() => import('@pages/Login'));
-const Home = lazy(() => import('@pages/Home'));
-const Profile = lazy(() => import('@pages/Profile'));
-const Test = lazy(() => import('@pages/Test'));
 
 const Router = () => {
   const UserDetails = useGetUser();
@@ -35,10 +35,6 @@ const Router = () => {
         {
           path: ':profile',
           element: <Profile />,
-        },
-        {
-          path: 'test',
-          element: <Test />,
         },
       ],
     },
