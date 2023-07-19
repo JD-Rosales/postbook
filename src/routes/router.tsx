@@ -5,7 +5,6 @@ import Spinner from '@components/Spinner';
 import { useGetUser } from '@src/hooks/useAuth';
 import Home from '@pages/Home';
 import Profile from '@pages/Profile';
-import Test from '@pages/Test';
 
 const BaseLayout = lazy(() => import('../layout/BaseLayout'));
 const ErrorPage = lazy(() => import('@pages/Error'));
