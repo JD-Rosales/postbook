@@ -4,6 +4,7 @@ import './styles/global.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Spinner from '@components/Spinner';
+import { Toaster } from '@ui/toaster';
 
 import App from './App';
 
@@ -14,6 +15,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <QueryClientProvider client={queryClient}>
       <Suspense fallback={<Spinner />}>
         <App />
+        <Toaster />
       </Suspense>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

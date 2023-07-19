@@ -15,6 +15,21 @@ export const useGetUser = () => {
   });
 };
 
+const updateProfile = (data: {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+}) => {
+  return request({ url: '/user/profile', method: 'put', data });
+};
+
+export const useUpdateProfile = () => {
+  return useMutation({
+    mutationFn: updateProfile,
+    onError: (error: ErrResponse) => error,
+  });
+};
+
 const login = (data: { email: string; password: string }) => {
   return request({ url: '/user/login', method: 'post', data });
 };

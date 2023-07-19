@@ -11,11 +11,58 @@ import {
   DialogTrigger,
   DialogFooter,
 } from '@ui/dialog';
+import { useToast } from '@ui/use-toast';
+import { useUpdateProfile } from '@src/hooks/useAuth';
 
 import { AiFillCamera, AiFillEdit } from 'react-icons/ai';
 import { RiUserFollowFill } from 'react-icons/ri';
+import { useEffect, useState } from 'react';
 
 const Index = () => {
+  const updateProfile = useUpdateProfile();
+  const { toast } = useToast();
+
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    middleName: '',
+    lastName: '',
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const handleSubmit = () => {
+    updateProfile.mutate(formData);
+  };
+
+  useEffect(() => {
+    if (updateProfile.isSuccess && !updateProfile.isError) {
+      // reset the formData
+      setFormData({ firstName: '', middleName: '', lastName: '' });
+
+      setOpen(false);
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Profile updated successfully',
+      });
+    }
+    if (updateProfile.isError) {
+      toast({
+        variant: 'destructive',
+        title: 'An error has occured!',
+        description: updateProfile.error?.message,
+      });
+    }
+  }, [
+    updateProfile.isSuccess,
+    updateProfile.isError,
+    updateProfile.error?.message,
+    toast,
+  ]);
   return (
     <div className='max-w-xl mx-auto'>
       <div className='relative h-52 rounded-b-lg mb-[90px]'>
@@ -46,7 +93,7 @@ const Index = () => {
           FOLLOW
         </Button>
 
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button className='mt-4 ml-1 py-5 font-bold' variant={'default'}>
               <AiFillEdit className='mr-2 w-5 h-5' />
@@ -72,6 +119,7 @@ const Index = () => {
                     placeholder='First Name'
                     name='firstName'
                     required
+                    onChange={handleChange}
                   />
                 </div>
               </div>
@@ -86,6 +134,7 @@ const Index = () => {
                     type='text'
                     placeholder='Middle Name'
                     name='middleName'
+                    onChange={handleChange}
                   />
                 </div>
               </div>
@@ -100,13 +149,20 @@ const Index = () => {
                     type='text'
                     placeholder='Last Name'
                     name='lastName'
+                    onChange={handleChange}
                   />
                 </div>
               </div>
             </div>
 
             <DialogFooter>
-              <Button type='submit'>Save changes</Button>
+              <Button
+                variant={'default'}
+                loading={updateProfile.isLoading}
+                onClick={handleSubmit}
+              >
+                Save changes
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
