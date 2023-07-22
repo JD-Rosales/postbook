@@ -11,7 +11,18 @@ export const useGetUser = () => {
       if (data.token) localStorage.setItem('token', data.token);
     },
     refetchOnWindowFocus: false,
-    retry: 2,
+    retry: false,
+  });
+};
+
+const getProfile = (id: number) => {
+  return request({ url: `user/${id}` });
+};
+
+export const useGetProfile = (id: number) => {
+  return useQuery(['user', id], () => getProfile(id), {
+    refetchOnWindowFocus: false,
+    retry: false,
   });
 };
 
@@ -24,8 +35,12 @@ const updateProfile = (data: {
 };
 
 export const useUpdateProfile = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateProfile,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(['user', 'profile', data?.data?.userId]);
+    },
     onError: (error: ErrResponse) => error,
   });
 };
@@ -39,7 +54,6 @@ export const useLogin = () => {
   return useMutation(login, {
     onSuccess: (data) => {
       localStorage.setItem('token', data.token);
-      // queryClient.invalidateQueries(['user']);
       const data2 = { data: data.data };
       queryClient.setQueriesData(['user'], data2);
     },

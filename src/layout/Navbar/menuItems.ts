@@ -4,8 +4,8 @@ const menuItems = [
     url: '/',
   },
   {
-    title: 'PROFILE',
-    url: '/profile',
+    title: 'LOGOUT',
+    url: '/login',
   },
 ];
 

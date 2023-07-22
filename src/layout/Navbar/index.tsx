@@ -2,10 +2,14 @@ import { Link } from 'react-router-dom';
 import { Separator } from '@ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import menuItems from './menuItems';
+import { useGetProfile } from '@src/hooks/useAuth';
+import { parseJwt } from '@lib/utils';
 // import { useContext } from 'react';
 // import { SidebarContext } from '@src/contexts/SidebarContext';
 
 const Index: React.FC = () => {
+  const userProfile = useGetProfile(parseJwt());
+  // const userProfile = useGetProfile(id ? parseInt(id) : 0);
   // const { isOpen } = useContext(SidebarContext);
 
   return (
@@ -19,7 +23,12 @@ const Index: React.FC = () => {
             </Avatar>
 
             <span className='px-2 leading-10 truncate'>
-              Jake Dagami Rosales
+              {userProfile.isSuccess &&
+                (userProfile.data?.data?.email
+                  ? userProfile.data.data?.email
+                  : `${userProfile.data?.data?.firstName} 
+                    ${userProfile.data?.data?.middleName} 
+                    ${userProfile.data?.data?.lastName}`)}
             </span>
           </div>
           <Separator />
@@ -32,6 +41,9 @@ const Index: React.FC = () => {
                 </li>
               );
             })}
+            <li>
+              <Link to={`user/${parseJwt()}`}>PROFILE</Link>
+            </li>
           </ul>
         </div>
       </aside>

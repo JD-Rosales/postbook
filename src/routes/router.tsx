@@ -32,7 +32,7 @@ const Router = () => {
           element: <Home />,
         },
         {
-          path: ':profile',
+          path: '/user/:id',
           element: <Profile />,
         },
       ],
