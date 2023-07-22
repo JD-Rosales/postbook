@@ -39,7 +39,7 @@ export const useUpdateProfile = () => {
   return useMutation({
     mutationFn: updateProfile,
     onSuccess: (data) => {
-      queryClient.invalidateQueries(['user', 'profile', data?.data?.userId]);
+      queryClient.invalidateQueries(['user', data?.data?.userId]);
     },
     onError: (error: ErrResponse) => error,
   });
