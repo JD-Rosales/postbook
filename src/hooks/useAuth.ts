@@ -30,6 +30,8 @@ const updateProfile = (data: {
   firstName: string;
   middleName: string;
   lastName: string;
+  profilePhoto: string | null;
+  coverPhoto: string | null;
 }) => {
   return request({ url: '/user/profile', method: 'put', data });
 };

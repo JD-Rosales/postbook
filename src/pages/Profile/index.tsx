@@ -1,7 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
-import { Button } from '@ui/button';
-import { Label } from '@ui/label';
-import { Input } from '@ui/input';
 import {
   Dialog,
   DialogContent,
@@ -10,22 +7,18 @@ import {
   DialogTrigger,
   DialogFooter,
 } from '@ui/dialog';
+import PageNotFound from '@pages/NotFound';
 import { useToast } from '@ui/use-toast';
+import { Button } from '@ui/button';
+import { Label } from '@ui/label';
+import { Input } from '@ui/input';
 import { useUpdateProfile, useGetProfile } from '@src/hooks/useAuth';
 import { useParams } from 'react-router-dom';
 import { AiFillCamera, AiFillEdit } from 'react-icons/ai';
 import { RiUserFollowFill } from 'react-icons/ri';
 import { useEffect, useState, useRef } from 'react';
 import { parseJwt } from '@lib/utils';
-import PageNotFound from '@pages/NotFound';
-
-type formDataType = {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  profilePhoto: string;
-  coverPhoto: string;
-};
+import axios from 'axios';
 
 const Index = () => {
   const { id } = useParams();
@@ -34,12 +27,21 @@ const Index = () => {
   const { toast } = useToast();
 
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState<formDataType>({
+  const [formData, setFormData] = useState({
     firstName: '',
     middleName: '',
     lastName: '',
     profilePhoto: '',
     coverPhoto: '',
+  });
+  const [imgPrev, setImgPrev] = useState({
+    profilePhoto: '',
+    coverPhoto: '',
+  });
+  const [imageUpload, setImageUpload] = useState({
+    profileProgress: 0,
+    coverProgress: 0,
+    isUploading: false,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +49,62 @@ const Index = () => {
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    let data = { ...formData, profilePhoto: '', coverPhoto: '' };
+
+    if (imgPrev.profilePhoto) {
+      const cloudinaryForm = new FormData();
+      const cloudName = 'dachbgiue';
+      cloudinaryForm.append('file', imgPrev.profilePhoto);
+      cloudinaryForm.append('upload_preset', 'gej93vyl');
+      await axios
+        .post(
+          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+          cloudinaryForm,
+          {
+            onUploadProgress: (ProgressEvent) => {
+              if (ProgressEvent.total) {
+                const progress =
+                  (ProgressEvent.loaded / ProgressEvent.total) * 100;
+                setImageUpload((prevState) => ({
+                  ...prevState,
+                  profileProgress: Math.trunc(progress),
+                  isUploading: true,
+                }));
+              }
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          data = {
+            ...formData,
+            profilePhoto: response.data,
+          };
+        })
+        .catch((error) => {
+          console.log(error);
+          data = {
+            ...formData,
+            profilePhoto: error.data,
+          };
+        })
+        .finally(() => {
+          setImageUpload({
+            profileProgress: 0,
+            coverProgress: 0,
+            isUploading: false,
+          });
+        });
+    }
+
+    if (imgPrev.coverPhoto) {
+      data = {
+        ...formData,
+        coverPhoto: imgPrev.coverPhoto,
+      };
+    }
+
     updateProfile.mutate(formData);
   };
   const inputFileProfile = useRef<HTMLInputElement | null>(null);
@@ -61,7 +118,7 @@ const Index = () => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = () => {
-        setFormData((prevState) => ({
+        setImgPrev((prevState) => ({
           ...prevState,
           [name]: reader.result?.toString(),
         }));
@@ -85,8 +142,18 @@ const Index = () => {
         profilePhoto: userProfile.data?.data?.profilePhoto || '',
         coverPhoto: userProfile.data?.data?.coverPhoto || '',
       });
+
+      // reset input file when profile updated
+      if (inputFileProfile.current) inputFileProfile.current.value = '';
+      if (inputFileCover.current) inputFileCover.current.value = '';
+
+      // reset img preview
+      setImgPrev({
+        profilePhoto: '',
+        coverPhoto: '',
+      });
     }
-  }, [userProfile.data, userProfile.isSuccess]);
+  }, [userProfile.data]);
 
   useEffect(() => {
     if (updateProfile.isSuccess && !updateProfile.isError) {
@@ -148,7 +215,11 @@ const Index = () => {
       <div className=' flex justify-center'>
         {userProfile.isSuccess &&
           (parseJwt().toString() === id ? (
-            <Dialog open={open} onOpenChange={setOpen}>
+            <Dialog
+              open={open}
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
+              onOpenChange={!imageUpload.isUploading ? setOpen : () => {}}
+            >
               <DialogTrigger asChild>
                 <Button
                   className='mt-4 ml-1 py-5 font-bold'
@@ -168,51 +239,98 @@ const Index = () => {
                 <div>
                   <div className='flex justify-between items-center'>
                     <span className='font-bold'>Profile Picture</span>
-                    <Button
-                      className='py-4 mt-0'
-                      variant={'ghost'}
-                      onClick={() => {
-                        inputFileProfile.current?.click();
-                      }}
-                    >
-                      {userProfile.data?.data?.profilePhoto ? 'EDIT' : 'ADD'}
-                    </Button>
+                    {imgPrev.profilePhoto ? (
+                      <Button
+                        className='py-4 mt-0 text-rose-500 hover:text-rose-500'
+                        variant={'ghost'}
+                        onClick={() => {
+                          if (inputFileProfile.current) {
+                            inputFileProfile.current.value = '';
+                          }
+
+                          setImgPrev((prevState) => ({
+                            ...prevState,
+                            profilePhoto: '',
+                          }));
+                        }}
+                      >
+                        CANCEL
+                      </Button>
+                    ) : (
+                      <Button
+                        className='mt-0'
+                        variant={'ghost'}
+                        onClick={() => {
+                          inputFileProfile.current?.click();
+                        }}
+                      >
+                        {userProfile.data?.data?.profilePhoto ? 'EDIT' : 'ADD'}
+                      </Button>
+                    )}
                   </div>
                   <Input
                     type='file'
                     className='hidden'
                     ref={inputFileProfile}
-                    accept='image/x-png,image/gif,image/jpeg'
+                    accept='.png, .jpg, .jpeg'
                     name='profilePhoto'
                     onChange={previewImage}
                   />
 
-                  <div className='my-2 relative w-36 h-36 mx-auto rounded-full'>
-                    <Avatar className='h-full w-full'>
-                      <AvatarImage src={formData.profilePhoto} />
-                      <AvatarFallback>DP</AvatarFallback>
-                    </Avatar>
+                  <div className='mx-12 mt-3'>
+                    <div className='relative w-44 h-44 mx-auto rounded-full group'>
+                      <Avatar className='h-full w-full'>
+                        <AvatarImage
+                          src={
+                            imgPrev.profilePhoto
+                              ? imgPrev.profilePhoto
+                              : formData.profilePhoto
+                          }
+                        />
+                        <AvatarFallback>DP</AvatarFallback>
+                      </Avatar>
+                    </div>
                   </div>
                 </div>
 
                 <div>
                   <div className='flex justify-between items-center'>
                     <span className='font-bold'>Cover Photo</span>
-                    <Button
-                      className='py-4 mt-0'
-                      variant={'ghost'}
-                      onClick={() => {
-                        inputFileCover.current?.click();
-                      }}
-                    >
-                      {userProfile.data?.data?.coverPhoto ? 'EDIT' : 'ADD'}
-                    </Button>
+
+                    {imgPrev.coverPhoto ? (
+                      <Button
+                        className='py-4 mt-0 text-rose-500 hover:text-rose-500'
+                        variant={'ghost'}
+                        onClick={() => {
+                          if (inputFileCover.current) {
+                            inputFileCover.current.value = '';
+                          }
+
+                          setImgPrev((prevState) => ({
+                            ...prevState,
+                            coverPhoto: '',
+                          }));
+                        }}
+                      >
+                        CANCEL
+                      </Button>
+                    ) : (
+                      <Button
+                        className='py-4 mt-0'
+                        variant={'ghost'}
+                        onClick={() => {
+                          inputFileCover.current?.click();
+                        }}
+                      >
+                        {userProfile.data?.data?.coverPhoto ? 'EDIT' : 'ADD'}
+                      </Button>
+                    )}
                   </div>
                   <Input
                     type='file'
                     className='hidden'
                     ref={inputFileCover}
-                    accept='image/x-png,image/gif,image/jpeg'
+                    accept='.png, .jpg, .jpeg'
                     name='coverPhoto'
                     onChange={previewImage}
                   />
@@ -222,7 +340,12 @@ const Index = () => {
                       !formData.coverPhoto && 'bg-slate-100'
                     }`}
                   >
-                    {formData.coverPhoto ? (
+                    {imgPrev.coverPhoto ? (
+                      <img
+                        className='object-cover w-full h-full rounded-lg'
+                        src={imgPrev.coverPhoto}
+                      />
+                    ) : formData.coverPhoto ? (
                       <img
                         className='object-cover w-full h-full rounded-lg'
                         src={formData.coverPhoto}
@@ -235,7 +358,7 @@ const Index = () => {
                   </div>
                 </div>
 
-                <span className='font-bold mt-6'>Profile Data</span>
+                <span className='font-bold mt-4'>Profile Data</span>
                 <div className='grid gap-4 pb-4'>
                   <div className='grid grid-cols-4 gap-4 items-center'>
                     <div className='col-span-1 text-right'>
@@ -291,7 +414,7 @@ const Index = () => {
                 <DialogFooter>
                   <Button
                     variant={'default'}
-                    loading={updateProfile.isLoading}
+                    loading={updateProfile.isLoading || imageUpload.isUploading}
                     onClick={handleSubmit}
                   >
                     Save changes
