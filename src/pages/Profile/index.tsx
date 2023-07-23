@@ -5,7 +5,6 @@ import { Input } from '@ui/input';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -16,9 +15,17 @@ import { useUpdateProfile, useGetProfile } from '@src/hooks/useAuth';
 import { useParams } from 'react-router-dom';
 import { AiFillCamera, AiFillEdit } from 'react-icons/ai';
 import { RiUserFollowFill } from 'react-icons/ri';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { parseJwt } from '@lib/utils';
 import PageNotFound from '@pages/NotFound';
+
+type formDataType = {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  profilePhoto: string;
+  coverPhoto: string;
+};
 
 const Index = () => {
   const { id } = useParams();
@@ -27,10 +34,12 @@ const Index = () => {
   const { toast } = useToast();
 
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<formDataType>({
     firstName: '',
     middleName: '',
     lastName: '',
+    profilePhoto: '',
+    coverPhoto: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +50,31 @@ const Index = () => {
   const handleSubmit = () => {
     updateProfile.mutate(formData);
   };
+  const inputFileProfile = useRef<HTMLInputElement | null>(null);
+  const inputFileCover = useRef<HTMLInputElement | null>(null);
+
+  const previewImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) {
+      const name = e.target.name;
+      const file = e.target.files[0];
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setFormData((prevState) => ({
+          ...prevState,
+          [name]: reader.result?.toString(),
+        }));
+      };
+      reader.onerror = () => {
+        toast({
+          variant: 'destructive',
+          title: 'An error has occured!',
+          description: 'Selected file cannot be read',
+        });
+      };
+    }
+  };
 
   useEffect(() => {
     if (userProfile.data?.data) {
@@ -48,9 +82,11 @@ const Index = () => {
         firstName: userProfile.data?.data?.firstName || '',
         middleName: userProfile.data?.data?.middleName || '',
         lastName: userProfile.data?.data?.lastName || '',
+        profilePhoto: userProfile.data?.data?.profilePhoto || '',
+        coverPhoto: userProfile.data?.data?.coverPhoto || '',
       });
     }
-  }, [userProfile.data, userProfile.isError]);
+  }, [userProfile.data, userProfile.isSuccess]);
 
   useEffect(() => {
     if (updateProfile.isSuccess && !updateProfile.isError) {
@@ -78,6 +114,7 @@ const Index = () => {
   if (userProfile.isError) {
     return <PageNotFound />;
   }
+
   return (
     <div className='max-w-xl mx-auto'>
       <div className='relative h-52 rounded-b-lg mb-[90px]'>
@@ -101,7 +138,7 @@ const Index = () => {
       </div>
       <span className='text-center text-3xl font-medium block'>
         {userProfile.isSuccess &&
-          // show only profile email if firstName and lastname is not provided
+          // show only email if firstName and lastname is not provided
           (userProfile.data?.data?.email
             ? `${userProfile.data?.data?.email}`
             : `${userProfile.data?.data?.firstName} 
@@ -121,15 +158,85 @@ const Index = () => {
                   EDIT PROFILE
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className='sm:my-5'>
                 <DialogHeader>
-                  <DialogTitle>EDIT PROFILE</DialogTitle>
-                  <DialogDescription>
-                    Make changes to your profile here. Click save when you're
-                    done.
-                  </DialogDescription>
+                  <DialogTitle className='text-center'>
+                    EDIT PROFILE
+                  </DialogTitle>
                 </DialogHeader>
-                <div className='grid gap-4 py-4'>
+
+                <div>
+                  <div className='flex justify-between items-center'>
+                    <span className='font-bold'>Profile Picture</span>
+                    <Button
+                      className='py-4 mt-0'
+                      variant={'ghost'}
+                      onClick={() => {
+                        inputFileProfile.current?.click();
+                      }}
+                    >
+                      {userProfile.data?.data?.profilePhoto ? 'EDIT' : 'ADD'}
+                    </Button>
+                  </div>
+                  <Input
+                    type='file'
+                    className='hidden'
+                    ref={inputFileProfile}
+                    accept='image/x-png,image/gif,image/jpeg'
+                    name='profilePhoto'
+                    onChange={previewImage}
+                  />
+
+                  <div className='my-2 relative w-36 h-36 mx-auto rounded-full'>
+                    <Avatar className='h-full w-full'>
+                      <AvatarImage src={formData.profilePhoto} />
+                      <AvatarFallback>DP</AvatarFallback>
+                    </Avatar>
+                  </div>
+                </div>
+
+                <div>
+                  <div className='flex justify-between items-center'>
+                    <span className='font-bold'>Cover Photo</span>
+                    <Button
+                      className='py-4 mt-0'
+                      variant={'ghost'}
+                      onClick={() => {
+                        inputFileCover.current?.click();
+                      }}
+                    >
+                      {userProfile.data?.data?.coverPhoto ? 'EDIT' : 'ADD'}
+                    </Button>
+                  </div>
+                  <Input
+                    type='file'
+                    className='hidden'
+                    ref={inputFileCover}
+                    accept='image/x-png,image/gif,image/jpeg'
+                    name='coverPhoto'
+                    onChange={previewImage}
+                  />
+
+                  <div
+                    className={`relative mx-12 mt-4 h-44 rounded-lg ${
+                      !formData.coverPhoto && 'bg-slate-100'
+                    }`}
+                  >
+                    {formData.coverPhoto ? (
+                      <img
+                        className='object-cover w-full h-full rounded-lg'
+                        src={formData.coverPhoto}
+                      />
+                    ) : (
+                      <span className='absolute inset-0 flex items-center justify-center'>
+                        DP
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <span className='font-bold mt-6'>Profile Data</span>
+                <div className='grid gap-4 pb-4'>
                   <div className='grid grid-cols-4 gap-4 items-center'>
                     <div className='col-span-1 text-right'>
                       <Label htmlFor='firstName'>First Name:</Label>
