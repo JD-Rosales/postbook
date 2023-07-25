@@ -13,17 +13,19 @@ import { Button } from '@ui/button';
 import { Label } from '@ui/label';
 import { Input } from '@ui/input';
 import { useUpdateProfile, useGetProfile } from '@src/hooks/useAuth';
+import { useFileUpload } from '@src/hooks/useFileUpload';
 import { useParams } from 'react-router-dom';
 import { AiFillCamera, AiFillEdit } from 'react-icons/ai';
 import { RiUserFollowFill } from 'react-icons/ri';
 import { useEffect, useState, useRef } from 'react';
 import { parseJwt } from '@lib/utils';
-import axios from 'axios';
 
 const Index = () => {
   const { id } = useParams();
   const updateProfile = useUpdateProfile();
   const userProfile = useGetProfile(id ? parseInt(id) : 0);
+  const profileUpload = useFileUpload(1);
+  const coverUpload = useFileUpload(2);
   const { toast } = useToast();
 
   const [open, setOpen] = useState(false);
@@ -38,74 +40,30 @@ const Index = () => {
     profilePhoto: '',
     coverPhoto: '',
   });
-  const [imageUpload, setImageUpload] = useState({
-    profileProgress: 0,
-    coverProgress: 0,
-    isUploading: false,
-  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
+  useEffect(() => {
+    console.log('PROFILE PROGRESS: ', profileUpload.progress);
+    console.log('COVER PROGRESS: ', coverUpload.progress);
+  }, [profileUpload.progress, coverUpload.progress]);
+
   const handleSubmit = async () => {
-    let data = { ...formData, profilePhoto: '', coverPhoto: '' };
+    // needs rework here 7/25/23
+    // const data = { ...formData, profilePhoto: '', coverPhoto: '' };
 
     if (imgPrev.profilePhoto) {
-      const cloudinaryForm = new FormData();
-      const cloudName = 'dachbgiue';
-      cloudinaryForm.append('file', imgPrev.profilePhoto);
-      cloudinaryForm.append('upload_preset', 'gej93vyl');
-      await axios
-        .post(
-          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-          cloudinaryForm,
-          {
-            onUploadProgress: (ProgressEvent) => {
-              if (ProgressEvent.total) {
-                const progress =
-                  (ProgressEvent.loaded / ProgressEvent.total) * 100;
-                setImageUpload((prevState) => ({
-                  ...prevState,
-                  profileProgress: Math.trunc(progress),
-                  isUploading: true,
-                }));
-              }
-            },
-          }
-        )
-        .then((response) => {
-          console.log(response);
-          data = {
-            ...formData,
-            profilePhoto: response.data,
-          };
-        })
-        .catch((error) => {
-          console.log(error);
-          data = {
-            ...formData,
-            profilePhoto: error.data,
-          };
-        })
-        .finally(() => {
-          setImageUpload({
-            profileProgress: 0,
-            coverProgress: 0,
-            isUploading: false,
-          });
-        });
+      profileUpload.mutate(imgPrev.profilePhoto);
     }
 
     if (imgPrev.coverPhoto) {
-      data = {
-        ...formData,
-        coverPhoto: imgPrev.coverPhoto,
-      };
+      coverUpload.mutate(imgPrev.coverPhoto);
     }
 
-    updateProfile.mutate(formData);
+    // updateProfile.mutate(data);
   };
   const inputFileProfile = useRef<HTMLInputElement | null>(null);
   const inputFileCover = useRef<HTMLInputElement | null>(null);
@@ -218,7 +176,7 @@ const Index = () => {
             <Dialog
               open={open}
               // eslint-disable-next-line @typescript-eslint/no-empty-function
-              onOpenChange={!imageUpload.isUploading ? setOpen : () => {}}
+              onOpenChange={!profileUpload.isLoading ? setOpen : () => {}}
             >
               <DialogTrigger asChild>
                 <Button
@@ -414,7 +372,7 @@ const Index = () => {
                 <DialogFooter>
                   <Button
                     variant={'default'}
-                    loading={updateProfile.isLoading || imageUpload.isUploading}
+                    loading={updateProfile.isLoading}
                     onClick={handleSubmit}
                   >
                     Save changes
