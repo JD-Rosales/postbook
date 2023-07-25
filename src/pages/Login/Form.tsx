@@ -6,8 +6,11 @@ import { MdOutlineVisibility } from 'react-icons/md';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { MdOutlineVisibilityOff } from 'react-icons/md';
 import { useLogin } from '@src/hooks/useAuth';
+import { useContext } from 'react';
+import { AuthContext } from '@src/contexts/AuthContext';
 
 const Form: React.FC = () => {
+  const { authContextValue } = useContext(AuthContext);
   const loginUser = useLogin();
 
   const navigate = useNavigate();
@@ -34,10 +37,8 @@ const Form: React.FC = () => {
   };
 
   useEffect(() => {
-    if (loginUser.isSuccess) {
-      navigate('/');
-    }
-  }, [loginUser.isSuccess, navigate]);
+    if (authContextValue.isAuthenticated && loginUser.isSuccess) navigate('/');
+  }, [authContextValue.isAuthenticated, loginUser.isSuccess, navigate]);
 
   return (
     <>

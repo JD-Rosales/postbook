@@ -2,9 +2,11 @@
 import { lazy } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Spinner from '@components/Spinner';
-import { useGetUser } from '@src/hooks/useAuth';
+// import { useGetUser } from '@src/hooks/useAuth';
 import Home from '@pages/Home';
 import Profile from '@pages/Profile';
+import { useContext } from 'react';
+import { AuthContext } from '@src/contexts/AuthContext';
 
 const BaseLayout = lazy(() => import('../layout/BaseLayout'));
 const ErrorPage = lazy(() => import('@pages/Error'));
@@ -12,15 +14,13 @@ const Signup = lazy(() => import('@pages/Signup'));
 const Login = lazy(() => import('@pages/Login'));
 
 const Router = () => {
-  const UserDetails = useGetUser();
+  // const UserDetails = useGetUser();
+  const { authContextValue } = useContext(AuthContext);
 
   return createBrowserRouter([
     {
       path: '/',
-      element: UserDetails.isLoading ? (
-        // Spinner not center to be fix later
-        <Spinner />
-      ) : UserDetails.isSuccess ? (
+      element: authContextValue.isAuthenticated ? (
         <BaseLayout />
       ) : (
         <Navigate to='/login' />

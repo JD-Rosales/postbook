@@ -12,7 +12,7 @@ import { useToast } from '@ui/use-toast';
 import { Button } from '@ui/button';
 import { Label } from '@ui/label';
 import { Input } from '@ui/input';
-import { useUpdateProfile, useGetProfile } from '@src/hooks/useAuth';
+import { useUpdateProfile, useGetProfile } from '@src/hooks/useProfile';
 import { useFileUpload } from '@src/hooks/useFileUpload';
 import { useParams } from 'react-router-dom';
 import { AiFillCamera, AiFillEdit } from 'react-icons/ai';

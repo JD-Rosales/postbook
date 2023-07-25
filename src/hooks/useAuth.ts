@@ -1,49 +1,31 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { request, ErrResponse } from '@lib/axios-interceptor';
+import { useContext } from 'react';
+import { AuthContext } from '@src/contexts/AuthContext';
 
-const getUser = () => {
+const verifyToken = () => {
   return request({ url: '/user' });
 };
 
-export const useGetUser = () => {
-  return useQuery(['user'], getUser, {
-    onSuccess: (data) => {
-      if (data.token) localStorage.setItem('token', data.token);
+export const useVerifyToken = () => {
+  const { setAuthContextValue } = useContext(AuthContext);
+  return useQuery(['user'], verifyToken, {
+    onSuccess: () => {
+      setAuthContextValue((prev) => ({
+        ...prev,
+        isAuthenticated: true,
+      }));
+      // if (data.token) localStorage.setItem('token', data.token);
+    },
+    onError: () => {
+      setAuthContextValue((prev) => ({
+        ...prev,
+        isAuthenticated: false,
+      }));
+      localStorage.removeItem('token');
     },
     refetchOnWindowFocus: false,
     retry: false,
-  });
-};
-
-const getProfile = (id: number) => {
-  return request({ url: `user/${id}` });
-};
-
-export const useGetProfile = (id: number) => {
-  return useQuery(['user', id], () => getProfile(id), {
-    refetchOnWindowFocus: false,
-    retry: false,
-  });
-};
-
-const updateProfile = (data: {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  profilePhoto: string | null;
-  coverPhoto: string | null;
-}) => {
-  return request({ url: '/user/profile', method: 'put', data });
-};
-
-export const useUpdateProfile = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: updateProfile,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries(['user', data?.data?.userId]);
-    },
-    onError: (error: ErrResponse) => error,
   });
 };
 
@@ -52,9 +34,14 @@ const login = (data: { email: string; password: string }) => {
 };
 
 export const useLogin = () => {
+  const { setAuthContextValue } = useContext(AuthContext);
   const queryClient = useQueryClient();
   return useMutation(login, {
     onSuccess: (data) => {
+      setAuthContextValue((prev) => ({
+        ...prev,
+        isAuthenticated: true,
+      }));
       localStorage.setItem('token', data.token);
       const data2 = { data: data.data };
       queryClient.setQueriesData(['user'], data2);

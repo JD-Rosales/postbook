@@ -7,10 +7,10 @@ export interface ErrResponse {
   [key: string]: string;
 }
 
-const tokenString = localStorage.getItem('token');
-const token = tokenString ? JSON.stringify(tokenString) : '';
-
 export const request = async ({ ...options }: AxiosRequestConfig) => {
+  const tokenString = localStorage.getItem('token');
+  const token = tokenString ? JSON.stringify(tokenString) : null;
+
   if (token)
     client.defaults.headers.common.Authorization = `Bearer ${token.replace(
       /\\|"/g,
@@ -18,11 +18,9 @@ export const request = async ({ ...options }: AxiosRequestConfig) => {
     )}`;
 
   const onSuccess = (response: AxiosResponse) => {
-    // success callback here
     return response.data;
   };
   const onError = (error: AxiosError): ErrResponse => {
-    // error callback here
     throw error?.response?.data;
   };
 
