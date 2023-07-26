@@ -1,12 +1,12 @@
 import React from 'react';
 
 import { cn } from '@lib/utils';
-import { IconType } from 'react-icons';
+import { LucideIcon } from 'lucide-react';
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: boolean;
-  icon?: IconType;
+  icon?: LucideIcon;
   iconPosition?: 'start' | 'end';
   iconClick?: () => void;
 }
@@ -45,7 +45,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               className={`
               absolute
               text-slate-400
-              top-2.5 
+              top-3.5
               ${iconPosition === 'start' ? 'left-3' : 'right-3'}
               ${iconClick && 'cursor-pointer'}
               `}

@@ -2,8 +2,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import { Button } from '@ui/button';
 import { useGetProfile } from '@src/hooks/useProfile';
 import { useParams } from 'react-router-dom';
-import { AiFillCamera, AiFillEdit } from 'react-icons/ai';
-import { RiUserFollowFill } from 'react-icons/ri';
+import { Pencil, Camera } from 'lucide-react';
+import { UserCheck } from 'lucide-react';
 import { parseJwt } from '@lib/utils';
 import PageNotFound from '@pages/NotFound';
 import UpdateDialog from './UpdateDialog';
@@ -18,7 +18,7 @@ const Index = () => {
 
   return (
     <div className='max-w-xl mx-auto'>
-      <div className='relative bg-slate-100 h-52 rounded-b-lg mb-[90px]'>
+      <div className='relative bg-primary h-52 rounded-b-lg mb-[90px]'>
         {userProfile.data?.data?.coverPhoto ? (
           <img
             className='object-cover w-full h-full rounded-b-lg'
@@ -26,8 +26,8 @@ const Index = () => {
             alt='Profile Cover Photo'
           />
         ) : (
-          <span className='absolute inset-0 flex items-center justify-center'>
-            DP
+          <span className='absolute inset-0 flex items-center justify-center text-white'>
+            COVER PHOTO
           </span>
         )}
 
@@ -39,7 +39,7 @@ const Index = () => {
             </Avatar>
 
             <button className='bg-gray-200 hover:bg-slate-300 p-2 rounded-full absolute bottom-5 right-1'>
-              <AiFillCamera className='w-5 h-5' />
+              <Camera size={20} />
             </button>
           </div>
         </div>
@@ -58,13 +58,13 @@ const Index = () => {
           (parseJwt().toString() === id ? (
             <UpdateDialog queryData={userProfile.data?.data}>
               <Button className='mt-4 ml-1 py-5 font-bold' variant={'default'}>
-                <AiFillEdit className='mr-2 w-5 h-5' />
+                <Pencil className='mr-2' size={20} />
                 EDIT PROFILE
               </Button>
             </UpdateDialog>
           ) : (
             <Button className='mt-4 mr-1 py-5 font-bold' variant={'default'}>
-              <RiUserFollowFill className='mr-2 w-5 h-5' />
+              <UserCheck className='mr-2' size={20} />
               FOLLOW
             </Button>
           ))}

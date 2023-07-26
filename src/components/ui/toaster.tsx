@@ -7,8 +7,7 @@ import {
   ToastViewport,
 } from '@components/ui/toast';
 import { useToast } from '@components/ui/use-toast';
-import { AiFillCheckCircle } from 'react-icons/ai';
-import { MdError } from 'react-icons/md';
+import { CheckCircle, AlertOctagon } from 'lucide-react';
 
 export function Toaster() {
   const { toasts } = useToast();
@@ -26,16 +25,16 @@ export function Toaster() {
         return (
           <Toast key={id} {...props}>
             <div className='grid gap-1'>
-              <div className='grid grid-cols-4 items-center'>
-                <div className='col-span-1 pl-1 text-2xl'>
+              <div className='grid grid-cols-8 items-center'>
+                <div className='col-span-2 pl-2 text-2xl'>
                   {variant === 'success' && (
-                    <AiFillCheckCircle className='text-green-500' />
+                    <CheckCircle className='text-green-500' />
                   )}
                   {variant === 'destructive' && (
-                    <MdError className='text-destructive' />
+                    <AlertOctagon className='text-destructive' />
                   )}
                 </div>
-                <div className='col-span-3'>
+                <div className='col-span-6'>
                   {title && (
                     <ToastTitle
                       className={

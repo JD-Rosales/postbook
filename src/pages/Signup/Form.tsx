@@ -2,9 +2,7 @@ import { useState } from 'react';
 import { Input } from '@ui/input';
 import { Button } from '@ui/button';
 import { useNavigate } from 'react-router-dom';
-import { MdOutlineVisibility } from 'react-icons/md';
-import { MdOutlineVisibilityOff } from 'react-icons/md';
-import { FiAlertTriangle } from 'react-icons/fi';
+import { Eye, EyeOff, AlertTriangle } from 'lucide-react';
 import { useRegister } from '@src/hooks/useAuth';
 
 const Form: React.FC = () => {
@@ -50,7 +48,7 @@ const Form: React.FC = () => {
           type={passwordShown ? 'text' : 'password'}
           placeholder='Password'
           name='password'
-          icon={passwordShown ? MdOutlineVisibility : MdOutlineVisibilityOff}
+          icon={passwordShown ? Eye : EyeOff}
           iconPosition='end'
           iconClick={handlePasswordShown}
           required
@@ -63,7 +61,7 @@ const Form: React.FC = () => {
           type={passwordShown ? 'text' : 'password'}
           placeholder='Confirm password'
           name='password_confirmation'
-          icon={passwordShown ? MdOutlineVisibility : MdOutlineVisibilityOff}
+          icon={passwordShown ? Eye : EyeOff}
           iconPosition='end'
           iconClick={handlePasswordShown}
           required
@@ -73,7 +71,7 @@ const Form: React.FC = () => {
 
         {registerUser.isError && (
           <p className='mt-3 pl-2 text-left text-sm text-rose-600 flex items-center'>
-            <FiAlertTriangle className='mr-2' />
+            <AlertTriangle className='mr-2' size={20} />
             {registerUser.error?.message}
           </p>
         )}

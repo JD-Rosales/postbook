@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import { Input } from '@ui/input';
 import { Button } from '@ui/button';
 import { useNavigate } from 'react-router-dom';
-import { MdOutlineVisibility } from 'react-icons/md';
-import { FiAlertTriangle } from 'react-icons/fi';
-import { MdOutlineVisibilityOff } from 'react-icons/md';
+import { Eye, EyeOff, AlertTriangle } from 'lucide-react';
 import { useLogin } from '@src/hooks/useAuth';
 import { useContext } from 'react';
 import { AuthContext } from '@src/contexts/AuthContext';
@@ -57,7 +55,7 @@ const Form: React.FC = () => {
           type={passwordShown ? 'text' : 'password'}
           placeholder='Password'
           name='password'
-          icon={passwordShown ? MdOutlineVisibility : MdOutlineVisibilityOff}
+          icon={passwordShown ? Eye : EyeOff}
           iconPosition='end'
           iconClick={handlePasswordShown}
           required
@@ -67,7 +65,7 @@ const Form: React.FC = () => {
 
         {loginUser.isError && (
           <p className='mt-3 pl-2 text-left text-sm text-rose-600 flex items-center'>
-            <FiAlertTriangle className='mr-2' />
+            <AlertTriangle className='mr-2' size={20} />
             {loginUser.error?.message}
           </p>
         )}
