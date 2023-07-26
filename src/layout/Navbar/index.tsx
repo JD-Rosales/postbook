@@ -11,14 +11,11 @@ import menuItems from './menuItems';
 const Index: React.FC = () => {
   const userProfile = useGetProfile(parseJwt());
   const navigate = useNavigate();
-  const { setAuthContextValue } = useContext(AuthContext);
+  const { setIsAuthenticated } = useContext(AuthContext);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    setAuthContextValue((prev) => ({
-      ...prev,
-      isAuthenticated: false,
-    }));
+    setIsAuthenticated(false);
     navigate('/login');
   };
 

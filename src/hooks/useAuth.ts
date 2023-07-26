@@ -8,20 +8,15 @@ const verifyToken = () => {
 };
 
 export const useVerifyToken = () => {
-  const { setAuthContextValue } = useContext(AuthContext);
+  const { setIsAuthenticated, setIsVerifying } = useContext(AuthContext);
   return useQuery(['user'], verifyToken, {
     onSuccess: () => {
-      setAuthContextValue((prev) => ({
-        ...prev,
-        isAuthenticated: true,
-      }));
-      // if (data.token) localStorage.setItem('token', data.token);
+      setIsVerifying(false);
+      setIsAuthenticated(true);
     },
     onError: () => {
-      setAuthContextValue((prev) => ({
-        ...prev,
-        isAuthenticated: false,
-      }));
+      setIsVerifying(false);
+      setIsAuthenticated(false);
       localStorage.removeItem('token');
     },
     refetchOnWindowFocus: false,
@@ -34,19 +29,19 @@ const login = (data: { email: string; password: string }) => {
 };
 
 export const useLogin = () => {
-  const { setAuthContextValue } = useContext(AuthContext);
+  const { setIsAuthenticated } = useContext(AuthContext);
   const queryClient = useQueryClient();
   return useMutation(login, {
     onSuccess: (data) => {
-      setAuthContextValue((prev) => ({
-        ...prev,
-        isAuthenticated: true,
-      }));
+      setIsAuthenticated(true);
       localStorage.setItem('token', data.token);
       const data2 = { data: data.data };
       queryClient.setQueriesData(['user'], data2);
     },
-    onError: (error: ErrResponse) => error,
+    onError: (error: ErrResponse) => {
+      setIsAuthenticated(false);
+      return error;
+    },
   });
 };
 

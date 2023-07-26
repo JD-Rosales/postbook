@@ -12,9 +12,8 @@ export const request = async ({ ...options }: AxiosRequestConfig) => {
   const token = tokenString ? JSON.stringify(tokenString) : null;
 
   if (token)
-    client.defaults.headers.common.Authorization = `Bearer ${token.replace(
-      /\\|"/g,
-      ''
+    client.defaults.headers.common.Authorization = `Bearer ${JSON.parse(
+      token
     )}`;
 
   const onSuccess = (response: AxiosResponse) => {

@@ -1,37 +1,39 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { createContext, useState } from 'react';
-import { AuthContextValueType } from '@src/types/auth';
+import { AuthContextValueType, AuthContextFunctionType } from '@src/types/auth';
 
 type AuthProviderProps = {
   children: React.ReactNode;
 };
 
-const initialAuthContext = {
-  token: '',
+const initialAuthContextValue = {
   isAuthenticated: false,
-  isVerifying: false,
+  isVerifying: true,
 };
 
-type AuthContextType = {
-  authContextValue: AuthContextValueType;
-  setAuthContextValue: React.Dispatch<
-    React.SetStateAction<AuthContextValueType>
-  >;
-};
-
-export const AuthContext = createContext<AuthContextType>({
-  authContextValue: { ...initialAuthContext },
-  setAuthContextValue: () => {},
+export const AuthContext = createContext<
+  AuthContextValueType & AuthContextFunctionType
+>({
+  ...initialAuthContextValue,
+  setIsAuthenticated: () => {},
+  setIsVerifying: () => {},
 });
 
 const AuthContextProvider = ({ children }: AuthProviderProps) => {
-  const [authContextValue, setAuthContextValue] = useState(initialAuthContext);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    initialAuthContextValue.isAuthenticated
+  );
+  const [isVerifying, setIsVerifying] = useState(
+    initialAuthContextValue.isVerifying
+  );
 
   return (
     <AuthContext.Provider
       value={{
-        authContextValue,
-        setAuthContextValue,
+        isAuthenticated,
+        setIsAuthenticated,
+        isVerifying,
+        setIsVerifying,
       }}
     >
       {children}

@@ -10,7 +10,7 @@ import { useContext } from 'react';
 import { AuthContext } from '@src/contexts/AuthContext';
 
 const Form: React.FC = () => {
-  const { authContextValue } = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
   const loginUser = useLogin();
 
   const navigate = useNavigate();
@@ -37,8 +37,8 @@ const Form: React.FC = () => {
   };
 
   useEffect(() => {
-    if (authContextValue.isAuthenticated && loginUser.isSuccess) navigate('/');
-  }, [authContextValue.isAuthenticated, loginUser.isSuccess, navigate]);
+    if (isAuthenticated && loginUser.isSuccess) navigate('/');
+  }, [isAuthenticated, loginUser.isSuccess, navigate]);
 
   return (
     <>
