@@ -25,7 +25,7 @@ const Index: React.FC = () => {
         <div className='px-4'>
           <div className='py-5 ps-3 flex flex-row md:flex-column'>
             <Avatar className='text-black'>
-              <AvatarImage />
+              <AvatarImage src={userProfile.data?.data?.profilePhoto} />
               <AvatarFallback>DP</AvatarFallback>
             </Avatar>
 

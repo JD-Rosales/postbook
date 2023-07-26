@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import {
   Dialog,
@@ -12,6 +13,7 @@ import { useToast } from '@ui/use-toast';
 import { Button } from '@ui/button';
 import { Label } from '@ui/label';
 import { Input } from '@ui/input';
+import { Progress } from '@ui/progress';
 import { useUpdateProfile, useGetProfile } from '@src/hooks/useProfile';
 import { useFileUpload } from '@src/hooks/useFileUpload';
 import { useParams } from 'react-router-dom';
@@ -46,24 +48,21 @@ const Index = () => {
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  useEffect(() => {
-    console.log('PROFILE PROGRESS: ', profileUpload.progress);
-    console.log('COVER PROGRESS: ', coverUpload.progress);
-  }, [profileUpload.progress, coverUpload.progress]);
-
   const handleSubmit = async () => {
-    // needs rework here 7/25/23
-    // const data = { ...formData, profilePhoto: '', coverPhoto: '' };
-
+    let data = { ...formData };
     if (imgPrev.profilePhoto) {
-      profileUpload.mutate(imgPrev.profilePhoto);
+      const response = await profileUpload.mutateAsync(imgPrev.profilePhoto);
+      if (response.status === 200)
+        data = { ...data, profilePhoto: response.data.secure_url };
     }
 
     if (imgPrev.coverPhoto) {
-      coverUpload.mutate(imgPrev.coverPhoto);
+      const response = await coverUpload.mutateAsync(imgPrev.coverPhoto);
+      if (response.status == 200)
+        data = { ...data, coverPhoto: response.data.secure_url };
     }
 
-    // updateProfile.mutate(data);
+    updateProfile.mutate(data);
   };
   const inputFileProfile = useRef<HTMLInputElement | null>(null);
   const inputFileCover = useRef<HTMLInputElement | null>(null);
@@ -115,6 +114,14 @@ const Index = () => {
 
   useEffect(() => {
     if (updateProfile.isSuccess && !updateProfile.isError) {
+      // reset states
+      setImgPrev({
+        profilePhoto: '',
+        coverPhoto: '',
+      });
+      profileUpload.reset();
+      coverUpload.reset();
+
       setOpen(false);
       toast({
         variant: 'success',
@@ -129,12 +136,8 @@ const Index = () => {
         description: updateProfile.error?.message,
       });
     }
-  }, [
-    updateProfile.isSuccess,
-    updateProfile.isError,
-    updateProfile.error?.message,
-    toast,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateProfile.isSuccess, updateProfile.isError, toast]);
 
   if (userProfile.isError) {
     return <PageNotFound />;
@@ -142,16 +145,23 @@ const Index = () => {
 
   return (
     <div className='max-w-xl mx-auto'>
-      <div className='relative h-52 rounded-b-lg mb-[90px]'>
-        <img
-          className='object-cover w-full h-full rounded-b-lg'
-          src='https://images.pexels.com/photos/220201/pexels-photo-220201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-          alt='Profile Cover Photo'
-        />
+      <div className='relative bg-slate-100 h-52 rounded-b-lg mb-[90px]'>
+        {userProfile.data?.data?.coverPhoto ? (
+          <img
+            className='object-cover w-full h-full rounded-b-lg'
+            src={userProfile.data?.data?.coverPhoto}
+            alt='Profile Cover Photo'
+          />
+        ) : (
+          <span className='absolute inset-0 flex items-center justify-center'>
+            DP
+          </span>
+        )}
+
         <div className='absolute -bottom-20 right-0 left-0'>
           <div className='text-black relative w-44 h-44 mx-auto p-1 rounded-full bg-slate-300'>
             <Avatar className='h-full w-full'>
-              <AvatarImage src='https://github.com/shadcn.png' />
+              <AvatarImage src={userProfile.data?.data?.profilePhoto} />
               <AvatarFallback>DP</AvatarFallback>
             </Avatar>
 
@@ -175,8 +185,13 @@ const Index = () => {
           (parseJwt().toString() === id ? (
             <Dialog
               open={open}
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
-              onOpenChange={!profileUpload.isLoading ? setOpen : () => {}}
+              onOpenChange={
+                !updateProfile.isLoading &&
+                !profileUpload.isLoading &&
+                !coverUpload.isLoading
+                  ? setOpen
+                  : () => {}
+              }
             >
               <DialogTrigger asChild>
                 <Button
@@ -226,6 +241,7 @@ const Index = () => {
                       </Button>
                     )}
                   </div>
+
                   <Input
                     type='file'
                     className='hidden'
@@ -248,6 +264,12 @@ const Index = () => {
                         <AvatarFallback>DP</AvatarFallback>
                       </Avatar>
                     </div>
+                    {profileUpload.isLoading && (
+                      <Progress
+                        value={profileUpload.progress}
+                        className='w-full mt-3 h-3'
+                      />
+                    )}
                   </div>
                 </div>
 
@@ -293,25 +315,34 @@ const Index = () => {
                     onChange={previewImage}
                   />
 
-                  <div
-                    className={`relative mx-12 mt-4 h-44 rounded-lg ${
-                      !formData.coverPhoto && 'bg-slate-100'
-                    }`}
-                  >
-                    {imgPrev.coverPhoto ? (
-                      <img
-                        className='object-cover w-full h-full rounded-lg'
-                        src={imgPrev.coverPhoto}
+                  <div className='mx-12 mt-3'>
+                    <div
+                      className={`relative h-44 rounded-lg ${
+                        !formData.coverPhoto && 'bg-slate-100'
+                      }`}
+                    >
+                      {imgPrev.coverPhoto ? (
+                        <img
+                          className='object-cover w-full h-full rounded-lg'
+                          src={imgPrev.coverPhoto}
+                        />
+                      ) : formData.coverPhoto ? (
+                        <img
+                          className='object-cover w-full h-full rounded-lg'
+                          src={formData.coverPhoto}
+                        />
+                      ) : (
+                        <span className='absolute inset-0 flex items-center justify-center'>
+                          DP
+                        </span>
+                      )}
+                    </div>
+
+                    {coverUpload.isLoading && (
+                      <Progress
+                        value={coverUpload.progress}
+                        className='w-full mt-3 h-3'
                       />
-                    ) : formData.coverPhoto ? (
-                      <img
-                        className='object-cover w-full h-full rounded-lg'
-                        src={formData.coverPhoto}
-                      />
-                    ) : (
-                      <span className='absolute inset-0 flex items-center justify-center'>
-                        DP
-                      </span>
                     )}
                   </div>
                 </div>
@@ -372,7 +403,11 @@ const Index = () => {
                 <DialogFooter>
                   <Button
                     variant={'default'}
-                    loading={updateProfile.isLoading}
+                    loading={
+                      updateProfile.isLoading ||
+                      profileUpload.isLoading ||
+                      coverUpload.isLoading
+                    }
                     onClick={handleSubmit}
                   >
                     Save changes
