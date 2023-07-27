@@ -43,6 +43,10 @@ const Index = () => {
             </button>
           </div>
         </div>
+
+        <button className='bg-gray-200 hover:bg-slate-300 p-2 rounded absolute bottom-3 right-3'>
+          <Camera size={20} />
+        </button>
       </div>
       <span className='text-center text-3xl font-medium block'>
         {userProfile.isSuccess &&

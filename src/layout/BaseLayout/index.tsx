@@ -1,20 +1,15 @@
 import { Outlet } from 'react-router-dom';
-import SidebarContextProvider from '@src/contexts/SidebarContext';
 import Sidebar from '../Navbar';
 
 const Index: React.FC = () => {
   return (
-    <>
-      <SidebarContextProvider>
-        <div className='pb-20 md:pb-0 md:pl-64'>
-          <Sidebar />
+    <div className='pb-20 md:pb-0 md:pl-64'>
+      <Sidebar />
 
-          <div className='px-2'>
-            <Outlet />
-          </div>
-        </div>
-      </SidebarContextProvider>
-    </>
+      <div className='px-2 relative'>
+        <Outlet />
+      </div>
+    </div>
   );
 };
 
