@@ -286,7 +286,7 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ children, queryData }) => {
                 />
               ) : (
                 <span className='absolute inset-0 flex items-center justify-center'>
-                  DP
+                  Cover Photo
                 </span>
               )}
             </div>
@@ -355,7 +355,7 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ children, queryData }) => {
 
         <DialogFooter>
           <Button
-            className='sm:min-w-[200px]'
+            className='sm:min-w-[170px]'
             variant={'default'}
             loading={
               updateProfile.isLoading ||
