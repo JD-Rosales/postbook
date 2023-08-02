@@ -9,8 +9,9 @@ import {
 } from '@ui/dialog';
 import { Textarea } from '@ui/textarea';
 import { Button } from '@ui/button';
-import { SmilePlus } from 'lucide-react';
+import { SmilePlus, Image } from 'lucide-react';
 import { EmojiClickData } from 'emoji-picker-react';
+import PickerSkeleton from '@components/Loader/EmojiPickerSkeleton';
 
 const EmojiPicker = lazy(() => import('@components/EmojiPicker'));
 
@@ -22,20 +23,34 @@ const Index: React.FC<IndexProps> = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [emojiPickerShown, setEmojiPickerShown] = useState(false);
   const textRef = useRef<HTMLTextAreaElement>(null);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const text = textRef.current?.value;
-
-    console.log(text);
-  };
+  const emojiRef = useRef<HTMLDivElement>(null);
 
   const handleEmojiClick = (emoji: EmojiClickData, event: MouseEvent) => {
     if (textRef.current) {
       textRef.current.value = textRef.current.value + emoji.emoji;
     }
   };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const text = textRef.current?.value;
+    console.log(text);
+  };
+
+  const handleClickOutside = (e: MouseEvent) => {
+    if (!emojiRef.current?.contains(e.target as Node)) {
+      setEmojiPickerShown(false);
+      document.removeEventListener('click', handleClickOutside, true);
+    }
+  };
+
+  useEffect(() => {
+    if (emojiPickerShown) {
+      document.addEventListener('click', handleClickOutside, true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [emojiPickerShown]);
 
   useEffect(() => {
     setEmojiPickerShown(false);
@@ -60,31 +75,24 @@ const Index: React.FC<IndexProps> = ({ children }) => {
           </div>
 
           <div className='relative mt-1 flex justify-end'>
-            <button
-              className='p-2 block'
-              onClick={() => {
-                setEmojiPickerShown(!emojiPickerShown);
-              }}
-            >
-              <SmilePlus color='black' />
+            <button className='p-2 block'>
+              <Image className='text-green-500' size={30} />
             </button>
 
             <button
               className='p-2 block'
               onClick={() => {
-                setEmojiPickerShown(!emojiPickerShown);
+                setEmojiPickerShown(true);
               }}
             >
-              <SmilePlus color='black' />
+              <SmilePlus className='text-orange-500' size={30} />
             </button>
 
             <div className='absolute -top-[270px] -right-[350px] z-50'>
-              {emojiPickerShown ? (
-                <Suspense fallback={<span>Loading.............</span>}>
-                  <EmojiPicker onEmojiClick={handleEmojiClick} />
+              {emojiPickerShown && (
+                <Suspense fallback={<PickerSkeleton />}>
+                  <EmojiPicker ref={emojiRef} onEmojiClick={handleEmojiClick} />
                 </Suspense>
-              ) : (
-                ''
               )}
             </div>
           </div>
