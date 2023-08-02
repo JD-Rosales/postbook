@@ -26,7 +26,7 @@ const Index: React.FC<IndexProps> = ({ children }) => {
   const emojiRef = useRef<HTMLDivElement>(null);
 
   const handleEmojiClick = (emoji: EmojiClickData, event: MouseEvent) => {
-    if (textRef.current) {
+    if (textRef.current && event) {
       textRef.current.value = textRef.current.value + emoji.emoji;
     }
   };
