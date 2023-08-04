@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { request, ErrResponse } from '@lib/axios-interceptor';
 
 const getProfile = (id: number) => {
-  return request({ url: `user/${id}` });
+  return request({ url: `profile/${id}` });
 };
 
 export const useGetProfile = (id: number) => {
@@ -19,7 +19,7 @@ const updateProfile = (data: {
   profilePhoto: string | null;
   coverPhoto: string | null;
 }) => {
-  return request({ url: '/user/profile', method: 'put', data });
+  return request({ url: '/profile', method: 'put', data });
 };
 
 export const useUpdateProfile = () => {
