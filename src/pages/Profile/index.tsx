@@ -3,10 +3,10 @@ import { Button } from '@ui/button';
 import { useGetProfile } from '@src/hooks/useProfile';
 import { useParams } from 'react-router-dom';
 import { Pencil, Camera } from 'lucide-react';
-import { UserCheck } from 'lucide-react';
 import { parseJwt } from '@lib/utils';
 import PageNotFound from '@pages/NotFound';
 import UpdateDialog from './UpdateDialog';
+import FollowButton from './FollowButton';
 
 const Index = () => {
   const { id } = useParams();
@@ -67,10 +67,7 @@ const Index = () => {
               </Button>
             </UpdateDialog>
           ) : (
-            <Button className='mt-4 mr-1 py-5 font-bold' variant={'default'}>
-              <UserCheck className='mr-2' size={20} />
-              FOLLOW
-            </Button>
+            <FollowButton id={id ? parseInt(id) : 0} />
           ))}
       </div>
     </div>

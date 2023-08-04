@@ -24,8 +24,8 @@ export function Toaster() {
       }) {
         return (
           <Toast key={id} {...props}>
-            <div className='grid gap-1'>
-              <div className='grid grid-cols-8 items-center'>
+            <div className='grid gap-1 w-full'>
+              <div className='grid grid-cols-10 items-center'>
                 <div className='col-span-2 pl-2 text-2xl'>
                   {variant === 'success' && (
                     <CheckCircle className='text-green-500' />
@@ -34,7 +34,7 @@ export function Toaster() {
                     <AlertOctagon className='text-destructive' />
                   )}
                 </div>
-                <div className='col-span-6'>
+                <div className='col-span-8'>
                   {title && (
                     <ToastTitle
                       className={
