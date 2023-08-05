@@ -27,12 +27,6 @@ const FollowButton: React.FC<FollowButtonProps> = ({ id }) => {
   };
 
   useEffect(() => {
-    if (followUser.isSuccess) {
-      toast({
-        variant: 'success',
-        title: 'Followed succesfully',
-      });
-    }
     if (followUser.isError) {
       toast({
         variant: 'destructive',
@@ -41,15 +35,9 @@ const FollowButton: React.FC<FollowButtonProps> = ({ id }) => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [followUser.isSuccess, followUser.isError]);
+  }, [followUser.isError]);
 
   useEffect(() => {
-    if (unFollowUser.isSuccess) {
-      toast({
-        variant: 'success',
-        title: 'Unfollowed succesfully',
-      });
-    }
     if (unFollowUser.isError) {
       toast({
         variant: 'destructive',
@@ -58,7 +46,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ id }) => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [unFollowUser.isSuccess, unFollowUser.isError]);
+  }, [unFollowUser.isError]);
   return (
     <>
       {isFollowing.data?.data ? (

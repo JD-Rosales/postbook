@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
+import { Skeleton } from '@ui/skeleton';
 import { Button } from '@ui/button';
 import { useGetProfile } from '@src/hooks/useProfile';
 import { useParams } from 'react-router-dom';
@@ -48,15 +49,21 @@ const Index = () => {
           <Camera size={20} />
         </button>
       </div>
-      <span className='text-center text-3xl font-medium block'>
-        {userProfile.isSuccess &&
-          // show only email if firstName and lastname is not provided
-          (userProfile.data?.data?.email
-            ? `${userProfile.data?.data?.email}`
-            : `${userProfile.data?.data?.firstName} 
+
+      {userProfile.isLoading ? (
+        <Skeleton className='w-[300px] h-[30px] mx-auto' />
+      ) : (
+        <span className='text-center text-3xl font-medium block'>
+          {userProfile.isSuccess &&
+            // show only email if firstName and lastname is not provided
+            (userProfile.data?.data?.email
+              ? `${userProfile.data?.data?.email}`
+              : `${userProfile.data?.data?.firstName} 
           ${userProfile.data?.data?.middleName} 
           ${userProfile.data?.data?.lastName}`)}
-      </span>
+        </span>
+      )}
+
       <div className=' flex justify-center'>
         {userProfile.isSuccess &&
           (parseJwt().toString() === id ? (
