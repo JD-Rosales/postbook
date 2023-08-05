@@ -1,10 +1,13 @@
 import styles from './home.module.css';
 import PostDialog from '@components/PostDialog';
+import PostList from '@components/PostList';
 
 const Index = () => {
   return (
     <>
       <div className='max-w-xl mx-auto'>
+        <PostList />
+
         <PostDialog>
           <div className='fixed right-20 bottom-20'>
             <button className={styles['icon-btn'] + ' ' + styles['add-btn']}>

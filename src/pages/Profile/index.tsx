@@ -4,7 +4,7 @@ import { Button } from '@ui/button';
 import { useGetProfile } from '@src/hooks/useProfile';
 import { useParams } from 'react-router-dom';
 import { Pencil, Camera } from 'lucide-react';
-import { parseJwt } from '@lib/utils';
+import { parseJwtId } from '@lib/utils';
 import PageNotFound from '@pages/NotFound';
 import UpdateDialog from './UpdateDialog';
 import FollowButton from './FollowButton';
@@ -20,10 +20,10 @@ const Index = () => {
   return (
     <div className='max-w-xl mx-auto'>
       <div className='relative bg-primary h-52 rounded-b-lg mb-[90px]'>
-        {userProfile.data?.data?.coverPhoto ? (
+        {userProfile.data?.data?.profile?.coverPhoto ? (
           <img
             className='object-cover w-full h-full rounded-b-lg'
-            src={userProfile.data?.data?.coverPhoto}
+            src={userProfile.data?.data?.profile.coverPhoto}
             alt='Profile Cover Photo'
           />
         ) : (
@@ -35,7 +35,9 @@ const Index = () => {
         <div className='absolute -bottom-20 right-0 left-0'>
           <div className='text-black relative w-44 h-44 mx-auto p-1 rounded-full bg-slate-300'>
             <Avatar className='h-full w-full'>
-              <AvatarImage src={userProfile.data?.data?.profilePhoto} />
+              <AvatarImage
+                src={userProfile.data?.data?.profile?.profilePhoto}
+              />
               <AvatarFallback>DP</AvatarFallback>
             </Avatar>
 
@@ -56,18 +58,18 @@ const Index = () => {
         <span className='text-center text-3xl font-medium block'>
           {userProfile.isSuccess &&
             // show only email if firstName and lastname is not provided
-            (userProfile.data?.data?.email
-              ? `${userProfile.data?.data?.email}`
-              : `${userProfile.data?.data?.firstName} 
-          ${userProfile.data?.data?.middleName} 
-          ${userProfile.data?.data?.lastName}`)}
+            (userProfile.data?.data?.profile
+              ? `${userProfile.data?.data?.profile.firstName} 
+          ${userProfile.data?.data?.profile?.middleName} 
+          ${userProfile.data?.data?.profile.lastName}`
+              : `${userProfile.data?.data?.email}`)}
         </span>
       )}
 
       <div className=' flex justify-center'>
         {userProfile.isSuccess &&
-          (parseJwt().toString() === id ? (
-            <UpdateDialog queryData={userProfile.data?.data}>
+          (parseJwtId().toString() === id ? (
+            <UpdateDialog queryData={userProfile.data?.data.profile}>
               <Button className='mt-4 ml-1 py-5 font-bold' variant={'default'}>
                 <Pencil className='mr-2' size={20} />
                 EDIT PROFILE

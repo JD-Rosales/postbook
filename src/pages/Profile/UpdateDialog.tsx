@@ -17,17 +17,11 @@ import { useUpdateProfile } from '@src/hooks/useProfile';
 import { useFileUpload } from '@src/hooks/useFileUpload';
 import { useToast } from '@ui/use-toast';
 
-type queryDataType = {
-  firstName: string;
-  middleName?: string;
-  lastName: string;
-  profilePhoto?: string;
-  coverPhoto?: string;
-};
+import { ProfileType } from '@src/types/user';
 
 interface UpdateDialogProps {
   children: React.ReactNode;
-  queryData: queryDataType;
+  queryData: ProfileType | null;
 }
 
 const UpdateDialog: React.FC<UpdateDialogProps> = ({ children, queryData }) => {
