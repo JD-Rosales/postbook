@@ -1,6 +1,6 @@
 import styles from './home.module.css';
 import PostDialog from '@components/PostDialog';
-import PostList from '@components/PostList';
+import PostList from './Postlist';
 
 const Index = () => {
   return (

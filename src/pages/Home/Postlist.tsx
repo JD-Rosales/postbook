@@ -1,7 +1,15 @@
 import { usePosts } from '@src/hooks/usePost';
+import Post from '@components/Post';
+import { useEffect } from 'react';
 
 const Index = () => {
   const fetchPosts = usePosts();
+
+  useEffect(() => {
+    if (fetchPosts.data) {
+      console.log(fetchPosts.data.pages);
+    }
+  }, [fetchPosts]);
 
   return (
     <div>
@@ -10,12 +18,7 @@ const Index = () => {
           return (
             <div key={i}>
               {group.data.map((post) => {
-                return (
-                  <div key={post.id} className='mb-2'>
-                    <p>Id: {post.id}</p>
-                    <p>Text: {post.text}</p>
-                  </div>
-                );
+                return <Post data={post} key={post.id} />;
               })}
             </div>
           );

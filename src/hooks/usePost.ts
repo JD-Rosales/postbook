@@ -4,7 +4,8 @@ import {
   UseInfiniteQueryResult,
 } from '@tanstack/react-query';
 import { request, ErrResponse } from '@lib/axios-interceptor';
-import { Post } from '@src/types/post';
+import { PostType } from '@src/types/post';
+import { ProfileType } from '@src/types/user';
 
 const createPost = (data: {
   text: string | null | undefined;
@@ -24,6 +25,12 @@ export const useCreatePost = () => {
 const fetchPosts = ({ pageParam = undefined }: { pageParam?: number }) =>
   request({ url: `post?cursor=${pageParam}` });
 
+export type Post = PostType & {
+  author: {
+    email: string;
+    profile?: ProfileType;
+  };
+};
 interface FetchResponse {
   data: Post[];
 }

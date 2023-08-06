@@ -53,6 +53,7 @@ const Form: React.FC = () => {
         <Input
           className='mt-4'
           type={passwordShown ? 'text' : 'password'}
+          autoComplete='off'
           placeholder='Password'
           name='password'
           icon={passwordShown ? Eye : EyeOff}

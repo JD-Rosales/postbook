@@ -1,8 +1,9 @@
-export interface Post {
+export type PostType = {
   id: number;
-  photo: string;
-  text: string;
+  postType: string;
+  photo?: string;
+  text?: string;
   createdAt: Date;
   updatedAt: Date;
   authorId: number;
-}
+};
