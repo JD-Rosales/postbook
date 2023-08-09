@@ -1,12 +1,21 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  UseQueryResult,
+} from '@tanstack/react-query';
 import { request, ErrResponse } from '@lib/axios-interceptor';
+import { UserProfileType } from '@src/types/user';
 
-const isFollowing = (id: number) => {
-  return request({ url: `follow/${id}` });
-};
+interface UserProfile {
+  data: UserProfileType;
+}
 
 export const useIsFollowing = (id: number) => {
-  return useQuery(['following', id], () => isFollowing(id), {
+  const isFollowing = () => {
+    return request({ url: `follow/${id}` });
+  };
+  return useQuery(['following', id], isFollowing, {
     refetchOnWindowFocus: false,
     retry: false,
   });
@@ -40,4 +49,12 @@ export const useUnFollowUser = () => {
     },
     onError: (error: ErrResponse) => error,
   });
+};
+
+export const useUserFollowers = (
+  id: number
+): UseQueryResult<UserProfile, Error> => {
+  const followers = () => request({ url: `/follow/followers/${id}` });
+
+  return useQuery(['followers', id], followers);
 };

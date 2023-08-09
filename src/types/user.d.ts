@@ -13,3 +13,7 @@ export type ProfileType = {
   updatedAt: string;
   userId: number;
 };
+
+export type UserProfileType = UserType & {
+  profile: ProfileType | null;
+};

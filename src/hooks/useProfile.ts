@@ -5,20 +5,16 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 import { request, ErrResponse } from '@lib/axios-interceptor';
-import { UserType, ProfileType } from '@src/types/user';
-
-const getProfile = (id: number) => {
-  return request({ url: `profile/${id}` });
-};
+import { UserProfileType } from '@src/types/user';
 
 interface UserProfile {
-  data: UserType & {
-    profile: ProfileType | null;
-  };
+  data: UserProfileType;
 }
 
 export const useGetProfile = (id: number): UseQueryResult<UserProfile> => {
-  return useQuery(['user', id], () => getProfile(id), {
+  const getProfile = () => request({ url: `profile/${id}` });
+
+  return useQuery(['user', id], getProfile, {
     refetchOnWindowFocus: false,
     retry: false,
   });

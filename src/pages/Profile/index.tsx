@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import { Skeleton } from '@ui/skeleton';
 import { Button } from '@ui/button';
@@ -8,10 +9,17 @@ import { parseJwtId } from '@lib/utils';
 import PageNotFound from '@pages/NotFound';
 import UpdateDialog from './UpdateDialog';
 import FollowButton from './FollowButton';
+import Followers from './Followers';
+import { useUserPosts } from '@src/hooks/usePost';
+import PostList from '@components/PostList';
 
 const Index = () => {
   const { id } = useParams();
-  const userProfile = useGetProfile(id ? parseInt(id) : 0);
+
+  if (!id || isNaN(parseInt(id))) return <PageNotFound />;
+
+  const userProfile = useGetProfile(parseInt(id));
+  const userPosts = useUserPosts(parseInt(id));
 
   if (userProfile.isError) {
     return <PageNotFound />;
@@ -19,66 +27,86 @@ const Index = () => {
 
   return (
     <div className='max-w-xl mx-auto'>
-      <div className='relative bg-primary h-52 rounded-b-lg mb-[90px]'>
-        {userProfile.data?.data?.profile?.coverPhoto ? (
-          <img
-            className='object-cover w-full h-full rounded-b-lg'
-            src={userProfile.data?.data?.profile.coverPhoto}
-            alt='Profile Cover Photo'
-          />
+      <div className='pb-5'>
+        <div className='relative bg-primary h-52 rounded-b-lg mb-[90px]'>
+          {userProfile.data?.data?.profile?.coverPhoto ? (
+            <img
+              className='object-cover w-full h-full rounded-b-lg'
+              src={userProfile.data?.data?.profile.coverPhoto}
+              alt='Profile Cover Photo'
+            />
+          ) : (
+            <span className='absolute inset-0 flex items-center justify-center text-white'>
+              COVER PHOTO
+            </span>
+          )}
+
+          <div className='absolute -bottom-20 right-0 left-0'>
+            <div className='text-black relative w-44 h-44 mx-auto p-1 rounded-full bg-slate-300'>
+              {userProfile.isLoading ? (
+                <Skeleton className='w-full h-full rounded-full' />
+              ) : (
+                <Avatar className='h-full w-full'>
+                  <AvatarImage
+                    src={userProfile.data?.data?.profile?.profilePhoto}
+                  />
+                  <AvatarFallback>DP</AvatarFallback>
+                </Avatar>
+              )}
+
+              <button className='bg-gray-200 hover:bg-slate-300 p-2 rounded-full absolute bottom-5 right-1'>
+                <Camera size={20} />
+              </button>
+            </div>
+          </div>
+
+          <button className='bg-gray-200 hover:bg-slate-300 p-2 rounded absolute bottom-3 right-3'>
+            <Camera size={20} />
+          </button>
+        </div>
+
+        {userProfile.isLoading ? (
+          <Skeleton className='w-[300px] h-[30px] mx-auto' />
         ) : (
-          <span className='absolute inset-0 flex items-center justify-center text-white'>
-            COVER PHOTO
+          <span className='text-center text-3xl font-medium block'>
+            {userProfile.isSuccess &&
+              (userProfile.data?.data?.profile
+                ? `${userProfile.data?.data?.profile.firstName} 
+          ${userProfile.data?.data?.profile?.middleName} 
+          ${userProfile.data?.data?.profile.lastName}`
+                : `${userProfile.data?.data?.email}`)}
           </span>
         )}
 
-        <div className='absolute -bottom-20 right-0 left-0'>
-          <div className='text-black relative w-44 h-44 mx-auto p-1 rounded-full bg-slate-300'>
-            <Avatar className='h-full w-full'>
-              <AvatarImage
-                src={userProfile.data?.data?.profile?.profilePhoto}
-              />
-              <AvatarFallback>DP</AvatarFallback>
-            </Avatar>
-
-            <button className='bg-gray-200 hover:bg-slate-300 p-2 rounded-full absolute bottom-5 right-1'>
-              <Camera size={20} />
-            </button>
-          </div>
-        </div>
-
-        <button className='bg-gray-200 hover:bg-slate-300 p-2 rounded absolute bottom-3 right-3'>
-          <Camera size={20} />
-        </button>
-      </div>
-
-      {userProfile.isLoading ? (
-        <Skeleton className='w-[300px] h-[30px] mx-auto' />
-      ) : (
-        <span className='text-center text-3xl font-medium block'>
-          {userProfile.isSuccess &&
-            // show only email if firstName and lastname is not provided
-            (userProfile.data?.data?.profile
-              ? `${userProfile.data?.data?.profile.firstName} 
-          ${userProfile.data?.data?.profile?.middleName} 
-          ${userProfile.data?.data?.profile.lastName}`
-              : `${userProfile.data?.data?.email}`)}
-        </span>
-      )}
-
-      <div className=' flex justify-center'>
         {userProfile.isSuccess &&
           (parseJwtId().toString() === id ? (
-            <UpdateDialog queryData={userProfile.data?.data.profile}>
-              <Button className='mt-4 ml-1 py-5 font-bold' variant={'default'}>
-                <Pencil className='mr-2' size={20} />
-                EDIT PROFILE
-              </Button>
-            </UpdateDialog>
+            <div className=' flex justify-center'>
+              <UpdateDialog queryData={userProfile.data?.data.profile}>
+                <Button
+                  className='mt-4 ml-1 py-5 font-bold'
+                  variant={'default'}
+                >
+                  <Pencil className='mr-2' size={20} />
+                  EDIT PROFILE
+                </Button>
+              </UpdateDialog>
+            </div>
           ) : (
-            <FollowButton id={id ? parseInt(id) : 0} />
+            <div className=' flex justify-center'>
+              <FollowButton id={id ? parseInt(id) : 0} />
+            </div>
           ))}
+
+        <Followers id={parseInt(id)} />
       </div>
+
+      <PostList
+        isLoading={userPosts.isLoading}
+        data={userPosts.data?.pages}
+        hasNextPage={userPosts.hasNextPage}
+        isFetchingNextPage={userPosts.isFetchingNextPage}
+        nextPage={userPosts.fetchNextPage}
+      />
     </div>
   );
 };

@@ -1,23 +1,29 @@
 import styles from './home.module.css';
 import PostDialog from '@components/PostDialog';
-import PostList from './Postlist';
+import PostList from '@components/PostList';
+import { usePosts } from '@src/hooks/usePost';
 
 const Index = () => {
+  const fetchPosts = usePosts();
   return (
-    <>
-      <div className='max-w-xl mx-auto'>
-        <PostList />
+    <div className='max-w-xl mx-auto'>
+      <PostList
+        isLoading={fetchPosts.isLoading}
+        data={fetchPosts.data?.pages}
+        hasNextPage={fetchPosts.hasNextPage}
+        isFetchingNextPage={fetchPosts.isFetchingNextPage}
+        nextPage={fetchPosts.fetchNextPage}
+      />
 
-        <PostDialog>
-          <div className='fixed right-20 bottom-20'>
-            <button className={styles['icon-btn'] + ' ' + styles['add-btn']}>
-              <div className={styles['add-icon']}></div>
-              <div className={styles['btn-txt']}>Create Post</div>
-            </button>
-          </div>
-        </PostDialog>
-      </div>
-    </>
+      <PostDialog>
+        <div className='fixed right-20 bottom-20'>
+          <button className={styles['icon-btn'] + ' ' + styles['add-btn']}>
+            <div className={styles['add-icon']}></div>
+            <div className={styles['btn-txt']}>Create Post</div>
+          </button>
+        </div>
+      </PostDialog>
+    </div>
   );
 };
 
