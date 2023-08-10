@@ -28,7 +28,7 @@ const Index = () => {
   return (
     <div className='max-w-xl mx-auto'>
       <div className='pb-5'>
-        <div className='relative bg-primary h-52 rounded-b-lg mb-[90px]'>
+        <div className='relative bg-slate-400 h-52 rounded-b-lg mb-[90px]'>
           {userProfile.data?.data?.profile?.coverPhoto ? (
             <img
               className='object-cover w-full h-full rounded-b-lg'
@@ -68,7 +68,7 @@ const Index = () => {
         {userProfile.isLoading ? (
           <Skeleton className='w-[300px] h-[30px] mx-auto' />
         ) : (
-          <span className='text-center text-3xl font-medium block'>
+          <span className='text-center text-3xl font-medium block px-4 break-words'>
             {userProfile.isSuccess &&
               (userProfile.data?.data?.profile
                 ? `${userProfile.data?.data?.profile.firstName} 

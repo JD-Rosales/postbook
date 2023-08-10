@@ -8,7 +8,7 @@ import { request, ErrResponse } from '@lib/axios-interceptor';
 import { UserProfileType } from '@src/types/user';
 
 interface UserProfile {
-  data: UserProfileType;
+  data: UserProfileType[];
 }
 
 export const useIsFollowing = (id: number) => {

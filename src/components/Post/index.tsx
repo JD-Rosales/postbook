@@ -11,6 +11,8 @@ import { ThumbsUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@lib/utils';
 import { PostAuthor } from '@src/types/post';
+import { formatDistanceToNow } from 'date-fns';
+import { useEffect, useState } from 'react';
 
 type PostProps = {
   data: PostAuthor;
@@ -18,6 +20,22 @@ type PostProps = {
 };
 
 const Index: React.FC<PostProps> = ({ className, data }) => {
+  const [postDate, setPostDate] = useState(
+    formatDistanceToNow(new Date(data.createdAt), {
+      addSuffix: true,
+    })
+  );
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setPostDate(
+        formatDistanceToNow(new Date(data.createdAt), { addSuffix: true })
+      );
+    }, 10000);
+
+    return () => clearInterval(intervalId);
+  }, [data.createdAt]);
+
   return (
     <Card className={cn('mb-2', className)}>
       <CardHeader>
@@ -37,7 +55,7 @@ const Index: React.FC<PostProps> = ({ className, data }) => {
                   : data.author.email}
               </Link>
 
-              <span className='font-normal text-xs mt-1'>{`${data.postType} 10h ago`}</span>
+              <span className='font-normal text-xs mt-1'>{`${data.postType} ${postDate}`}</span>
             </div>
           </div>
         </CardTitle>
