@@ -1,6 +1,8 @@
 import { useUserFollowers } from '@src/hooks/useFollows';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@ui/button';
+import FollowersDialog from './FollowersDialog';
+import { useMediaQuery } from 'react-responsive';
 interface FollowersProps {
   id: number;
 }
@@ -9,23 +11,31 @@ const Followers: React.FC<FollowersProps> = ({ id }) => {
   const navigate = useNavigate();
   const followers = useUserFollowers(id);
 
+  const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
+
   return (
-    <div>
+    <div className='mt-8'>
       <div className='flex justify-between items-center my-2'>
-        <span className='font-medium'>Followers</span>
-        <Button
-          className='py-4 mt-0 text-primary hover:text-primary'
-          variant={'ghost'}
-        >
-          See all
-        </Button>
+        <span className='font-medium'>
+          Followers <span>{`(${followers.data?.data.length})`}</span>
+        </span>
+        {followers.data?.data && followers.data.data.length > 3 && (
+          <FollowersDialog data={followers.data.data}>
+            <Button
+              className='py-4 mt-0 text-primary hover:text-primary'
+              variant={'ghost'}
+            >
+              See all
+            </Button>
+          </FollowersDialog>
+        )}
       </div>
       <div className='grid grid-cols-12 gap-2'>
         {followers.data?.data ? (
-          followers.data.data.map((follower) => {
+          followers.data.data.slice(0, isMobile ? 6 : 8).map((follower) => {
             return (
               <div
-                className='col-span-4 md:col-span-3 cursor-pointer'
+                className='col-span-4 md:col-span-3 cursor-pointer hover:opacity-90'
                 key={follower.id}
                 onClick={() => navigate(`/user/${follower.id}`)}
               >

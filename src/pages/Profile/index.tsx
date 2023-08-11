@@ -100,7 +100,9 @@ const Index = () => {
         <Followers id={parseInt(id)} />
       </div>
 
+      <span className='font-medium block mt-6'>Posts</span>
       <PostList
+        className='mt-2'
         isLoading={userPosts.isLoading}
         data={userPosts.data?.pages}
         hasNextPage={userPosts.hasNextPage}

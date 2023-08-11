@@ -198,7 +198,7 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ children, queryData }) => {
             onChange={previewImage}
           />
 
-          <div className='mx-12 mt-3'>
+          <div className='mx-10 mt-3'>
             <div className='relative w-44 h-44 mx-auto rounded-full group'>
               <Avatar className='h-full w-full'>
                 <AvatarImage
@@ -262,7 +262,7 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ children, queryData }) => {
             onChange={previewImage}
           />
 
-          <div className='mx-12 mt-3'>
+          <div className='sm:mx-10 mt-3'>
             <div
               className={`relative h-44 rounded-lg ${
                 !formData.coverPhoto && 'bg-slate-100'
