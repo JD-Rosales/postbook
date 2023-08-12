@@ -1,3 +1,9 @@
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@ui/tooltip';
 import { useUserFollowers } from '@src/hooks/useFollows';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@ui/button';
@@ -19,47 +25,62 @@ const Followers: React.FC<FollowersProps> = ({ id }) => {
         <span className='font-medium'>
           Followers <span>{`(${followers.data?.data.length})`}</span>
         </span>
-        {followers.data?.data && followers.data.data.length > 3 && (
-          <FollowersDialog data={followers.data.data}>
-            <Button
-              className='py-4 mt-0 text-primary hover:text-primary'
-              variant={'ghost'}
-            >
-              See all
-            </Button>
-          </FollowersDialog>
-        )}
+        {followers.data?.data &&
+          followers.data.data.length >= (isMobile ? 6 : 8) && (
+            <FollowersDialog data={followers.data.data}>
+              <Button
+                className='py-4 mt-0 text-primary hover:text-primary'
+                variant={'ghost'}
+              >
+                See all
+              </Button>
+            </FollowersDialog>
+          )}
       </div>
       <div className='grid grid-cols-12 gap-2'>
         {followers.data?.data ? (
           followers.data.data.slice(0, isMobile ? 6 : 8).map((follower) => {
             return (
-              <div
-                className='col-span-4 md:col-span-3 cursor-pointer hover:opacity-90'
-                key={follower.id}
-                onClick={() => navigate(`/user/${follower.id}`)}
-              >
-                <div className='relative bg-muted h-[110px] sm:h-[130px] rounded-lg'>
-                  {follower.profile?.profilePhoto ? (
-                    <img
-                      src={follower.profile?.profilePhoto}
-                      alt='Profile'
-                      className='object-cover w-full h-full rounded-lg'
-                    />
-                  ) : (
-                    <span className='absolute inset-0 flex items-center justify-center text-black'>
-                      DP
-                    </span>
-                  )}
-                </div>
-                <span className='text-center font-medium block mt-1 truncate'>
-                  {follower.profile
-                    ? `${follower.profile.firstName} 
+              <TooltipProvider key={follower.id}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div
+                      className='col-span-4 md:col-span-3 cursor-pointer hover:opacity-90'
+                      onClick={() => navigate(`/user/${follower.id}`)}
+                    >
+                      <div className='relative bg-muted h-[110px] sm:h-[130px] rounded-lg'>
+                        {follower.profile?.profilePhoto ? (
+                          <img
+                            src={follower.profile?.profilePhoto}
+                            alt='Profile'
+                            className='object-cover w-full h-full rounded-lg'
+                          />
+                        ) : (
+                          <span className='absolute inset-0 flex items-center justify-center text-black'>
+                            DP
+                          </span>
+                        )}
+                      </div>
+                      <span className='text-center font-medium block mt-1 truncate'>
+                        {follower.profile
+                          ? `${follower.profile.firstName} 
                       ${follower.profile?.middleName} 
                       ${follower.profile.lastName}`
-                    : `${follower.email}`}
-                </span>
-              </div>
+                          : `${follower.email}`}
+                      </span>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      {follower.profile
+                        ? `${follower.profile.firstName} 
+                      ${follower.profile?.middleName} 
+                      ${follower.profile.lastName}`
+                        : `${follower.email}`}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             );
           })
         ) : (

@@ -4,7 +4,7 @@ import { Skeleton } from '@ui/skeleton';
 import { Button } from '@ui/button';
 import { useGetProfile } from '@src/hooks/useProfile';
 import { useParams } from 'react-router-dom';
-import { Pencil, Camera } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import { parseJwtId } from '@lib/utils';
 import PageNotFound from '@pages/NotFound';
 import UpdateDialog from './UpdateDialog';
@@ -54,15 +54,15 @@ const Index = () => {
                 </Avatar>
               )}
 
-              <button className='bg-gray-200 hover:bg-slate-300 p-2 rounded-full absolute bottom-5 right-1'>
+              {/* <button className='bg-gray-200 hover:bg-slate-300 p-2 rounded-full absolute bottom-5 right-1'>
                 <Camera size={20} />
-              </button>
+              </button> */}
             </div>
           </div>
 
-          <button className='bg-gray-200 hover:bg-slate-300 p-2 rounded absolute bottom-3 right-3'>
+          {/* <button className='bg-gray-200 hover:bg-slate-300 p-2 rounded absolute bottom-3 right-3'>
             <Camera size={20} />
-          </button>
+          </button> */}
         </div>
 
         {userProfile.isLoading ? (
