@@ -40,7 +40,7 @@ const Index: React.FC<PostListProps> = ({
     if (lastPostRef.current) {
       const observer = new IntersectionObserver(handleIntersect, {
         root: null,
-        rootMargin: '0px',
+        rootMargin: '20px',
         threshold: 1.0,
       });
 
@@ -84,15 +84,13 @@ const Index: React.FC<PostListProps> = ({
 
       {!isLoading &&
         (isFetchingNextPage ? (
-          <div className='relative flex pb-4 items-center'>
+          <div className='relative flex pb-4 items-center px-12'>
             <div className='flex-grow border-t border-gray-200'></div>
-            <span className='flex-shrink mx-4 text-gray-400'>
-              Fetching more posts
-            </span>
+            <span className='flex-shrink mx-4 text-gray-400'>Loading</span>
             <div className='flex-grow border-t border-gray-200'></div>
           </div>
         ) : !hasNextPage && data && data[0].data.length !== 0 ? (
-          <div className='relative flex pb-4 items-center'>
+          <div className='relative flex pb-4 items-center px-12'>
             <div className='flex-grow border-t border-gray-200'></div>
             <span className='flex-shrink mx-4 text-gray-400'>
               No more posts

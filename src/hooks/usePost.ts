@@ -19,6 +19,16 @@ export const useCreatePost = () => {
   });
 };
 
+const sharePost = (data: { text: string | null | undefined; postId: number }) =>
+  request({ url: '/post/share', method: 'post', data });
+
+export const useSharePost = () =>
+  useMutation(sharePost, {
+    onError: (error: ErrResponse) => {
+      return error;
+    },
+  });
+
 export interface InfiniteQueryPostResponse {
   data: PostAuthor[];
 }
@@ -43,7 +53,7 @@ const fetchFollowedPosts = ({
   pageParam = undefined,
 }: {
   pageParam?: unknown;
-}) => request({ url: `post?cursor=${pageParam}` });
+}) => request({ url: `/post?cursor=${pageParam}` });
 
 export const usePosts = (): UseInfiniteQueryResult<
   InfiniteQueryPostResponse,

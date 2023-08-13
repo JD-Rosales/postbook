@@ -1,43 +1,22 @@
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
-import { Button } from '@ui/button';
-import { ThumbsUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@lib/utils';
 import { PostAuthor } from '@src/types/post';
 import { formatDistanceToNow } from 'date-fns';
 import { useEffect, useState } from 'react';
-import { useSharePost } from '@src/hooks/usePost';
-import SharedPost from './SharedPost';
-import SharePostDialog from '@components/SharePostDialog';
 
-type PostProps = {
-  data: PostAuthor;
+interface SharedPostProps {
+  data: Omit<PostAuthor, 'sharedPost'>;
   className?: string;
-};
+}
 
-const Index: React.FC<PostProps> = ({ className, data }) => {
-  const sharePost = useSharePost();
+const SharedPost: React.FC<SharedPostProps> = ({ data, className }) => {
   const [postDate, setPostDate] = useState(
     formatDistanceToNow(new Date(data.createdAt), {
       addSuffix: true,
     })
   );
-
-  const handleSharePost = () => {
-    console.log('sharing post');
-    console.log(sharePost.data);
-    // const text = data.text;
-    // const postId = data.id;
-
-    // sharePost.mutate({ text, postId });
-  };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -48,9 +27,8 @@ const Index: React.FC<PostProps> = ({ className, data }) => {
 
     return () => clearInterval(intervalId);
   }, [data.createdAt]);
-
   return (
-    <Card className={cn('mb-2', className)}>
+    <Card className={cn('mb-0', className)}>
       <CardHeader className='px-3 sm:px-6'>
         <CardTitle>
           <div className='flex align-middle items-center py-1'>
@@ -74,7 +52,7 @@ const Index: React.FC<PostProps> = ({ className, data }) => {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className='pb-3 px-3 sm:px-6'>
+      <CardContent className='pb-2 px-3 sm:px-6'>
         {data?.text && <p className='mb-2'>{data.text}</p>}
         {data?.photo && (
           <div className='relative w-full h-[200px] sm:h-[300px] rounded-lg'>
@@ -85,40 +63,9 @@ const Index: React.FC<PostProps> = ({ className, data }) => {
             />
           </div>
         )}
-
-        {data.sharedPost && <SharedPost data={data.sharedPost} />}
       </CardContent>
-
-      <CardFooter className='px-3 sm:px-6'>
-        <div className='grid grid-cols-12 gap-1 sm:gap-3 w-full'>
-          <div className='col-span-4'>
-            <Button className='rounded-2xl' variant={'outline'} fullWidth>
-              <ThumbsUp size={20} />
-              <span className='ml-3 text-lg font-semibold'>5</span>
-            </Button>
-          </div>
-          <div className='col-span-4'>
-            <Button className='rounded-2xl' variant={'outline'} fullWidth>
-              COMMENT
-            </Button>
-          </div>
-
-          <div className='col-span-4'>
-            <SharePostDialog postId={data.id}>
-              <Button
-                onClick={handleSharePost}
-                className='rounded-2xl'
-                variant={'outline'}
-                fullWidth
-              >
-                SHARE
-              </Button>
-            </SharePostDialog>
-          </div>
-        </div>
-      </CardFooter>
     </Card>
   );
 };
 
-export default Index;
+export default SharedPost;

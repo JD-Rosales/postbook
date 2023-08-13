@@ -8,6 +8,13 @@ export type Post = {
   createdAt: Date;
   updatedAt: Date;
   authorId: number;
+  sharedPostId: number;
+  sharedPost?: Post & {
+    author: {
+      email: string;
+      profile?: ProfileType;
+    };
+  };
 };
 
 export type PostAuthor = Post & {
