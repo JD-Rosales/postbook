@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {
   Card,
   CardContent,
@@ -7,24 +8,42 @@ import {
 } from '@components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import { Link } from 'react-router-dom';
+import ContentEditable, { ContentEditableEvent } from 'react-contenteditable';
 import { cn } from '@lib/utils';
 import { PostAuthor } from '@src/types/post';
 import { formatDistanceToNow } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PostAction from './PostAction';
 import SharedPost from './SharedPost';
 
 type PostProps = {
   data: PostAuthor;
+  isEditable?: boolean;
+  hasFooter?: boolean;
   className?: string;
 };
 
-const Index: React.FC<PostProps> = ({ className, data }) => {
+const Index: React.FC<PostProps> = ({
+  className,
+  data,
+  isEditable = false,
+  hasFooter = true,
+}) => {
+  const [value, setValue] = useState({
+    text: data.text ? data.text : '',
+  });
   const [postDate, setPostDate] = useState(
     formatDistanceToNow(new Date(data.createdAt), {
       addSuffix: true,
     })
   );
+  const textRef = useRef<HTMLInputElement>(null);
+
+  const handleChange = (e: ContentEditableEvent) => {
+    const text = e.target.value;
+
+    setValue((prev) => ({ ...prev, text: text }));
+  };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -62,7 +81,24 @@ const Index: React.FC<PostProps> = ({ className, data }) => {
       </CardHeader>
 
       <CardContent className='pb-3 px-3 sm:px-6'>
-        {data?.text && <p className='mb-2'>{data.text}</p>}
+        <div className='relative'>
+          <ContentEditable
+            innerRef={textRef}
+            disabled={!isEditable}
+            className={`mb-2 focus-visible:outline-none bg-transparent break-all`}
+            html={value.text}
+            onChange={handleChange}
+            tagName='p'
+          />
+
+          {/* Placeholder for the ContentEditable */}
+          {!value.text && isEditable && (
+            <p className='absolute top-0 text-gray-500 pointer-events-none'>
+              Input your post content here.
+            </p>
+          )}
+        </div>
+
         {data?.photo && (
           <div className='relative w-full h-[200px] sm:h-[300px] rounded-lg'>
             <img
@@ -81,9 +117,13 @@ const Index: React.FC<PostProps> = ({ className, data }) => {
         )}
       </CardContent>
 
-      <CardFooter className='px-3 sm:px-6 pb-2'>
-        <PostAction postId={data.sharedPostId ? data.sharedPostId : data.id} />
-      </CardFooter>
+      {hasFooter && (
+        <CardFooter className='px-3 sm:px-6 pb-2'>
+          <PostAction
+            postId={data.sharedPostId ? data.sharedPostId : data.id}
+          />
+        </CardFooter>
+      )}
     </Card>
   );
 };

@@ -6,12 +6,13 @@ import {
   DialogTrigger,
   DialogFooter,
 } from '@ui/dialog';
-import { Textarea } from '@ui/textarea';
 import { Button } from '@ui/button';
 import { useToast } from '@ui/use-toast';
 import { useGetPost, useSharePost } from '@src/hooks/usePost';
 import { useState, useRef, useEffect } from 'react';
-import Post from './Post';
+import ContentEditable, { ContentEditableEvent } from 'react-contenteditable';
+import Post from '@components/Post';
+import PostLoader from '@components/Loader/PostLoader';
 
 interface IndexProps {
   postId: number;
@@ -21,10 +22,14 @@ interface IndexProps {
 const Index: React.FC<IndexProps> = ({ children, postId }) => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const [value, setValue] = useState({
+    text: '',
+  });
+
   const sharePost = useSharePost();
   const getPost = useGetPost(postId, open);
 
-  const textRef = useRef<HTMLTextAreaElement>(null);
+  const textRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,6 +37,12 @@ const Index: React.FC<IndexProps> = ({ children, postId }) => {
     const text = textRef.current?.value;
 
     sharePost.mutate({ text, postId });
+  };
+
+  const handleChange = (e: ContentEditableEvent) => {
+    const text = e.target.value;
+
+    setValue((prev) => ({ ...prev, text: text }));
   };
 
   useEffect(() => {
@@ -71,17 +82,29 @@ const Index: React.FC<IndexProps> = ({ children, postId }) => {
         <DialogHeader>
           <DialogTitle className='text-center'>SHARE POST</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <div className='mt-3 mb-3'>
-            <Textarea
-              ref={textRef}
-              className='text-base min-h-[10px] '
-              placeholder='Type your post text here.'
-              name='text'
+        <form onSubmit={handleSubmit} className='relative w-full'>
+          <div className='relative my-3'>
+            <ContentEditable
+              innerRef={textRef}
+              className={`mb-2 focus-visible:outline-none bg-transparent break-all`}
+              html={value.text}
+              onChange={handleChange}
+              tagName='p'
             />
+
+            {/* Placeholder for the ContentEditable */}
+            {!value.text && (
+              <p className='absolute top-0 text-gray-500 pointer-events-none'>
+                Input your post content here.
+              </p>
+            )}
           </div>
 
-          {getPost.data && <Post data={getPost.data.data} />}
+          {getPost.isLoading ? (
+            <PostLoader />
+          ) : (
+            getPost.data && <Post data={getPost.data.data} hasFooter={false} />
+          )}
 
           <DialogFooter className='mt-4'>
             <Button type='submit' variant={'default'} loading={false} fullWidth>

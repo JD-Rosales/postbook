@@ -12,12 +12,14 @@ type SkeletonLoaderPostProps = {
   className?: string;
   hasText?: boolean;
   hasImg?: boolean;
+  hasFooter?: boolean;
 };
 
 const SkeletonLoaderPost: React.FC<SkeletonLoaderPostProps> = ({
   className,
   hasText = true,
   hasImg = true,
+  hasFooter = true,
 }) => {
   return (
     <Card className={cn('mb-2', className)}>
@@ -40,20 +42,22 @@ const SkeletonLoaderPost: React.FC<SkeletonLoaderPostProps> = ({
         {hasImg && <Skeleton className='w-full h-[100px]' />}
       </CardContent>
 
-      <CardFooter>
-        <div className='grid grid-cols-12 gap-1 sm:gap-3 w-full'>
-          <div className='col-span-4'>
-            <Skeleton className='w-full h-[40px]' />
-          </div>
-          <div className='col-span-4'>
-            <Skeleton className='w-full h-[40px]' />
-          </div>
+      {hasFooter && (
+        <CardFooter>
+          <div className='grid grid-cols-12 gap-1 sm:gap-3 w-full'>
+            <div className='col-span-4'>
+              <Skeleton className='w-full h-[40px]' />
+            </div>
+            <div className='col-span-4'>
+              <Skeleton className='w-full h-[40px]' />
+            </div>
 
-          <div className='col-span-4'>
-            <Skeleton className='w-full h-[40px]' />
+            <div className='col-span-4'>
+              <Skeleton className='w-full h-[40px]' />
+            </div>
           </div>
-        </div>
-      </CardFooter>
+        </CardFooter>
+      )}
     </Card>
   );
 };

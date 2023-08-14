@@ -1,6 +1,6 @@
 import { Button } from '@ui/button';
 import { ThumbsUp } from 'lucide-react';
-import SharePostDialog from '@components/SharePostDialog';
+import PostShareDialog from '@components/PostShareDialog';
 
 interface PostActionProps {
   postId: number;
@@ -22,11 +22,11 @@ const PostAction: React.FC<PostActionProps> = ({ postId }) => {
       </div>
 
       <div className='col-span-4'>
-        <SharePostDialog postId={postId}>
+        <PostShareDialog postId={postId}>
           <Button className='rounded-2xl' variant={'outline'} fullWidth>
             SHARE
           </Button>
-        </SharePostDialog>
+        </PostShareDialog>
       </div>
     </div>
   );

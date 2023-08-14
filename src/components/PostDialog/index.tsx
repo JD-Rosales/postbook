@@ -17,7 +17,7 @@ import { EmojiClickData } from 'emoji-picker-react';
 import { useFileUpload } from '@src/hooks/useFileUpload';
 import { useCreatePost } from '@src/hooks/usePost';
 
-import PickerSkeleton from '@components/Loader/EmojiPickerSkeleton';
+import EmojiPickerLoader from '@components/Loader/EmojiPickerLoader';
 
 const EmojiPicker = lazy(() => import('@components/EmojiPicker'));
 
@@ -197,7 +197,7 @@ const Index: React.FC<IndexProps> = ({ children }) => {
 
             <div className='absolute -top-[270px] -right-[350px] z-50'>
               {emojiPickerShown && (
-                <Suspense fallback={<PickerSkeleton />}>
+                <Suspense fallback={<EmojiPickerLoader />}>
                   <EmojiPicker ref={emojiRef} onEmojiClick={handleEmojiClick} />
                 </Suspense>
               )}

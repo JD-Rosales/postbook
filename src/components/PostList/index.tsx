@@ -2,7 +2,7 @@ import { FetchNextPageOptions } from '@tanstack/react-query';
 import { cn } from '@lib/utils';
 import { InfiniteQueryPostResponse } from '@src/hooks/usePost';
 import Post from '@components/Post';
-import SkeletonLoader from './SkeletonLoader';
+import PostLoader from '@components/Loader/PostLoader';
 import { useRef, useEffect, useCallback } from 'react';
 
 type PostListProps = {
@@ -55,7 +55,10 @@ const Index: React.FC<PostListProps> = ({
   return (
     <div className={cn('mt-5', className)}>
       {isLoading ? (
-        <SkeletonLoader />
+        <div className='w-full h-full mt-5'>
+          <PostLoader hasImg={false} />
+          <PostLoader />
+        </div>
       ) : !data ? (
         <></>
       ) : data[0].data.length === 0 ? (
