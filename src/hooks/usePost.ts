@@ -2,6 +2,8 @@ import {
   useMutation,
   useInfiniteQuery,
   UseInfiniteQueryResult,
+  useQuery,
+  UseQueryResult,
 } from '@tanstack/react-query';
 import { request, ErrResponse } from '@lib/axios-interceptor';
 import { PostAuthor } from '@src/types/post';
@@ -16,6 +18,23 @@ export const useCreatePost = () => {
     onError: (error: ErrResponse) => {
       return error;
     },
+  });
+};
+
+type PostResultType = {
+  data: PostAuthor;
+};
+
+export const useGetPost = (
+  postId: number,
+  enabled = false
+): UseQueryResult<PostResultType, Error> => {
+  const getPost = () => request({ url: `/post/${postId}` });
+
+  return useQuery(['post', postId], getPost, {
+    refetchOnWindowFocus: false,
+    retry: false,
+    enabled: enabled,
   });
 };
 
@@ -37,10 +56,10 @@ export const useUserPosts = (
   userId: number
 ): UseInfiniteQueryResult<InfiniteQueryPostResponse, Error> => {
   const fetchUserPosts = async ({ pageParam }: { pageParam?: unknown }) =>
-    request({ url: `/post/${userId}?cursor=${pageParam}` });
+    request({ url: `/post/user/${userId}?cursor=${pageParam}` });
 
   return useInfiniteQuery({
-    queryKey: ['posts', userId],
+    queryKey: ['posts', 'user', userId],
     queryFn: fetchUserPosts,
     getNextPageParam: (lastPage) => {
       const lastPost = lastPage.data[lastPage.data.length - 1];
@@ -53,14 +72,14 @@ const fetchFollowedPosts = ({
   pageParam = undefined,
 }: {
   pageParam?: unknown;
-}) => request({ url: `/post?cursor=${pageParam}` });
+}) => request({ url: `/post/followed/?cursor=${pageParam}` });
 
 export const usePosts = (): UseInfiniteQueryResult<
   InfiniteQueryPostResponse,
   Error
 > =>
   useInfiniteQuery({
-    queryKey: ['posts'],
+    queryKey: ['posts', 'home'],
     queryFn: fetchFollowedPosts,
     getNextPageParam: (lastPage) => {
       const lastPost = lastPage.data[lastPage.data.length - 1];

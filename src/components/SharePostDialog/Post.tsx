@@ -1,25 +1,14 @@
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import { Link } from 'react-router-dom';
-import { cn } from '@lib/utils';
 import { PostAuthor } from '@src/types/post';
+import { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { useEffect, useState } from 'react';
-import PostAction from './PostAction';
-import SharedPost from './SharedPost';
 
 type PostProps = {
-  data: PostAuthor;
-  className?: string;
+  data: Omit<PostAuthor, 'sharedPost'>;
 };
-
-const Index: React.FC<PostProps> = ({ className, data }) => {
+const Post: React.FC<PostProps> = ({ data }) => {
   const [postDate, setPostDate] = useState(
     formatDistanceToNow(new Date(data.createdAt), {
       addSuffix: true,
@@ -37,7 +26,7 @@ const Index: React.FC<PostProps> = ({ className, data }) => {
   }, [data.createdAt]);
 
   return (
-    <Card className={cn('mb-2', className)}>
+    <Card className='mb-0'>
       <CardHeader className='px-3 sm:px-6'>
         <CardTitle>
           <div className='flex align-middle items-center py-1'>
@@ -61,7 +50,7 @@ const Index: React.FC<PostProps> = ({ className, data }) => {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className='pb-3 px-3 sm:px-6'>
+      <CardContent className='pb-2 px-3 sm:px-6'>
         {data?.text && <p className='mb-2'>{data.text}</p>}
         {data?.photo && (
           <div className='relative w-full h-[200px] sm:h-[300px] rounded-lg'>
@@ -72,20 +61,9 @@ const Index: React.FC<PostProps> = ({ className, data }) => {
             />
           </div>
         )}
-
-        {data.sharedPost && <SharedPost data={data.sharedPost} />}
-
-        {/* render if original post have been deleted */}
-        {data.sharedPostId && !data.sharedPost && (
-          <p className='text-red-500'>Original Post have been deleted</p>
-        )}
       </CardContent>
-
-      <CardFooter className='px-3 sm:px-6 pb-2'>
-        <PostAction postId={data.sharedPostId ? data.sharedPostId : data.id} />
-      </CardFooter>
     </Card>
   );
 };
 
-export default Index;
+export default Post;

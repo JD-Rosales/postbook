@@ -46,7 +46,7 @@ const SharedPost: React.FC<SharedPostProps> = ({ data, className }) => {
                   : data.author.email}
               </Link>
 
-              <span className='font-normal text-xs mt-1'>{`${data.postType}, ${postDate}`}</span>
+              <span className='font-normal text-xs mt-1'>{`${data.postType} ${postDate}`}</span>
             </div>
           </div>
         </CardTitle>
