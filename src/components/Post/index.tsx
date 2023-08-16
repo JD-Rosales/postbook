@@ -27,6 +27,8 @@ import { formatDistanceToNow } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
 import PostAction from './PostAction';
 import SharedPost from './SharedPost';
+import { useDeletePost } from '@src/hooks/usePost';
+import { useToast } from '@ui/use-toast';
 
 type PostProps = {
   data: PostAuthor;
@@ -41,6 +43,7 @@ const Index: React.FC<PostProps> = ({
   isEditable = false,
   hasFooter = true,
 }) => {
+  const deletePost = useDeletePost();
   const [value, setValue] = useState({
     text: data.text ? data.text : '',
   });
@@ -49,6 +52,7 @@ const Index: React.FC<PostProps> = ({
       addSuffix: true,
     })
   );
+  const { toast } = useToast();
   const textRef = useRef<HTMLParagraphElement>(null);
 
   const handleChange = (e: ContentEditableEvent) => {
@@ -66,6 +70,25 @@ const Index: React.FC<PostProps> = ({
 
     return () => clearInterval(intervalId);
   }, [data.createdAt]);
+
+  useEffect(() => {
+    if (deletePost.isSuccess && !deletePost.isError) {
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Post deleted successfully',
+      });
+    }
+
+    if (deletePost.isError) {
+      toast({
+        variant: 'destructive',
+        title: 'An error has occured!',
+        description: deletePost.error?.message,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deletePost.isSuccess, deletePost.isError]);
 
   return (
     <Card className={cn('mb-2', className)}>
@@ -91,7 +114,7 @@ const Index: React.FC<PostProps> = ({
           </div>
 
           <div className='absolute right-0 top-1'>
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant='ghost'
@@ -107,7 +130,11 @@ const Index: React.FC<PostProps> = ({
                 <DropdownMenuLabel>Settings</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      deletePost.mutate({ postId: data.id });
+                    }}
+                  >
                     <span>Delete</span>
                     <DropdownMenuShortcut>
                       <Trash2 size={20} />

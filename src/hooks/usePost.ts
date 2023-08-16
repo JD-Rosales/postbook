@@ -4,6 +4,7 @@ import {
   UseInfiniteQueryResult,
   useQuery,
   UseQueryResult,
+  useQueryClient,
 } from '@tanstack/react-query';
 import { request, ErrResponse } from '@lib/axios-interceptor';
 import { PostAuthor } from '@src/types/post';
@@ -17,6 +18,20 @@ export const useCreatePost = () => {
   return useMutation(createPost, {
     onError: (error: ErrResponse) => {
       return error;
+    },
+  });
+};
+
+const deletePost = (data: { postId: number }) =>
+  request({ url: `/post/${data.postId}`, method: 'delete', data });
+
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation(deletePost, {
+    onError: (error: ErrResponse) => error,
+    onSuccess: (data) => {
+      const authorId = data.data.authorId;
+      queryClient.prefetchInfiniteQuery(['posts', 'user', authorId.toString()]);
     },
   });
 };
@@ -41,13 +56,16 @@ export const useGetPost = (
 const sharePost = (data: { text: string | null | undefined; postId: number }) =>
   request({ url: '/post/share', method: 'post', data });
 
-export const useSharePost = () =>
-  useMutation(sharePost, {
-    onError: (error: ErrResponse) => {
-      return error;
+export const useSharePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation(sharePost, {
+    onError: (error: ErrResponse) => error,
+    onSuccess: (data) => {
+      const authorId = data.data.authorId;
+      queryClient.prefetchInfiniteQuery(['posts', 'user', authorId.toString()]);
     },
   });
-
+};
 export interface InfiniteQueryPostResponse {
   data: PostAuthor[];
 }
