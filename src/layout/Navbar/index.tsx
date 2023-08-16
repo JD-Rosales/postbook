@@ -9,7 +9,7 @@ import { AuthContext } from '@src/contexts/AuthContext';
 import menuItems from './menuItems';
 
 const Index: React.FC = () => {
-  const userProfile = useGetProfile(parseJwtId());
+  const userProfile = useGetProfile(parseJwtId().toString());
   const navigate = useNavigate();
   const { setIsAuthenticated } = useContext(AuthContext);
 

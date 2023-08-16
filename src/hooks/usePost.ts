@@ -53,7 +53,7 @@ export interface InfiniteQueryPostResponse {
 }
 
 export const useUserPosts = (
-  userId: number
+  userId?: string
 ): UseInfiniteQueryResult<InfiniteQueryPostResponse, Error> => {
   const fetchUserPosts = async ({ pageParam }: { pageParam?: unknown }) =>
     request({ url: `/post/user/${userId}?cursor=${pageParam}` });

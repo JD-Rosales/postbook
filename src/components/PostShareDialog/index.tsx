@@ -29,19 +29,20 @@ const Index: React.FC<IndexProps> = ({ children, postId }) => {
   const sharePost = useSharePost();
   const getPost = useGetPost(postId, open);
 
-  const textRef = useRef<HTMLInputElement>(null);
+  const textRef = useRef<HTMLParagraphElement>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const text = textRef.current?.value;
+    const text = value.text;
+
+    console.log(textRef.current?.innerText);
 
     sharePost.mutate({ text, postId });
   };
 
   const handleChange = (e: ContentEditableEvent) => {
     const text = e.target.value;
-
     setValue((prev) => ({ ...prev, text: text }));
   };
 
@@ -53,9 +54,10 @@ const Index: React.FC<IndexProps> = ({ children, postId }) => {
         description: 'Post shared successfully',
       });
 
-      // reset textarea value
+      // reset text value
       if (textRef.current) {
-        textRef.current.value = '';
+        textRef.current.innerText = '';
+        setValue((prev) => ({ ...prev, text: '' }));
       }
       sharePost.reset();
       setOpen(false);
@@ -107,7 +109,12 @@ const Index: React.FC<IndexProps> = ({ children, postId }) => {
           )}
 
           <DialogFooter className='mt-4'>
-            <Button type='submit' variant={'default'} loading={false} fullWidth>
+            <Button
+              type='submit'
+              variant={'default'}
+              loading={sharePost.isLoading}
+              fullWidth
+            >
               SHARE
             </Button>
           </DialogFooter>

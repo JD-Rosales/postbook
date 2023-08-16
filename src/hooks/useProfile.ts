@@ -11,7 +11,7 @@ interface UserProfile {
   data: UserProfileType;
 }
 
-export const useGetProfile = (id: number): UseQueryResult<UserProfile> => {
+export const useGetProfile = (id?: string): UseQueryResult<UserProfile> => {
   const getProfile = () => request({ url: `profile/${id}` });
 
   return useQuery(['user', id], getProfile, {

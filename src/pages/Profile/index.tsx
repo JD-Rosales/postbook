@@ -15,11 +15,8 @@ import PostList from '@components/PostList';
 
 const Index = () => {
   const { id } = useParams();
-
-  if (!id || isNaN(parseInt(id))) return <PageNotFound />;
-
-  const userProfile = useGetProfile(parseInt(id));
-  const userPosts = useUserPosts(parseInt(id));
+  const userProfile = useGetProfile(id);
+  const userPosts = useUserPosts(id);
 
   if (userProfile.isError) {
     return <PageNotFound />;
@@ -68,7 +65,7 @@ const Index = () => {
         {userProfile.isLoading ? (
           <Skeleton className='w-[300px] h-[30px] mx-auto' />
         ) : (
-          <span className='text-center text-3xl font-medium block px-4 break-words'>
+          <span className='text-center text-3xl font-medium block px-4 break-all'>
             {userProfile.isSuccess &&
               (userProfile.data?.data?.profile
                 ? `${userProfile.data?.data?.profile.firstName} 
@@ -93,11 +90,15 @@ const Index = () => {
             </div>
           ) : (
             <div className=' flex justify-center'>
-              <FollowButton id={id ? parseInt(id) : 0} />
+              <FollowButton id={userProfile.data.data.id} />
             </div>
           ))}
 
-        <Followers id={parseInt(id)} />
+        {userProfile.isLoading ? (
+          <>Loading</>
+        ) : (
+          <Followers id={userProfile.data.data.id} />
+        )}
       </div>
 
       <span className='font-medium block mt-6'>Posts</span>

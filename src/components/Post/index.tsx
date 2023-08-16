@@ -6,8 +6,20 @@ import {
   CardHeader,
   CardTitle,
 } from '@components/ui/card';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from '@ui/dropdown-menu';
+import { Button } from '@ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import { Link } from 'react-router-dom';
+import { MoreHorizontal, Trash2, PenLine, Forward } from 'lucide-react';
 import ContentEditable, { ContentEditableEvent } from 'react-contenteditable';
 import { cn } from '@lib/utils';
 import { PostAuthor } from '@src/types/post';
@@ -37,7 +49,7 @@ const Index: React.FC<PostProps> = ({
       addSuffix: true,
     })
   );
-  const textRef = useRef<HTMLInputElement>(null);
+  const textRef = useRef<HTMLParagraphElement>(null);
 
   const handleChange = (e: ContentEditableEvent) => {
     const text = e.target.value;
@@ -58,7 +70,7 @@ const Index: React.FC<PostProps> = ({
   return (
     <Card className={cn('mb-2', className)}>
       <CardHeader className='px-3 sm:px-6'>
-        <CardTitle>
+        <CardTitle className='relative'>
           <div className='flex align-middle items-center py-1'>
             <Avatar className='text-sm h-[55px] w-[55px]'>
               <AvatarImage src={data.author.profile?.profilePhoto} />
@@ -76,6 +88,46 @@ const Index: React.FC<PostProps> = ({
 
               <span className='font-normal text-xs mt-1'>{`${data.postType} ${postDate}`}</span>
             </div>
+          </div>
+
+          <div className='absolute right-0 top-1'>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant='ghost'
+                  className='focus-visible:ring-0 focus-visible:ring-offset-0'
+                >
+                  <MoreHorizontal />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                sideOffset={-25}
+                className='w-40 absolute -right-3'
+              >
+                <DropdownMenuLabel>Settings</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <span>Delete</span>
+                    <DropdownMenuShortcut>
+                      <Trash2 size={20} />
+                    </DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span>Edit</span>
+                    <DropdownMenuShortcut>
+                      <PenLine size={20} />
+                    </DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span>Share</span>
+                    <DropdownMenuShortcut>
+                      <Forward size={20} />
+                    </DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </CardTitle>
       </CardHeader>
