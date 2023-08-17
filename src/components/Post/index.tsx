@@ -22,7 +22,6 @@ import { Link } from 'react-router-dom';
 import { MoreHorizontal, Trash2, PenLine, Forward } from 'lucide-react';
 import ContentEditable, { ContentEditableEvent } from 'react-contenteditable';
 import { cn } from '@lib/utils';
-import { PostAuthor } from '@src/types/post';
 import { formatDistanceToNow } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
 import PostAction from './PostAction';
@@ -54,6 +53,7 @@ const Index: React.FC<PostProps> = ({
   );
   const { toast } = useToast();
   const textRef = useRef<HTMLParagraphElement>(null);
+  const shareBtnRef = useRef<HTMLButtonElement>(null);
 
   const handleChange = (e: ContentEditableEvent) => {
     const text = e.target.value;
@@ -146,7 +146,11 @@ const Index: React.FC<PostProps> = ({
                       <PenLine size={20} />
                     </DropdownMenuShortcut>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      if (shareBtnRef.current) shareBtnRef.current.click();
+                    }}
+                  >
                     <span>Share</span>
                     <DropdownMenuShortcut>
                       <Forward size={20} />
@@ -199,6 +203,7 @@ const Index: React.FC<PostProps> = ({
       {hasFooter && (
         <CardFooter className='px-3 sm:px-6 pb-2'>
           <PostAction
+            shareBtnRef={shareBtnRef}
             postId={data.sharedPostId ? data.sharedPostId : data.id}
           />
         </CardFooter>

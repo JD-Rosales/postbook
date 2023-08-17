@@ -1,9 +1,9 @@
-export type UserType = {
+type UserType = {
   id: number;
   email: string;
 };
 
-export type ProfileType = {
+type ProfileType = {
   firstName: string;
   middleName?: string;
   lastName: string;
@@ -14,6 +14,6 @@ export type ProfileType = {
   userId: number;
 };
 
-export type UserProfileType = UserType & {
+type UserProfileType = UserType & {
   profile: ProfileType | null;
 };

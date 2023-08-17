@@ -17,8 +17,6 @@ import { useUpdateProfile } from '@src/hooks/useProfile';
 import { useFileUpload } from '@src/hooks/useFileUpload';
 import { useToast } from '@ui/use-toast';
 
-import { ProfileType } from '@src/types/user';
-
 interface UpdateDialogProps {
   children: React.ReactNode;
   queryData: ProfileType | null;
@@ -296,11 +294,11 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ children, queryData }) => {
 
         <span className='font-bold mt-4'>Profile Data</span>
         <div className='grid gap-4 pb-4'>
-          <div className='grid grid-cols-4 gap-4 items-center'>
-            <div className='col-span-1 text-right'>
+          <div className='grid grid-cols-4 gap-0 sm:gap-4 items-center'>
+            <div className='col-span-4 text-left ml-2 sm:ml-0 sm:col-span-1 sm:text-right'>
               <Label htmlFor='firstName'>First Name:</Label>
             </div>
-            <div className='col-span-3'>
+            <div className='col-span-4 sm:col-span-3'>
               <Input
                 className=''
                 type='text'
@@ -313,11 +311,11 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ children, queryData }) => {
             </div>
           </div>
 
-          <div className='grid grid-cols-4 gap-4 items-center'>
-            <div className='col-span-1 text-right'>
+          <div className='grid grid-cols-4 gap-0 sm:gap-4 items-center'>
+            <div className='col-span-4 text-left ml-2 sm:ml-0 sm:col-span-1 sm:text-right'>
               <Label htmlFor='middleName'>Middle Name:</Label>
             </div>
-            <div className='col-span-3'>
+            <div className='col-span-4 sm:col-span-3'>
               <Input
                 className=''
                 type='text'
@@ -329,11 +327,11 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ children, queryData }) => {
             </div>
           </div>
 
-          <div className='grid grid-cols-4 gap-4 items-center'>
-            <div className='col-span-1 text-right'>
+          <div className='grid grid-cols-4 gap-0 sm:gap-4 items-center'>
+            <div className='col-span-4 text-left ml-2 sm:ml-0 sm:col-span-1 sm:text-right'>
               <Label htmlFor='lastName'>Last Name:</Label>
             </div>
-            <div className='col-span-3'>
+            <div className='col-span-4 sm:col-span-3'>
               <Input
                 className=''
                 type='text'

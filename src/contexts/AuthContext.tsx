@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { createContext, useState } from 'react';
-import { AuthContextValueType, AuthContextFunctionType } from '@src/types/auth';
 
 type AuthProviderProps = {
   children: React.ReactNode;

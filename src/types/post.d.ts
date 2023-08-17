@@ -1,6 +1,4 @@
-import { ProfileType } from './user';
-
-export type Post = {
+type Post = {
   id: number;
   postType: string;
   photo?: string;
@@ -15,11 +13,12 @@ export type Post = {
       profile?: ProfileType;
     };
   };
+  likesCount: number;
 };
 
-export type PostAuthor = Post & {
+type PostAuthor = Post & {
   author: {
     email: string;
-    profile?: ProfileType;
+    profile?: import('./user').ProfileType;
   };
 };

@@ -7,7 +7,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { request, ErrResponse } from '@lib/axios-interceptor';
-import { PostAuthor } from '@src/types/post';
 
 const createPost = (data: {
   text: string | null | undefined;

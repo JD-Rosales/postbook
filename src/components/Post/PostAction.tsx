@@ -4,9 +4,10 @@ import PostShareDialog from '@components/PostShareDialog';
 
 interface PostActionProps {
   postId: number;
+  shareBtnRef?: React.RefObject<HTMLButtonElement>;
 }
 
-const PostAction: React.FC<PostActionProps> = ({ postId }) => {
+const PostAction: React.FC<PostActionProps> = ({ postId, shareBtnRef }) => {
   return (
     <div className='grid grid-cols-12 gap-1 sm:gap-3 w-full'>
       <div className='col-span-4'>
@@ -23,7 +24,12 @@ const PostAction: React.FC<PostActionProps> = ({ postId }) => {
 
       <div className='col-span-4'>
         <PostShareDialog postId={postId}>
-          <Button className='rounded-2xl' variant={'outline'} fullWidth>
+          <Button
+            ref={shareBtnRef}
+            className='rounded-2xl'
+            variant={'outline'}
+            fullWidth
+          >
             SHARE
           </Button>
         </PostShareDialog>

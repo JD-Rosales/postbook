@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import { Link } from 'react-router-dom';
 import { cn } from '@lib/utils';
-import { PostAuthor } from '@src/types/post';
 import { formatDistanceToNow } from 'date-fns';
 import { useEffect, useState } from 'react';
 

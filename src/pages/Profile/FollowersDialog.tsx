@@ -9,7 +9,6 @@ import { Button } from '@ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserProfileType } from '@src/types/user';
 
 interface FollowersDialogProps {
   children: React.ReactNode;
