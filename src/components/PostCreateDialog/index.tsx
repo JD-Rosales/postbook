@@ -42,12 +42,16 @@ const Index: React.FC<IndexProps> = ({ children }) => {
 
     const text = textRef.current?.value;
     let photo = imgPrev;
+    let photoPublicId = null;
     if (imgPrev) {
       const response = await fileUpload.mutateAsync(imgPrev);
-      if (response.status === 200) photo = response.data.secure_url;
+      if (response.status === 200) {
+        photo = response.data.secure_url;
+        photoPublicId = response.data.public_id;
+      }
     }
 
-    createPost.mutate({ text, photo });
+    createPost.mutate({ text, photo, photoPublicId });
   };
 
   const handleEmojiClick = (emoji: EmojiClickData, event: MouseEvent) => {

@@ -19,6 +19,6 @@ type Post = {
 type PostAuthor = Post & {
   author: {
     email: string;
-    profile?: import('./user').ProfileType;
+    profile?: ProfileType;
   };
 };

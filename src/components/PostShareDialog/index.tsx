@@ -16,10 +16,11 @@ import PostLoader from '@components/Loader/PostLoader';
 
 interface IndexProps {
   postId: number;
+  sharedPostId?: number;
   children: React.ReactNode;
 }
 
-const Index: React.FC<IndexProps> = ({ children, postId }) => {
+const Index: React.FC<IndexProps> = ({ children, postId, sharedPostId }) => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState({
@@ -27,7 +28,9 @@ const Index: React.FC<IndexProps> = ({ children, postId }) => {
   });
 
   const sharePost = useSharePost();
-  const getPost = useGetPost(postId, open);
+
+  // if the post is a shared post get the original post ID else get the post ID
+  const getPost = useGetPost(sharedPostId ? sharedPostId : postId, open);
 
   const textRef = useRef<HTMLParagraphElement>(null);
 
@@ -103,7 +106,7 @@ const Index: React.FC<IndexProps> = ({ children, postId }) => {
           </div>
 
           {getPost.isLoading ? (
-            <PostLoader />
+            <PostLoader hasImg={false} />
           ) : (
             getPost.data && <Post data={getPost.data.data} hasFooter={false} />
           )}

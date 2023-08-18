@@ -11,6 +11,7 @@ import { request, ErrResponse } from '@lib/axios-interceptor';
 const createPost = (data: {
   text: string | null | undefined;
   photo: string | null | undefined;
+  photoPublicId: string | null | undefined;
 }) => request({ url: '/post', method: 'post', data });
 
 export const useCreatePost = () => {
@@ -49,6 +50,20 @@ export const useGetPost = (
     refetchOnWindowFocus: false,
     retry: false,
     enabled: enabled,
+  });
+};
+
+type TotalLikesType = {
+  data: { likesCount: number };
+};
+
+export const useGetTotalLIkes = (
+  postId: number
+): UseQueryResult<TotalLikesType, Error> => {
+  const getTotalLikes = () => request({ url: `/post/likes/${postId}` });
+
+  return useQuery(['post', 'totalLikes', postId], getTotalLikes, {
+    refetchOnWindowFocus: false,
   });
 };
 

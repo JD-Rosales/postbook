@@ -1,9 +1,11 @@
 import { FetchNextPageOptions } from '@tanstack/react-query';
 import { cn } from '@lib/utils';
 import { InfiniteQueryPostResponse } from '@src/hooks/usePost';
-import Post from '@components/Post';
+// import Post from '@components/Post';
 import PostLoader from '@components/Loader/PostLoader';
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback, lazy, Suspense } from 'react';
+
+const Post = lazy(() => import('@components/Post'));
 
 type PostListProps = {
   className?: string;
@@ -56,7 +58,7 @@ const Index: React.FC<PostListProps> = ({
     <div className={cn('mt-5', className)}>
       {isLoading ? (
         <div className='w-full h-full mt-5'>
-          <PostLoader hasImg={false} />
+          <PostLoader />
           <PostLoader />
         </div>
       ) : !data ? (
@@ -75,7 +77,9 @@ const Index: React.FC<PostListProps> = ({
                       key={post.id}
                       ref={i === group.data.length - 1 ? lastPostRef : null}
                     >
-                      <Post data={post} />
+                      <Suspense fallback={<PostLoader />}>
+                        <Post data={post} />
+                      </Suspense>
                     </div>
                   );
                 })}

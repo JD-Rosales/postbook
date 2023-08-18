@@ -8,14 +8,14 @@ import {
 import { Skeleton } from '@ui/skeleton';
 import { cn } from '@lib/utils';
 
-type SkeletonLoaderPostProps = {
+type SkeletonPostLoaderProps = {
   className?: string;
   hasText?: boolean;
   hasImg?: boolean;
   hasFooter?: boolean;
 };
 
-const SkeletonLoaderPost: React.FC<SkeletonLoaderPostProps> = ({
+const SkeletonPostLoader: React.FC<SkeletonPostLoaderProps> = ({
   className,
   hasText = true,
   hasImg = true,
@@ -62,4 +62,4 @@ const SkeletonLoaderPost: React.FC<SkeletonLoaderPostProps> = ({
   );
 };
 
-export default SkeletonLoaderPost;
+export default SkeletonPostLoader;

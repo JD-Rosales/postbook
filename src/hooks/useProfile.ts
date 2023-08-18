@@ -24,7 +24,9 @@ const updateProfile = (data: {
   middleName: string;
   lastName: string;
   profilePhoto: string | null;
+  profilePublicId: string | null;
   coverPhoto: string | null;
+  coverPublicId: string | null;
 }) => {
   return request({ url: '/profile', method: 'put', data });
 };
@@ -34,7 +36,7 @@ export const useUpdateProfile = () => {
   return useMutation({
     mutationFn: updateProfile,
     onSuccess: (data) => {
-      queryClient.invalidateQueries(['user', data?.data?.userId]);
+      queryClient.invalidateQueries(['user', data?.data?.userId.toString()]);
     },
     onError: (error: ErrResponse) => error,
   });

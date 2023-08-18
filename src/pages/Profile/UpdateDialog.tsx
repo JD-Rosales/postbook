@@ -48,18 +48,24 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ children, queryData }) => {
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const handleSubmit = async () => {
-    let data = { ...formData };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    let data = { ...formData, profilePublicId: '', coverPublicId: '' };
     if (imgPrev.profilePhoto) {
       const response = await profileUpload.mutateAsync(imgPrev.profilePhoto);
-      if (response.status === 200)
+      if (response.status === 200) {
         data = { ...data, profilePhoto: response.data.secure_url };
+        data = { ...data, profilePublicId: response.data.public_id };
+      }
     }
 
     if (imgPrev.coverPhoto) {
       const response = await coverUpload.mutateAsync(imgPrev.coverPhoto);
-      if (response.status == 200)
+      if (response.status == 200) {
         data = { ...data, coverPhoto: response.data.secure_url };
+        data = { ...data, coverPublicId: response.data.public_id };
+      }
     }
 
     updateProfile.mutate(data);
@@ -137,6 +143,10 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ children, queryData }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateProfile.isSuccess, updateProfile.isError, toast]);
 
+  useEffect(() => {
+    console.log('cover upload: ', coverUpload.data);
+  }, [coverUpload.isSuccess, coverUpload.data]);
+
   return (
     <Dialog
       open={open}
@@ -153,212 +163,217 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ children, queryData }) => {
         <DialogHeader>
           <DialogTitle className='text-center'>EDIT PROFILE</DialogTitle>
         </DialogHeader>
+        <form className='h-fit' onSubmit={handleSubmit}>
+          <div>
+            <div className='flex justify-between items-center'>
+              <span className='font-bold'>Profile Picture</span>
+              {imgPrev.profilePhoto ? (
+                <Button
+                  className='py-4 mt-0 text-rose-500 hover:text-rose-500'
+                  variant={'ghost'}
+                  type='button'
+                  onClick={() => {
+                    if (inputFileProfile.current) {
+                      inputFileProfile.current.value = '';
+                    }
 
-        <div>
-          <div className='flex justify-between items-center'>
-            <span className='font-bold'>Profile Picture</span>
-            {imgPrev.profilePhoto ? (
-              <Button
-                className='py-4 mt-0 text-rose-500 hover:text-rose-500'
-                variant={'ghost'}
-                onClick={() => {
-                  if (inputFileProfile.current) {
-                    inputFileProfile.current.value = '';
-                  }
-
-                  setImgPrev((prevState) => ({
-                    ...prevState,
-                    profilePhoto: '',
-                  }));
-                }}
-              >
-                CANCEL
-              </Button>
-            ) : (
-              <Button
-                className='mt-0'
-                variant={'ghost'}
-                onClick={() => {
-                  inputFileProfile.current?.click();
-                }}
-              >
-                {queryData?.profilePhoto ? 'EDIT' : 'ADD'}
-              </Button>
-            )}
-          </div>
-
-          <Input
-            type='file'
-            className='hidden'
-            ref={inputFileProfile}
-            accept='.png, .jpg, .jpeg'
-            name='profilePhoto'
-            onChange={previewImage}
-          />
-
-          <div className='mx-10 mt-3'>
-            <div className='relative w-44 h-44 mx-auto rounded-full group'>
-              <Avatar className='h-full w-full'>
-                <AvatarImage
-                  src={
-                    imgPrev.profilePhoto
-                      ? imgPrev.profilePhoto
-                      : formData.profilePhoto
-                  }
-                />
-                <AvatarFallback>DP</AvatarFallback>
-              </Avatar>
-            </div>
-            {profileUpload.isLoading && (
-              <Progress
-                value={profileUpload.progress}
-                className='w-full mt-3 h-3'
-              />
-            )}
-          </div>
-        </div>
-
-        <div>
-          <div className='flex justify-between items-center'>
-            <span className='font-bold'>Cover Photo</span>
-
-            {imgPrev.coverPhoto ? (
-              <Button
-                className='py-4 mt-0 text-rose-500 hover:text-rose-500'
-                variant={'ghost'}
-                onClick={() => {
-                  if (inputFileCover.current) {
-                    inputFileCover.current.value = '';
-                  }
-
-                  setImgPrev((prevState) => ({
-                    ...prevState,
-                    coverPhoto: '',
-                  }));
-                }}
-              >
-                CANCEL
-              </Button>
-            ) : (
-              <Button
-                className='py-4 mt-0'
-                variant={'ghost'}
-                onClick={() => {
-                  inputFileCover.current?.click();
-                }}
-              >
-                {queryData?.coverPhoto ? 'EDIT' : 'ADD'}
-              </Button>
-            )}
-          </div>
-          <Input
-            type='file'
-            className='hidden'
-            ref={inputFileCover}
-            accept='.png, .jpg, .jpeg'
-            name='coverPhoto'
-            onChange={previewImage}
-          />
-
-          <div className='sm:mx-10 mt-3'>
-            <div
-              className={`relative h-44 rounded-lg ${
-                !formData.coverPhoto && 'bg-slate-100'
-              }`}
-            >
-              {imgPrev.coverPhoto ? (
-                <img
-                  className='object-cover w-full h-full rounded-lg'
-                  src={imgPrev.coverPhoto}
-                />
-              ) : formData.coverPhoto ? (
-                <img
-                  className='object-cover w-full h-full rounded-lg'
-                  src={formData.coverPhoto}
-                />
+                    setImgPrev((prevState) => ({
+                      ...prevState,
+                      profilePhoto: '',
+                    }));
+                  }}
+                >
+                  CANCEL
+                </Button>
               ) : (
-                <span className='absolute inset-0 flex items-center justify-center'>
-                  Cover Photo
-                </span>
+                <Button
+                  className='mt-0'
+                  variant={'ghost'}
+                  type='button'
+                  onClick={() => {
+                    inputFileProfile.current?.click();
+                  }}
+                >
+                  {queryData?.profilePhoto ? 'EDIT' : 'ADD'}
+                </Button>
               )}
             </div>
 
-            {coverUpload.isLoading && (
-              <Progress
-                value={coverUpload.progress}
-                className='w-full mt-3 h-3'
-              />
-            )}
-          </div>
-        </div>
+            <Input
+              type='file'
+              className='hidden'
+              ref={inputFileProfile}
+              accept='.png, .jpg, .jpeg'
+              name='profilePhoto'
+              onChange={previewImage}
+            />
 
-        <span className='font-bold mt-4'>Profile Data</span>
-        <div className='grid gap-4 pb-4'>
-          <div className='grid grid-cols-4 gap-0 sm:gap-4 items-center'>
-            <div className='col-span-4 text-left ml-2 sm:ml-0 sm:col-span-1 sm:text-right'>
-              <Label htmlFor='firstName'>First Name:</Label>
-            </div>
-            <div className='col-span-4 sm:col-span-3'>
-              <Input
-                className=''
-                type='text'
-                placeholder='First Name'
-                name='firstName'
-                required
-                value={formData.firstName}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-
-          <div className='grid grid-cols-4 gap-0 sm:gap-4 items-center'>
-            <div className='col-span-4 text-left ml-2 sm:ml-0 sm:col-span-1 sm:text-right'>
-              <Label htmlFor='middleName'>Middle Name:</Label>
-            </div>
-            <div className='col-span-4 sm:col-span-3'>
-              <Input
-                className=''
-                type='text'
-                placeholder='Middle Name'
-                name='middleName'
-                value={formData.middleName}
-                onChange={handleChange}
-              />
+            <div className='mx-10 mt-3'>
+              <div className='relative w-44 h-44 mx-auto rounded-full group'>
+                <Avatar className='h-full w-full'>
+                  <AvatarImage
+                    src={
+                      imgPrev.profilePhoto
+                        ? imgPrev.profilePhoto
+                        : formData.profilePhoto
+                    }
+                  />
+                  <AvatarFallback>DP</AvatarFallback>
+                </Avatar>
+              </div>
+              {profileUpload.isLoading && (
+                <Progress
+                  value={profileUpload.progress}
+                  className='w-full mt-3 h-3'
+                />
+              )}
             </div>
           </div>
 
-          <div className='grid grid-cols-4 gap-0 sm:gap-4 items-center'>
-            <div className='col-span-4 text-left ml-2 sm:ml-0 sm:col-span-1 sm:text-right'>
-              <Label htmlFor='lastName'>Last Name:</Label>
+          <div>
+            <div className='flex justify-between items-center'>
+              <span className='font-bold'>Cover Photo</span>
+
+              {imgPrev.coverPhoto ? (
+                <Button
+                  className='py-4 mt-0 text-rose-500 hover:text-rose-500'
+                  variant={'ghost'}
+                  type='button'
+                  onClick={() => {
+                    if (inputFileCover.current) {
+                      inputFileCover.current.value = '';
+                    }
+
+                    setImgPrev((prevState) => ({
+                      ...prevState,
+                      coverPhoto: '',
+                    }));
+                  }}
+                >
+                  CANCEL
+                </Button>
+              ) : (
+                <Button
+                  className='py-4 mt-0'
+                  variant={'ghost'}
+                  type='button'
+                  onClick={() => {
+                    inputFileCover.current?.click();
+                  }}
+                >
+                  {queryData?.coverPhoto ? 'EDIT' : 'ADD'}
+                </Button>
+              )}
             </div>
-            <div className='col-span-4 sm:col-span-3'>
-              <Input
-                className=''
-                type='text'
-                placeholder='Last Name'
-                name='lastName'
-                required
-                value={formData.lastName}
-                onChange={handleChange}
-              />
+            <Input
+              type='file'
+              className='hidden'
+              ref={inputFileCover}
+              accept='.png, .jpg, .jpeg'
+              name='coverPhoto'
+              onChange={previewImage}
+            />
+
+            <div className='sm:mx-10 mt-3'>
+              <div
+                className={`relative h-44 rounded-lg ${
+                  !formData.coverPhoto && 'bg-slate-100'
+                }`}
+              >
+                {imgPrev.coverPhoto ? (
+                  <img
+                    className='object-cover w-full h-full rounded-lg'
+                    src={imgPrev.coverPhoto}
+                  />
+                ) : formData.coverPhoto ? (
+                  <img
+                    className='object-cover w-full h-full rounded-lg'
+                    src={formData.coverPhoto}
+                  />
+                ) : (
+                  <span className='absolute inset-0 flex items-center justify-center'>
+                    Cover Photo
+                  </span>
+                )}
+              </div>
+
+              {coverUpload.isLoading && (
+                <Progress
+                  value={coverUpload.progress}
+                  className='w-full mt-3 h-3'
+                />
+              )}
             </div>
           </div>
-        </div>
 
-        <DialogFooter>
-          <Button
-            className='sm:min-w-[170px]'
-            variant={'default'}
-            loading={
-              updateProfile.isLoading ||
-              profileUpload.isLoading ||
-              coverUpload.isLoading
-            }
-            onClick={handleSubmit}
-          >
-            Save changes
-          </Button>
-        </DialogFooter>
+          <span className='font-bold mt-4'>Profile Data</span>
+          <div className='grid gap-4 pb-4'>
+            <div className='grid grid-cols-4 gap-0 sm:gap-4 items-center'>
+              <div className='col-span-4 text-left ml-2 sm:ml-0 sm:col-span-1 sm:text-right'>
+                <Label htmlFor='firstName'>First Name:</Label>
+              </div>
+              <div className='col-span-4 sm:col-span-3'>
+                <Input
+                  className=''
+                  type='text'
+                  placeholder='First Name'
+                  name='firstName'
+                  required
+                  value={formData.firstName}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <div className='grid grid-cols-4 gap-0 sm:gap-4 items-center'>
+              <div className='col-span-4 text-left ml-2 sm:ml-0 sm:col-span-1 sm:text-right'>
+                <Label htmlFor='middleName'>Middle Name:</Label>
+              </div>
+              <div className='col-span-4 sm:col-span-3'>
+                <Input
+                  className=''
+                  type='text'
+                  placeholder='Middle Name'
+                  name='middleName'
+                  value={formData.middleName}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <div className='grid grid-cols-4 gap-0 sm:gap-4 items-center'>
+              <div className='col-span-4 text-left ml-2 sm:ml-0 sm:col-span-1 sm:text-right'>
+                <Label htmlFor='lastName'>Last Name:</Label>
+              </div>
+              <div className='col-span-4 sm:col-span-3'>
+                <Input
+                  className=''
+                  type='text'
+                  placeholder='Last Name'
+                  name='lastName'
+                  required
+                  value={formData.lastName}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              className='sm:min-w-[170px]'
+              variant={'default'}
+              type='submit'
+              loading={
+                updateProfile.isLoading ||
+                profileUpload.isLoading ||
+                coverUpload.isLoading
+              }
+            >
+              Save changes
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
