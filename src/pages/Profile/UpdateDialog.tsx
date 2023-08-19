@@ -143,10 +143,6 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ children, queryData }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateProfile.isSuccess, updateProfile.isError, toast]);
 
-  useEffect(() => {
-    console.log('cover upload: ', coverUpload.data);
-  }, [coverUpload.isSuccess, coverUpload.data]);
-
   return (
     <Dialog
       open={open}

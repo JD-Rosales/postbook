@@ -1,8 +1,8 @@
 import { FetchNextPageOptions } from '@tanstack/react-query';
 import { cn } from '@lib/utils';
 import { InfiniteQueryPostResponse } from '@src/hooks/usePost';
-// import Post from '@components/Post';
 import PostLoader from '@components/Loader/PostLoader';
+import NoData from './NoData';
 import { useRef, useEffect, useCallback, lazy, Suspense } from 'react';
 
 const Post = lazy(() => import('@components/Post'));
@@ -64,7 +64,9 @@ const Index: React.FC<PostListProps> = ({
       ) : !data ? (
         <></>
       ) : data[0].data.length === 0 ? (
-        <>No Post</>
+        <>
+          <NoData />
+        </>
       ) : (
         <div>
           {data.map((group, i) => {

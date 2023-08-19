@@ -4,6 +4,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@ui/tooltip';
+import { Skeleton } from '@src/components/ui/skeleton';
 import { useUserFollowers } from '@src/hooks/useFollows';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@ui/button';
@@ -26,7 +27,7 @@ const Followers: React.FC<FollowersProps> = ({ id }) => {
           Followers <span>{`(${followers.data?.data.length})`}</span>
         </span>
         {followers.data?.data &&
-          followers.data.data.length >= (isMobile ? 6 : 8) && (
+          followers.data.data.length >= (isMobile ? 3 : 4) && (
             <FollowersDialog data={followers.data.data}>
               <Button
                 className='py-4 mt-0 text-primary hover:text-primary'
@@ -38,8 +39,16 @@ const Followers: React.FC<FollowersProps> = ({ id }) => {
           )}
       </div>
       <div className='grid grid-cols-12 gap-2'>
-        {followers.data?.data ? (
-          followers.data.data.slice(0, isMobile ? 6 : 8).map((follower) => {
+        {followers.isLoading ? (
+          <Skeleton className='h-[155px] w-full col-span-12 rounded-lg' />
+        ) : followers.data?.data.length == 0 ? (
+          <div className='bg-muted w-full h-[155px] col-span-12 flex items-center justify-center rounded-lg'>
+            <p className='font-normal text-lg max-w-[270px] text-center'>
+              You have no followers at the moment.
+            </p>
+          </div>
+        ) : followers.data?.data ? (
+          followers.data.data.slice(0, isMobile ? 3 : 4).map((follower) => {
             return (
               <TooltipProvider key={follower.id}>
                 <Tooltip>
@@ -84,7 +93,7 @@ const Followers: React.FC<FollowersProps> = ({ id }) => {
             );
           })
         ) : (
-          <>No Followers</>
+          ''
         )}
       </div>
     </div>

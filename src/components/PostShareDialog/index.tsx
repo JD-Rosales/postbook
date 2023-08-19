@@ -39,8 +39,6 @@ const Index: React.FC<IndexProps> = ({ children, postId, sharedPostId }) => {
 
     const text = value.text;
 
-    console.log(textRef.current?.innerText);
-
     sharePost.mutate({ text, postId });
   };
 

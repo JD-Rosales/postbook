@@ -11,7 +11,7 @@ import { request, ErrResponse } from '@lib/axios-interceptor';
 const createPost = (data: {
   text: string | null | undefined;
   photo: string | null | undefined;
-  photoPublicId: string | null | undefined;
+  photoPublicId: string | undefined;
 }) => request({ url: '/post', method: 'post', data });
 
 export const useCreatePost = () => {
@@ -31,7 +31,7 @@ export const useDeletePost = () => {
     onError: (error: ErrResponse) => error,
     onSuccess: (data) => {
       const authorId = data.data.authorId;
-      queryClient.prefetchInfiniteQuery(['posts', 'user', authorId.toString()]);
+      queryClient.invalidateQueries(['following', authorId.toString()]);
     },
   });
 };
@@ -54,7 +54,7 @@ export const useGetPost = (
 };
 
 type TotalLikesType = {
-  data: { likesCount: number };
+  data: { likesCount: number; userHasLiked: boolean };
 };
 
 export const useGetTotalLIkes = (
@@ -64,6 +64,20 @@ export const useGetTotalLIkes = (
 
   return useQuery(['post', 'totalLikes', postId], getTotalLikes, {
     refetchOnWindowFocus: false,
+  });
+};
+
+const likePost = (data: { postId: number }) =>
+  request({ url: '/post/like_post', method: 'post', data });
+
+export const useLikePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation(likePost, {
+    onError: (error: ErrResponse) => error,
+    onSuccess: (data) => {
+      const postId = data.data.id;
+      queryClient.invalidateQueries(['post', 'totalLikes', postId]);
+    },
   });
 };
 

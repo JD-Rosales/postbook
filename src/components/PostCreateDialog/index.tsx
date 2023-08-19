@@ -42,7 +42,7 @@ const Index: React.FC<IndexProps> = ({ children }) => {
 
     const text = textRef.current?.value;
     let photo = imgPrev;
-    let photoPublicId = null;
+    let photoPublicId;
     if (imgPrev) {
       const response = await fileUpload.mutateAsync(imgPrev);
       if (response.status === 200) {
