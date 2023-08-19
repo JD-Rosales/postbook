@@ -31,7 +31,7 @@ export const useDeletePost = () => {
     onError: (error: ErrResponse) => error,
     onSuccess: (data) => {
       const authorId = data.data.authorId;
-      queryClient.invalidateQueries(['following', authorId.toString()]);
+      queryClient.prefetchInfiniteQuery(['posts', 'user', authorId.toString()]);
     },
   });
 };
