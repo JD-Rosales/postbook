@@ -6,7 +6,7 @@ const Index: React.FC = () => {
   return (
     <div className='flex'>
       <Sidebar />
-      <div className='flex-grow h-screen overflow-auto'>
+      <div className='flex-grow h-screen overflow-y-auto'>
         <Navbar />
         <Outlet />
       </div>

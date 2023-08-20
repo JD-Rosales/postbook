@@ -35,6 +35,7 @@ type PostProps = {
   data: PostAuthor;
   isEditable?: boolean;
   hasFooter?: boolean;
+  hasMenu?: boolean;
   className?: string;
 };
 
@@ -42,6 +43,7 @@ const Index: React.FC<PostProps> = ({
   className,
   data,
   isEditable = false,
+  hasMenu = true,
   hasFooter = true,
 }) => {
   const deletePost = useDeletePost();
@@ -116,53 +118,55 @@ const Index: React.FC<PostProps> = ({
               </div>
             </div>
 
-            <div className='absolute right-0 top-1'>
-              <DropdownMenu modal={false}>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant='ghost'
-                    className='focus-visible:ring-0 focus-visible:ring-offset-0'
+            {hasMenu && (
+              <div className='absolute right-0 top-1'>
+                <DropdownMenu modal={false}>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant='ghost'
+                      className='focus-visible:ring-0 focus-visible:ring-offset-0'
+                    >
+                      <MoreHorizontal />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    sideOffset={-25}
+                    className='w-40 absolute -right-3'
                   >
-                    <MoreHorizontal />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  sideOffset={-25}
-                  className='w-40 absolute -right-3'
-                >
-                  <DropdownMenuLabel>Settings</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        deletePost.mutate({ postId: data.id });
-                      }}
-                    >
-                      <span>Delete</span>
-                      <DropdownMenuShortcut>
-                        <Trash2 size={20} />
-                      </DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <span>Edit</span>
-                      <DropdownMenuShortcut>
-                        <PenLine size={20} />
-                      </DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        if (shareBtnRef.current) shareBtnRef.current.click();
-                      }}
-                    >
-                      <span>Share</span>
-                      <DropdownMenuShortcut>
-                        <Forward size={20} />
-                      </DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+                    <DropdownMenuLabel>Settings</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          deletePost.mutate({ postId: data.id });
+                        }}
+                      >
+                        <span>Delete</span>
+                        <DropdownMenuShortcut>
+                          <Trash2 size={20} />
+                        </DropdownMenuShortcut>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <span>Edit</span>
+                        <DropdownMenuShortcut>
+                          <PenLine size={20} />
+                        </DropdownMenuShortcut>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          if (shareBtnRef.current) shareBtnRef.current.click();
+                        }}
+                      >
+                        <span>Share</span>
+                        <DropdownMenuShortcut>
+                          <Forward size={20} />
+                        </DropdownMenuShortcut>
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            )}
           </CardTitle>
         </CardHeader>
 

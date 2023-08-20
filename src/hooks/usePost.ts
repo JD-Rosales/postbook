@@ -125,7 +125,7 @@ export const usePosts = (): UseInfiniteQueryResult<
   Error
 > =>
   useInfiniteQuery({
-    queryKey: ['posts', 'home'],
+    queryKey: ['posts', 'followed'],
     queryFn: fetchFollowedPosts,
     getNextPageParam: (lastPage) => {
       const lastPost = lastPage.data[lastPage.data.length - 1];

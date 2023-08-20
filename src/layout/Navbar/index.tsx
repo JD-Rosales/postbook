@@ -1,18 +1,22 @@
 import useSidebar from '@src/contextsHooks/useSidebar';
+import { ArrowRightToLine, ArrowLeftToLine, Menu } from 'lucide-react';
 
 const Index = () => {
-  const { setToggled, setCollapsed } = useSidebar();
+  const { setToggled, setCollapsed, collapsed } = useSidebar();
   return (
-    <div className='bg-primary text-white h-[70px] sticky top-0 z-20'>
-      <button className='sm:hidden' onClick={() => setToggled((prev) => !prev)}>
-        Toggle Sidebar
+    <div className='flex items-center shadow-md bg-white py-2 h-16 sticky top-0 z-20'>
+      <button
+        className='md:hidden ml-2 text-slate-600 p-2'
+        onClick={() => setToggled((prev) => !prev)}
+      >
+        <Menu size={30} />
       </button>
 
       <button
-        className='hidden sm:block'
+        className='hidden md:block ml-2 text-slate-600 p-2'
         onClick={() => setCollapsed((prev) => !prev)}
       >
-        Collapse Sidebar
+        {collapsed ? <ArrowRightToLine /> : <ArrowLeftToLine />}
       </button>
     </div>
   );

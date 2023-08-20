@@ -55,7 +55,7 @@ const Index: React.FC<PostListProps> = ({
   }, [handleIntersect]);
 
   return (
-    <div className={cn('mt-5', className)}>
+    <div className={cn('pt-5', className)}>
       {isLoading ? (
         <div className='w-full h-full mt-5'>
           <PostLoader />

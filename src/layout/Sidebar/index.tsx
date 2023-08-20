@@ -1,7 +1,8 @@
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useVerifyToken } from '@src/hooks/useAuth';
 import useSidebar from '@src/contextsHooks/useSidebar';
+import { LayoutGrid, UserSquare } from 'lucide-react';
 
 const Index: React.FC = () => {
   const verifiedUser = useVerifyToken();
@@ -12,7 +13,7 @@ const Index: React.FC = () => {
     <div>
       <Sidebar
         className='h-screen'
-        breakPoint='sm'
+        breakPoint='md'
         onBackdropClick={() => setToggled(false)}
         toggled={toggled}
         collapsed={collapsed}
@@ -24,19 +25,23 @@ const Index: React.FC = () => {
               // the active class will be added automatically by react router
               // so we can use it to style the active menu item
               [`&.active`]: {
-                backgroundColor: 'red',
+                backgroundColor: 'blue',
                 color: 'white',
               },
+              fontSize: '18px',
             },
           }}
         >
-          <MenuItem component={<Link to='/' />}> Home</MenuItem>
+          <MenuItem icon={<LayoutGrid />} component={<NavLink to='/' />}>
+            Home
+          </MenuItem>
           <MenuItem
-            component={<Link to={`user/${verifiedUser.data?.data.id}`} />}
+            icon={<UserSquare />}
+            component={<NavLink to={`user/${verifiedUser.data?.data.id}`} />}
           >
             Profile
           </MenuItem>
-          <MenuItem component={<Link to='/login' />}> Logout</MenuItem>
+          <MenuItem component={<NavLink to='/login' />}> Logout</MenuItem>
         </Menu>
       </Sidebar>
     </div>

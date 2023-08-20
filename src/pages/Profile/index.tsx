@@ -40,7 +40,7 @@ const Index = () => {
           )}
 
           <div className='absolute -bottom-20 right-0 left-0'>
-            <div className='text-black relative w-44 h-44 mx-auto p-1 rounded-full bg-slate-300'>
+            <div className='text-black relative w-40 sm:w-44 h-40 sm:h-44  mx-auto p-1 rounded-full bg-slate-300'>
               {userProfile.isLoading ? (
                 <Skeleton className='w-full h-full rounded-full' />
               ) : (
@@ -66,7 +66,7 @@ const Index = () => {
         {userProfile.isLoading ? (
           <Skeleton className='w-[300px] h-[30px] mx-auto' />
         ) : (
-          <span className='text-center text-3xl font-medium block px-4 break-all'>
+          <span className='text-center text-2xl sm:text-3xl font-medium block px-4 break-all'>
             {userProfile.isSuccess &&
               (userProfile.data?.data?.profile
                 ? `${userProfile.data?.data?.profile.firstName} 
