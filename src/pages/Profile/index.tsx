@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+import ContainerXl from '@components/ContainerXl';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import { Skeleton } from '@ui/skeleton';
 import { Button } from '@ui/button';
@@ -23,7 +24,7 @@ const Index = () => {
   }
 
   return (
-    <div className='max-w-xl mx-auto'>
+    <ContainerXl>
       <div className='pb-5'>
         <div className='relative bg-slate-400 h-52 rounded-b-lg mb-[90px]'>
           {userProfile.data?.data?.profile?.coverPhoto ? (
@@ -110,7 +111,7 @@ const Index = () => {
         isFetchingNextPage={userPosts.isFetchingNextPage}
         nextPage={userPosts.fetchNextPage}
       />
-    </div>
+    </ContainerXl>
   );
 };
 

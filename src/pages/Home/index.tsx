@@ -1,4 +1,5 @@
 import styles from './home.module.css';
+import ContainerXl from '@components/ContainerXl';
 import PostCreateDialog from '@components/PostCreateDialog';
 import PostList from '@components/PostList';
 import { usePosts } from '@src/hooks/usePost';
@@ -6,7 +7,7 @@ import { usePosts } from '@src/hooks/usePost';
 const Index = () => {
   const fetchPosts = usePosts();
   return (
-    <div className='max-w-xl mx-auto'>
+    <ContainerXl>
       <PostList
         isLoading={fetchPosts.isLoading}
         data={fetchPosts.data?.pages}
@@ -23,7 +24,7 @@ const Index = () => {
           </button>
         </div>
       </PostCreateDialog>
-    </div>
+    </ContainerXl>
   );
 };
 

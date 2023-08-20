@@ -1,22 +1,22 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  UseQueryResult,
+} from '@tanstack/react-query';
 import { request, ErrResponse } from '@lib/axios-interceptor';
-import { useContext } from 'react';
-import { AuthContext } from '@src/contexts/AuthContext';
+
+type verifiedTokenResult = {
+  data: { id: number; email: string };
+};
 
 const verifyToken = () => {
   return request({ url: '/user' });
 };
 
-export const useVerifyToken = () => {
-  const { setIsAuthenticated, setIsVerifying } = useContext(AuthContext);
+export const useVerifyToken = (): UseQueryResult<verifiedTokenResult> => {
   return useQuery(['user'], verifyToken, {
-    onSuccess: () => {
-      setIsVerifying(false);
-      setIsAuthenticated(true);
-    },
     onError: () => {
-      setIsVerifying(false);
-      setIsAuthenticated(false);
       localStorage.removeItem('token');
     },
     refetchOnWindowFocus: false,
@@ -29,17 +29,14 @@ const login = (data: { email: string; password: string }) => {
 };
 
 export const useLogin = () => {
-  const { setIsAuthenticated } = useContext(AuthContext);
   const queryClient = useQueryClient();
   return useMutation(login, {
     onSuccess: (data) => {
-      setIsAuthenticated(true);
       localStorage.setItem('token', data.token);
       const data2 = { data: data.data };
       queryClient.setQueriesData(['user'], data2);
     },
     onError: (error: ErrResponse) => {
-      setIsAuthenticated(false);
       return error;
     },
   });

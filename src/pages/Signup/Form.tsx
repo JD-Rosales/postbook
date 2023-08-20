@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '@ui/input';
 import { Button } from '@ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, AlertTriangle } from 'lucide-react';
-import { useRegister } from '@src/hooks/useAuth';
+import { useRegister, useLogin } from '@src/hooks/useAuth';
 
 const Form: React.FC = () => {
   const registerUser = useRegister();
+  const login = useLogin();
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -29,6 +30,17 @@ const Form: React.FC = () => {
 
     registerUser.mutate(formData);
   };
+
+  useEffect(() => {
+    if (registerUser.isSuccess && !registerUser.isError) {
+      login.mutate(formData);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [registerUser.isSuccess, registerUser.isError]);
+
+  useEffect(() => {
+    if (login.isSuccess) navigate('/');
+  }, [login.isSuccess, navigate]);
 
   return (
     <>

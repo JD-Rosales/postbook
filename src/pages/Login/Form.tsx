@@ -4,11 +4,8 @@ import { Button } from '@ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, AlertTriangle } from 'lucide-react';
 import { useLogin } from '@src/hooks/useAuth';
-import { useContext } from 'react';
-import { AuthContext } from '@src/contexts/AuthContext';
 
 const Form: React.FC = () => {
-  const { isAuthenticated } = useContext(AuthContext);
   const loginUser = useLogin();
 
   const navigate = useNavigate();
@@ -35,8 +32,8 @@ const Form: React.FC = () => {
   };
 
   useEffect(() => {
-    if (isAuthenticated && loginUser.isSuccess) navigate('/');
-  }, [isAuthenticated, loginUser.isSuccess, navigate]);
+    if (loginUser.isSuccess) navigate('/');
+  }, [loginUser.isSuccess, navigate]);
 
   return (
     <>
