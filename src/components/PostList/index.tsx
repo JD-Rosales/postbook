@@ -84,11 +84,7 @@ const Index: React.FC<PostListProps> = ({
                       ref={i === group.data.length - 1 ? lastPostRef : null}
                     >
                       <Suspense fallback={<PostLoader />}>
-                        <Post
-                          data={post}
-                          hasMenu={hasMenu}
-                          postEditable={postEditable}
-                        />
+                        <Post postId={post.id} hasMenu={hasMenu} />
                       </Suspense>
                     </div>
                   );

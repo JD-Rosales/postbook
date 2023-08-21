@@ -95,7 +95,7 @@ export const useSharePost = () => {
   });
 };
 export interface InfiniteQueryPostResponse {
-  data: PostAuthor[];
+  data: { id: number }[];
 }
 
 export const useUserPosts = (

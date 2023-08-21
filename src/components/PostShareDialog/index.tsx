@@ -107,11 +107,7 @@ const Index: React.FC<IndexProps> = ({ children, postId, sharedPostId }) => {
             <PostLoader hasImg={false} />
           ) : (
             getPost.data && (
-              <Post
-                data={getPost.data.data}
-                hasFooter={false}
-                hasMenu={false}
-              />
+              <Post postId={postId} hasFooter={false} hasMenu={false} />
             )
           )}
 

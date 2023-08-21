@@ -6,17 +6,16 @@ const SharedPost = lazy(() => import('./SharedPost'));
 
 interface ContentProps {
   data: PostAuthor;
-  postEditable?: boolean;
 }
 
-const Content: React.FC<ContentProps> = ({ data, postEditable = false }) => {
-  const { setPostState } = usePostState();
+const Content: React.FC<ContentProps> = ({ data }) => {
+  // const { setPostState, setIsOpen, postState } = usePostState();
 
   const textRef = useRef<HTMLParagraphElement>(null);
 
   const handleChange = (e: ContentEditableEvent) => {
     const text = e.target.value;
-    setPostState((prev) => ({ ...prev, text: text }));
+    // setPostState((prev) => ({ ...prev, text: text }));
   };
 
   return (
@@ -24,7 +23,6 @@ const Content: React.FC<ContentProps> = ({ data, postEditable = false }) => {
       <div className='relative'>
         <ContentEditable
           innerRef={textRef}
-          disabled={postEditable}
           className={`mb-2 focus-visible:outline-none bg-transparent break-all`}
           html={data.text ?? ''}
           onChange={handleChange}
@@ -32,11 +30,11 @@ const Content: React.FC<ContentProps> = ({ data, postEditable = false }) => {
         />
 
         {/* Placeholder for the ContentEditable */}
-        {!data.text && postEditable && (
+        {/* {!data.text && postEditable && (
           <p className='absolute top-0 text-gray-500 pointer-events-none'>
             Input your post content here.
           </p>
-        )}
+        )} */}
       </div>
 
       {data?.photo && (

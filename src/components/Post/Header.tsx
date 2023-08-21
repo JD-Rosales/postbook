@@ -11,7 +11,7 @@ import {
 import { CardHeader, CardTitle } from '@components/ui/card';
 import { Button } from '@ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { MoreHorizontal, Trash2, PenLine, Forward } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useState, useEffect } from 'react';
@@ -23,12 +23,15 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ data, hasMenu = false }) => {
-  const { setIsEditing } = usePostState();
+  const navigate = useNavigate();
+  const { handleDialogOpen } = usePostState();
+
   const [postDate, setPostDate] = useState(
     formatDistanceToNow(new Date(data.createdAt), {
       addSuffix: true,
     })
   );
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       setPostDate(
@@ -49,13 +52,13 @@ const Header: React.FC<HeaderProps> = ({ data, hasMenu = false }) => {
           </Avatar>
 
           <div className='flex flex-col ml-2'>
-            <Link to={`/user/${data.authorId}`} className='hover:underline'>
+            <span onClick={() => navigate('/')}>
               {data.author.profile
                 ? `${data.author.profile.firstName}
                     ${data.author.profile?.middleName}
                     ${data.author.profile.lastName}`
                 : data.author.email}
-            </Link>
+            </span>
 
             <span className='font-normal text-xs mt-1'>{`${data.postType} ${postDate}`}</span>
           </div>
@@ -87,7 +90,7 @@ const Header: React.FC<HeaderProps> = ({ data, hasMenu = false }) => {
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
-                      setIsEditing((value) => !value);
+                      handleDialogOpen({ postId: data.id, type: 'update' });
                     }}
                   >
                     <span>Edit</span>
