@@ -108,7 +108,6 @@ const Index = () => {
         isLoading={userPosts.isLoading}
         data={userPosts.data?.pages}
         hasMenu={true}
-        postEditable={true}
         hasNextPage={userPosts.hasNextPage}
         isFetchingNextPage={userPosts.isFetchingNextPage}
         nextPage={userPosts.fetchNextPage}

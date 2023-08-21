@@ -11,11 +11,11 @@ import {
 import { CardHeader, CardTitle } from '@components/ui/card';
 import { Button } from '@ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { MoreHorizontal, Trash2, PenLine, Forward } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useState, useEffect } from 'react';
-import usePostState from '@src/contextsHooks/usePostState';
+import usePostDialog from '@src/contextsHooks/usePostDialog';
 
 interface HeaderProps {
   data: PostAuthor;
@@ -23,8 +23,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ data, hasMenu = false }) => {
-  const navigate = useNavigate();
-  const { handleDialogOpen } = usePostState();
+  const { handleDialog } = usePostDialog();
 
   const [postDate, setPostDate] = useState(
     formatDistanceToNow(new Date(data.createdAt), {
@@ -52,13 +51,13 @@ const Header: React.FC<HeaderProps> = ({ data, hasMenu = false }) => {
           </Avatar>
 
           <div className='flex flex-col ml-2'>
-            <span onClick={() => navigate('/')}>
+            <Link to={'/user/' + data.authorId} className='hover:underline'>
               {data.author.profile
                 ? `${data.author.profile.firstName}
                     ${data.author.profile?.middleName}
                     ${data.author.profile.lastName}`
                 : data.author.email}
-            </span>
+            </Link>
 
             <span className='font-normal text-xs mt-1'>{`${data.postType} ${postDate}`}</span>
           </div>
@@ -90,7 +89,7 @@ const Header: React.FC<HeaderProps> = ({ data, hasMenu = false }) => {
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
-                      handleDialogOpen({ postId: data.id, type: 'update' });
+                      handleDialog({ id: data.id, type: 'update' });
                     }}
                   >
                     <span>Edit</span>
@@ -98,7 +97,15 @@ const Header: React.FC<HeaderProps> = ({ data, hasMenu = false }) => {
                       <PenLine size={20} />
                     </DropdownMenuShortcut>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      // if post is a shared post pass the sharedpost id
+                      handleDialog({
+                        id: data.sharedPostId ?? data.id,
+                        type: 'share',
+                      });
+                    }}
+                  >
                     <span>Share</span>
                     <DropdownMenuShortcut>
                       <Forward size={20} />

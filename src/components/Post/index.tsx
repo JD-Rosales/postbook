@@ -1,13 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { Card, CardFooter } from '@components/ui/card';
 import { cn } from '@lib/utils';
-import { Suspense, lazy, useRef } from 'react';
+import { Suspense, lazy } from 'react';
 import PostLoader from '@components/Loader/PostLoader';
-import Header from './Header';
-import Content from './Content';
 import { useGetPost } from '@src/hooks/usePost';
-import usePostState from '@src/contextsHooks/usePostState';
 
+const Header = lazy(() => import('./Header'));
+const Content = lazy(() => import('./Content'));
 const PostAction = lazy(() => import('./PostAction'));
 
 type PostProps = {
@@ -23,9 +22,7 @@ const Index: React.FC<PostProps> = ({
   hasMenu = false,
   hasFooter = true,
 }) => {
-  const post = useGetPost(postId, true);
-  const shareBtnRef = useRef<HTMLButtonElement>(null);
-  const { handleDialogOpen } = usePostState();
+  const post = useGetPost(postId);
 
   return (
     <Suspense fallback={<PostLoader />}>
@@ -44,7 +41,6 @@ const Index: React.FC<PostProps> = ({
                 {hasFooter && (
                   <CardFooter className='px-3 sm:px-6 pb-2'>
                     <PostAction
-                      shareBtnRef={shareBtnRef}
                       postId={post.data.data.id}
                       sharedPostId={post.data.data.sharedPostId}
                     />

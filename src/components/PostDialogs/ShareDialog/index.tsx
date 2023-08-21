@@ -3,7 +3,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
 } from '@ui/dialog';
 import { Button } from '@ui/button';
@@ -13,24 +12,23 @@ import { useState, useRef, useEffect } from 'react';
 import ContentEditable, { ContentEditableEvent } from 'react-contenteditable';
 import Post from '@components/Post';
 import PostLoader from '@components/Loader/PostLoader';
+import usePostDialog from '@src/contextsHooks/usePostDialog';
 
 interface IndexProps {
   postId: number;
-  sharedPostId?: number;
-  children: React.ReactNode;
 }
 
-const Index: React.FC<IndexProps> = ({ children, postId, sharedPostId }) => {
+const Index: React.FC<IndexProps> = ({ postId }) => {
+  const { isOpen, setIsOpen } = usePostDialog();
   const { toast } = useToast();
-  const [open, setOpen] = useState(false);
+
   const [value, setValue] = useState({
     text: '',
   });
 
   const sharePost = useSharePost();
 
-  // if the post is a shared post get the original post ID else get the post ID
-  const getPost = useGetPost(sharedPostId ? sharedPostId : postId, open);
+  const getPost = useGetPost(postId);
 
   const textRef = useRef<HTMLParagraphElement>(null);
 
@@ -61,7 +59,7 @@ const Index: React.FC<IndexProps> = ({ children, postId, sharedPostId }) => {
         setValue((prev) => ({ ...prev, text: '' }));
       }
       sharePost.reset();
-      setOpen(false);
+      setIsOpen(false);
     }
 
     if (sharePost.isError) {
@@ -78,9 +76,7 @@ const Index: React.FC<IndexProps> = ({ children, postId, sharedPostId }) => {
   }, [sharePost.isError, sharePost.isSuccess]);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className='sm:my-5'>
         <DialogHeader>
           <DialogTitle className='text-center'>SHARE POST</DialogTitle>

@@ -6,7 +6,24 @@ import { formatDistanceToNow } from 'date-fns';
 import { useEffect, useState } from 'react';
 
 interface SharedPostProps {
-  data: Omit<PostAuthor, 'sharedPost'>;
+  data: {
+    author: {
+      id: number;
+      email: string;
+      profile?: {
+        profilePhoto?: string;
+        firstName: string;
+        middleName?: string;
+        lastName: string;
+      };
+    };
+    id: number;
+    authorId: number;
+    text?: string;
+    photo?: string;
+    postType: string;
+    createdAt: Date;
+  };
   className?: string;
 }
 
@@ -37,7 +54,7 @@ const SharedPost: React.FC<SharedPostProps> = ({ data, className }) => {
             </Avatar>
 
             <div className='flex flex-col ml-2'>
-              <Link to={`/user/${data.authorId}`} className='hover:underline'>
+              <Link to={`/user/${data.author.id}`} className='hover:underline'>
                 {data.author.profile
                   ? `${data.author.profile.firstName}
                     ${data.author.profile?.middleName}

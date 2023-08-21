@@ -41,15 +41,13 @@ type PostResultType = {
 };
 
 export const useGetPost = (
-  postId: number,
-  enabled = false
+  postId: number
 ): UseQueryResult<PostResultType, Error> => {
   const getPost = () => request({ url: `/post/${postId}` });
 
   return useQuery(['post', postId], getPost, {
     refetchOnWindowFocus: false,
     retry: false,
-    enabled: enabled,
   });
 };
 

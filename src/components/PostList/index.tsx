@@ -11,7 +11,6 @@ type PostListProps = {
   className?: string;
   isLoading: boolean;
   hasMenu?: boolean;
-  postEditable?: boolean;
   data: InfiniteQueryPostResponse[] | undefined;
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
@@ -22,7 +21,6 @@ const Index: React.FC<PostListProps> = ({
   className,
   isLoading,
   hasMenu,
-  postEditable,
   data,
   hasNextPage,
   isFetchingNextPage,

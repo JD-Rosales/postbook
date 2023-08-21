@@ -1,40 +1,52 @@
 import { CardContent } from '@components/ui/card';
 import ContentEditable, { ContentEditableEvent } from 'react-contenteditable';
-import { lazy, useRef } from 'react';
-import usePostState from '@src/contextsHooks/usePostState';
-const SharedPost = lazy(() => import('./SharedPost'));
+import { lazy, useEffect, useRef, useState } from 'react';
+import usePostDialog from '@src/contextsHooks/usePostDialog';
 
+const SharedPost = lazy(() => import('./SharedPost'));
 interface ContentProps {
   data: PostAuthor;
 }
 
 const Content: React.FC<ContentProps> = ({ data }) => {
-  // const { setPostState, setIsOpen, postState } = usePostState();
+  const { isOpen, setDialogData, dialogState } = usePostDialog();
 
+  const [localState, setLocalState] = useState({
+    text: data.text ?? '',
+    photo: data.photo ?? '',
+  });
   const textRef = useRef<HTMLParagraphElement>(null);
 
   const handleChange = (e: ContentEditableEvent) => {
     const text = e.target.value;
-    // setPostState((prev) => ({ ...prev, text: text }));
+
+    setLocalState((value) => ({ ...value, text: text }));
   };
+
+  useEffect(() => {
+    if (data.id === dialogState?.id) {
+      setDialogData(localState);
+    }
+  }, [data.id, dialogState?.id, localState, setDialogData]);
 
   return (
     <CardContent className='pb-3 px-3 sm:px-6'>
       <div className='relative'>
         <ContentEditable
           innerRef={textRef}
+          disabled={!isOpen}
           className={`mb-2 focus-visible:outline-none bg-transparent break-all`}
-          html={data.text ?? ''}
+          html={localState.text}
           onChange={handleChange}
           tagName='p'
         />
 
         {/* Placeholder for the ContentEditable */}
-        {/* {!data.text && postEditable && (
+        {isOpen && !localState.text && (
           <p className='absolute top-0 text-gray-500 pointer-events-none'>
             Input your post content here.
           </p>
-        )} */}
+        )}
       </div>
 
       {data?.photo && (

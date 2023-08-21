@@ -6,9 +6,10 @@ type Post = {
   createdAt: Date;
   updatedAt: Date;
   authorId: number;
-  sharedPostId: number;
+  sharedPostId: number | null;
   sharedPost?: Post & {
     author: {
+      id: number;
       email: string;
       profile?: ProfileType;
     };

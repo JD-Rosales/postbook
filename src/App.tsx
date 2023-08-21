@@ -1,11 +1,13 @@
-import { RouterProvider } from 'react-router-dom';
 import Router from './routes/router';
-import Spinner from '@components/Spinner';
+import { lazy } from 'react';
+
+const PostDialogs = lazy(() => import('@components/PostDialogs/index'));
 
 function App() {
   return (
     <div className='App'>
-      <RouterProvider fallbackElement={<Spinner />} router={Router()} />
+      {Router()}
+      <PostDialogs />
     </div>
   );
 }

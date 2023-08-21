@@ -7,25 +7,21 @@ import {
 } from '@ui/dialog';
 import { Button } from '@ui/button';
 import Post from '@components/Post';
-import usePostState from '@src/contextsHooks/usePostState';
-import { useEffect } from 'react';
+import usePostDialog from '@src/contextsHooks/usePostDialog';
+
 interface IndexProps {
   postId: number;
 }
 
 const Index: React.FC<IndexProps> = ({ postId }) => {
-  const { isOpen, setIsOpen } = usePostState();
+  const { isOpen, setIsOpen } = usePostDialog();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     console.log(e);
   };
 
-  const handleEditingChange = (): void => {
-    setIsOpen((value) => !value);
-  };
-
   return (
-    <Dialog open={isOpen} onOpenChange={handleEditingChange}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className='sm:my-5'>
         <DialogHeader>
           <DialogTitle className='text-center'>EDIT POST</DialogTitle>

@@ -6,21 +6,15 @@ import {
   TooltipTrigger,
 } from '@ui/tooltip';
 import { ThumbsUp, MessageSquare, Repeat2 } from 'lucide-react';
+import usePostDialog from '@src/contextsHooks/usePostDialog';
 import { useGetTotalLIkes, useLikePost } from '@src/hooks/usePost';
-import { lazy } from 'react';
-
-const PostShareDialog = lazy(() => import('@components/PostShareDialog'));
 interface PostActionProps {
   postId: number;
-  sharedPostId?: number;
-  shareBtnRef?: React.RefObject<HTMLButtonElement>;
+  sharedPostId: number | null;
 }
 
-const PostAction: React.FC<PostActionProps> = ({
-  postId,
-  sharedPostId,
-  shareBtnRef,
-}) => {
+const PostAction: React.FC<PostActionProps> = ({ postId, sharedPostId }) => {
+  const { handleDialog } = usePostDialog();
   const totalLikes = useGetTotalLIkes(postId);
   const likePost = useLikePost();
 
@@ -92,18 +86,20 @@ const PostAction: React.FC<PostActionProps> = ({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div>
-                <PostShareDialog postId={postId} sharedPostId={sharedPostId}>
-                  <Button
-                    ref={shareBtnRef}
-                    className='rounded-2xl'
-                    variant={'outline'}
-                    fullWidth
-                  >
-                    <Repeat2 className='text-primary' />
-                  </Button>
-                </PostShareDialog>
-              </div>
+              <Button
+                onClick={() => {
+                  // if post is a shared post pass the sharedpost id
+                  handleDialog({
+                    id: sharedPostId ?? postId,
+                    type: 'share',
+                  });
+                }}
+                className='rounded-2xl'
+                variant={'outline'}
+                fullWidth
+              >
+                <Repeat2 className='text-primary' />
+              </Button>
             </TooltipTrigger>
             <TooltipContent>
               <span>Share</span>
