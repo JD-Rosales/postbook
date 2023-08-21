@@ -1,7 +1,8 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import './styles/global.css';
-import SidebarProvider from './components/Providers/SidebarProvider';
+import SidebarProvider from '@components/Providers/SidebarProvider';
+import PostStateProvider from '@src/components/Providers/PostStateProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from '@ui/toaster';
@@ -16,8 +17,10 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <QueryClientProvider client={queryClient}>
       <Suspense fallback={<Spinner />}>
         <SidebarProvider>
-          <App />
-          <Toaster />
+          <PostStateProvider>
+            <App />
+            <Toaster />
+          </PostStateProvider>
         </SidebarProvider>
       </Suspense>
       <ReactQueryDevtools initialIsOpen={false} />

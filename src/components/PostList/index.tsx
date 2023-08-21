@@ -10,6 +10,8 @@ const Post = lazy(() => import('@components/Post'));
 type PostListProps = {
   className?: string;
   isLoading: boolean;
+  hasMenu?: boolean;
+  postEditable?: boolean;
   data: InfiniteQueryPostResponse[] | undefined;
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
@@ -19,6 +21,8 @@ type PostListProps = {
 const Index: React.FC<PostListProps> = ({
   className,
   isLoading,
+  hasMenu,
+  postEditable,
   data,
   hasNextPage,
   isFetchingNextPage,
@@ -80,7 +84,11 @@ const Index: React.FC<PostListProps> = ({
                       ref={i === group.data.length - 1 ? lastPostRef : null}
                     >
                       <Suspense fallback={<PostLoader />}>
-                        <Post data={post} />
+                        <Post
+                          data={post}
+                          hasMenu={hasMenu}
+                          postEditable={postEditable}
+                        />
                       </Suspense>
                     </div>
                   );

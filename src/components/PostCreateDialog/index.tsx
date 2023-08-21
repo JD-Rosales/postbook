@@ -8,7 +8,6 @@ import {
   DialogFooter,
 } from '@ui/dialog';
 import { Input } from '@ui/input';
-import { Textarea } from '@ui/textarea';
 import { Button } from '@ui/button';
 import { useToast } from '@ui/use-toast';
 import { Progress } from '@ui/progress';
@@ -16,6 +15,7 @@ import { SmilePlus, Image, X } from 'lucide-react';
 import { EmojiClickData } from 'emoji-picker-react';
 import { useFileUpload } from '@src/hooks/useFileUpload';
 import { useCreatePost } from '@src/hooks/usePost';
+import ContentEditable, { ContentEditableEvent } from 'react-contenteditable';
 
 import EmojiPickerLoader from '@components/Loader/EmojiPickerLoader';
 
@@ -29,6 +29,7 @@ const Index: React.FC<IndexProps> = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [emojiPickerShown, setEmojiPickerShown] = useState(false);
   const [imgPrev, setImgPrev] = useState('');
+  const [text, setText] = useState('');
   const textRef = useRef<HTMLTextAreaElement>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const emojiRef = useRef<HTMLDivElement>(null);
@@ -40,7 +41,6 @@ const Index: React.FC<IndexProps> = ({ children }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const text = textRef.current?.value;
     let photo = imgPrev;
     let photoPublicId;
     if (imgPrev) {
@@ -54,9 +54,15 @@ const Index: React.FC<IndexProps> = ({ children }) => {
     createPost.mutate({ text, photo, photoPublicId });
   };
 
+  const handleChange = (e: ContentEditableEvent) => {
+    const text = e.target.value;
+
+    setText(text);
+  };
+
   const handleEmojiClick = (emoji: EmojiClickData, event: MouseEvent) => {
     if (textRef.current && event) {
-      textRef.current.value = textRef.current.value + emoji.emoji;
+      setText((prev) => prev + emoji.emoji);
     }
   };
 
@@ -97,6 +103,7 @@ const Index: React.FC<IndexProps> = ({ children }) => {
       fileUpload.reset();
 
       setOpen(false);
+      setText('');
       toast({
         variant: 'success',
         title: 'Success',
@@ -134,12 +141,21 @@ const Index: React.FC<IndexProps> = ({ children }) => {
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className='mt-3'>
-            <Textarea
-              ref={textRef}
-              className='text-base'
-              placeholder='Type your post text here.'
-              name='text'
-            />
+            <div className='relative mb-6'>
+              <ContentEditable
+                innerRef={textRef}
+                className={`mb-2 focus-visible:outline-none bg-transparent break-all`}
+                html={text}
+                onChange={handleChange}
+                tagName='p'
+              />
+              {/* Placeholder for the ContentEditable */}
+              {!text && (
+                <p className='absolute top-0 text-gray-500 pointer-events-none'>
+                  Input your post content here.
+                </p>
+              )}
+            </div>
             <Input
               type='file'
               className='hidden'

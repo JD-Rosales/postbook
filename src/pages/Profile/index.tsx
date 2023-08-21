@@ -107,6 +107,8 @@ const Index = () => {
         className='mt-2'
         isLoading={userPosts.isLoading}
         data={userPosts.data?.pages}
+        hasMenu={true}
+        postEditable={true}
         hasNextPage={userPosts.hasNextPage}
         isFetchingNextPage={userPosts.isFetchingNextPage}
         nextPage={userPosts.fetchNextPage}

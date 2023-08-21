@@ -1,5 +1,4 @@
-import { SidebarContext } from './Context';
-import { initialValue } from './Context';
+import { SidebarContext, initialValue } from './Context';
 import { useState } from 'react';
 
 interface SidebarProviderProps {
