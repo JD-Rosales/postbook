@@ -22,6 +22,25 @@ export const useCreatePost = () => {
   });
 };
 
+const updatePost = (data: {
+  postId: number;
+  text?: string;
+  photo?: string;
+  photoPublicId?: string;
+}) => request({ url: '/post', method: 'put', data });
+
+export const useUpdatePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updatePost,
+    onError: (error: ErrResponse) => error,
+    onSuccess: (data) => {
+      const postId = data.data.id;
+      queryClient.invalidateQueries(['post', postId]);
+    },
+  });
+};
+
 const deletePost = (data: { postId: number }) =>
   request({ url: `/post/${data.postId}`, method: 'delete', data });
 

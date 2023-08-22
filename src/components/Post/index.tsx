@@ -14,6 +14,7 @@ type PostProps = {
   hasFooter?: boolean;
   hasMenu?: boolean;
   className?: string;
+  isEditable?: boolean;
 };
 
 const Index: React.FC<PostProps> = ({
@@ -21,6 +22,7 @@ const Index: React.FC<PostProps> = ({
   postId,
   hasMenu = false,
   hasFooter = true,
+  isEditable = false,
 }) => {
   const post = useGetPost(postId);
 
@@ -36,7 +38,7 @@ const Index: React.FC<PostProps> = ({
             <>
               <Card className={cn('mb-2', className)}>
                 <Header data={post.data.data} hasMenu={hasMenu} />
-                <Content data={post.data.data} />
+                <Content data={post.data.data} isEditable={isEditable} />
 
                 {hasFooter && (
                   <CardFooter className='px-3 sm:px-6 pb-2'>

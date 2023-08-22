@@ -6,19 +6,69 @@ import {
   DialogFooter,
 } from '@ui/dialog';
 import { Button } from '@ui/button';
+import { Progress } from '@ui/progress';
 import Post from '@components/Post';
+import { useGetPost } from '@src/hooks/usePost';
 import usePostDialog from '@src/contextsHooks/usePostDialog';
+import { useFileUpload } from '@src/hooks/useFileUpload';
+import { useUpdatePost } from '@src/hooks/usePost';
+import { useToast } from '@ui/use-toast';
+import { useEffect } from 'react';
 
 interface IndexProps {
   postId: number;
 }
 
 const Index: React.FC<IndexProps> = ({ postId }) => {
-  const { isOpen, setIsOpen } = usePostDialog();
+  const { toast } = useToast();
+  const post = useGetPost(postId);
+  const { isOpen, setIsOpen, dialogData } = usePostDialog();
+  const fileUpload = useFileUpload(1);
+  const postUpdate = useUpdatePost();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log(e);
+    e.preventDefault();
+
+    let data = { ...dialogData, photoPublicId: undefined, postId };
+
+    // start uploading photo if photo is modified on submit
+    if (post.data?.data.photo !== dialogData.photo && dialogData.photo) {
+      const response = await fileUpload.mutateAsync(dialogData.photo);
+      data = { ...data, photo: response.data.secure_url };
+      data = { ...data, photoPublicId: response.data.public_id };
+    }
+
+    postUpdate.mutate(data);
   };
+
+  useEffect(() => {
+    if (postUpdate.isSuccess && !postUpdate.isError) {
+      setIsOpen(false);
+      fileUpload.reset();
+      toast({
+        variant: 'success',
+        title: 'Sucess!',
+        description: 'Post updated successfully',
+      });
+    }
+
+    if (postUpdate.isError) {
+      toast({
+        variant: 'destructive',
+        title: 'Sucess!',
+        description: `${postUpdate.error.message}`,
+      });
+    }
+
+    if (fileUpload.isError) {
+      toast({
+        variant: 'destructive',
+        title: 'Sucess!',
+        description: `${fileUpload.error.message}`,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [postUpdate, fileUpload]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -27,7 +77,19 @@ const Index: React.FC<IndexProps> = ({ postId }) => {
           <DialogTitle className='text-center'>EDIT POST</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className='relative w-full'>
-          <Post postId={postId} hasFooter={false} hasMenu={false} />
+          <Post
+            postId={postId}
+            hasFooter={false}
+            hasMenu={false}
+            isEditable={true}
+          />
+
+          {fileUpload.isLoading && (
+            <Progress
+              value={fileUpload.progress}
+              className='w-full mt-3 mb-2 h-3'
+            />
+          )}
 
           <DialogFooter className='mt-4'>
             <Button type='submit' variant={'default'} fullWidth>
