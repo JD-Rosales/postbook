@@ -12,7 +12,6 @@ const PostAction = lazy(() => import('./PostAction'));
 type PostProps = {
   postId: number;
   hasFooter?: boolean;
-  hasMenu?: boolean;
   className?: string;
   isEditable?: boolean;
 };
@@ -20,7 +19,6 @@ type PostProps = {
 const Index: React.FC<PostProps> = ({
   className,
   postId,
-  hasMenu = false,
   hasFooter = true,
   isEditable = false,
 }) => {
@@ -37,7 +35,7 @@ const Index: React.FC<PostProps> = ({
           ) : (
             <>
               <Card className={cn('mb-2', className)}>
-                <Header data={post.data.data} hasMenu={hasMenu} />
+                <Header data={post.data.data} />
                 <Content data={post.data.data} isEditable={isEditable} />
 
                 {hasFooter && (

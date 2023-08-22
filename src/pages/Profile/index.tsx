@@ -77,7 +77,7 @@ const Index = () => {
         )}
 
         {userProfile.isSuccess &&
-          (parseJwtId().toString() === id ? (
+          (parseJwtId()?.toString() === id ? (
             <div className=' flex justify-center'>
               <UpdateDialog queryData={userProfile.data?.data.profile}>
                 <Button
@@ -107,7 +107,6 @@ const Index = () => {
         className='mt-2'
         isLoading={userPosts.isLoading}
         data={userPosts.data?.pages}
-        hasMenu={true}
         hasNextPage={userPosts.hasNextPage}
         isFetchingNextPage={userPosts.isFetchingNextPage}
         nextPage={userPosts.fetchNextPage}

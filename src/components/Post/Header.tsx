@@ -16,13 +16,13 @@ import { MoreHorizontal, Trash2, PenLine, Forward } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useState, useEffect } from 'react';
 import usePostDialog from '@src/contextsHooks/usePostDialog';
-
+import { useVerifyToken } from '@src/hooks/useAuth';
 interface HeaderProps {
   data: PostAuthor;
-  hasMenu?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ data, hasMenu = false }) => {
+const Header: React.FC<HeaderProps> = ({ data }) => {
+  const verifiedUser = useVerifyToken();
   const { handleDialog } = usePostDialog();
 
   const [postDate, setPostDate] = useState(
@@ -63,7 +63,8 @@ const Header: React.FC<HeaderProps> = ({ data, hasMenu = false }) => {
           </div>
         </div>
 
-        {hasMenu && (
+        {/* only show menu if post author id same as logged in user */}
+        {verifiedUser.data?.data.id === data.authorId && (
           <div className='absolute right-0 top-1'>
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
@@ -81,7 +82,11 @@ const Header: React.FC<HeaderProps> = ({ data, hasMenu = false }) => {
                 <DropdownMenuLabel>Settings</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      handleDialog({ id: data.id, type: 'delete' });
+                    }}
+                  >
                     <span>Delete</span>
                     <DropdownMenuShortcut>
                       <Trash2 size={20} />

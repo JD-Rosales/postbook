@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function parseJwtId(): number {
+export function parseJwtId(): number | undefined {
   const token = localStorage.getItem('token') || '';
 
   // Split the token and taken the second
@@ -20,5 +20,5 @@ export function parseJwtId(): number {
     return user.id;
   }
 
-  return 0;
+  return undefined;
 }

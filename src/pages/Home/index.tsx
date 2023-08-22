@@ -9,7 +9,6 @@ const Index = () => {
     <ContainerXl>
       <PostList
         isLoading={fetchPosts.isLoading}
-        hasMenu={false}
         data={fetchPosts.data?.pages}
         hasNextPage={fetchPosts.hasNextPage}
         isFetchingNextPage={fetchPosts.isFetchingNextPage}

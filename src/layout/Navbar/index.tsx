@@ -1,10 +1,15 @@
 import useSidebar from '@src/contextsHooks/useSidebar';
+import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import { ArrowRightToLine, ArrowLeftToLine, Menu } from 'lucide-react';
+import { useGetProfile } from '@src/hooks/useProfile';
+import { parseJwtId } from '@lib/utils';
 
 const Index = () => {
   const { setToggled, setCollapsed, collapsed } = useSidebar();
+  const userProfile = useGetProfile(parseJwtId()?.toString() ?? '');
+
   return (
-    <div className='flex items-center shadow-md bg-white py-2 h-16 sticky top-0 z-20'>
+    <div className='flex items-center shadow-md bg-white p-2 h-16 sticky top-0 z-20'>
       <button
         className='md:hidden ml-2 text-slate-600 p-2'
         onClick={() => setToggled((prev) => !prev)}
@@ -18,6 +23,13 @@ const Index = () => {
       >
         {collapsed ? <ArrowRightToLine /> : <ArrowLeftToLine />}
       </button>
+
+      <div className='ml-auto'>
+        <Avatar className='text-sm h-[40px] w-[40px]'>
+          <AvatarImage src={userProfile.data?.data.profile?.profilePhoto} />
+          <AvatarFallback>DP</AvatarFallback>
+        </Avatar>
+      </div>
     </div>
   );
 };

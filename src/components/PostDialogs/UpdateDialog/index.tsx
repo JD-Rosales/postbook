@@ -51,24 +51,8 @@ const Index: React.FC<IndexProps> = ({ postId }) => {
         description: 'Post updated successfully',
       });
     }
-
-    if (postUpdate.isError) {
-      toast({
-        variant: 'destructive',
-        title: 'Sucess!',
-        description: `${postUpdate.error.message}`,
-      });
-    }
-
-    if (fileUpload.isError) {
-      toast({
-        variant: 'destructive',
-        title: 'Sucess!',
-        description: `${fileUpload.error.message}`,
-      });
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [postUpdate, fileUpload]);
+  }, [postUpdate]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -77,12 +61,7 @@ const Index: React.FC<IndexProps> = ({ postId }) => {
           <DialogTitle className='text-center'>EDIT POST</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className='relative w-full'>
-          <Post
-            postId={postId}
-            hasFooter={false}
-            hasMenu={false}
-            isEditable={true}
-          />
+          <Post postId={postId} hasFooter={false} isEditable={true} />
 
           {fileUpload.isLoading && (
             <Progress
