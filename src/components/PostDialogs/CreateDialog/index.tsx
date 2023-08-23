@@ -16,17 +16,13 @@ import { EmojiClickData } from 'emoji-picker-react';
 import { useFileUpload } from '@src/hooks/useFileUpload';
 import { useCreatePost } from '@src/hooks/usePost';
 import ContentEditable, { ContentEditableEvent } from 'react-contenteditable';
-
+import usePostDialog from '@src/contextsHooks/usePostDialog';
 import EmojiPickerLoader from '@components/Loader/EmojiPickerLoader';
 
 const EmojiPicker = lazy(() => import('@components/EmojiPicker'));
 
-interface IndexProps {
-  children: React.ReactNode;
-}
-
-const Index: React.FC<IndexProps> = ({ children }) => {
-  const [open, setOpen] = useState(false);
+const Index = () => {
+  const { isOpen, setIsOpen } = usePostDialog();
   const [emojiPickerShown, setEmojiPickerShown] = useState(false);
   const [imgPrev, setImgPrev] = useState('');
   const [text, setText] = useState('');
@@ -102,7 +98,7 @@ const Index: React.FC<IndexProps> = ({ children }) => {
       }
       fileUpload.reset();
 
-      setOpen(false);
+      setIsOpen(false);
       setText('');
       toast({
         variant: 'success',
@@ -127,14 +123,8 @@ const Index: React.FC<IndexProps> = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emojiPickerShown]);
 
-  useEffect(() => {
-    setEmojiPickerShown(false);
-  }, [open, setOpen]);
-
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className='sm:my-5'>
         <DialogHeader>
           <DialogTitle className='text-center'>CREATE POST</DialogTitle>
