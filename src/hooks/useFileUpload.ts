@@ -4,7 +4,7 @@ import { ErrResponse } from '@lib/axios-interceptor';
 import axios from 'axios';
 
 export const useFileUpload = (key: number) => {
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState<number>(0);
 
   const mutation = useMutation({
     mutationKey: ['fileUpload', key],

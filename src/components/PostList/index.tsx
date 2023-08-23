@@ -43,7 +43,7 @@ const Index: React.FC<PostListProps> = ({
       const observer = new IntersectionObserver(handleIntersect, {
         root: null,
         rootMargin: '20px',
-        threshold: 1.0,
+        threshold: 1,
       });
 
       observer.observe(lastPostRef.current);

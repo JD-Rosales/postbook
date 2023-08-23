@@ -1,12 +1,15 @@
 // import styles from './home.module.css';
 import ContainerXl from '@components/ContainerXl';
 import PostList from '@components/PostList';
+import CreatePost from '@components/CreatePost';
 import { usePosts } from '@src/hooks/usePost';
 
 const Index = () => {
   const fetchPosts = usePosts();
   return (
     <ContainerXl>
+      <CreatePost />
+
       <PostList
         isLoading={fetchPosts.isLoading}
         data={fetchPosts.data?.pages}
@@ -14,15 +17,6 @@ const Index = () => {
         isFetchingNextPage={fetchPosts.isFetchingNextPage}
         nextPage={fetchPosts.fetchNextPage}
       />
-
-      {/* <PostCreateDialog>
-        <div className='fixed right-20 bottom-20'>
-          <button className={styles['icon-btn'] + ' ' + styles['add-btn']}>
-            <div className={styles['add-icon']}></div>
-            <div className={styles['btn-txt']}>Create Post</div>
-          </button>
-        </div>
-      </PostCreateDialog> */}
     </ContainerXl>
   );
 };

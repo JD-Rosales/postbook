@@ -4,13 +4,16 @@ import Navbar from '../Navbar';
 
 const Index: React.FC = () => {
   return (
-    <div className='flex'>
-      <Sidebar />
-      <div className='flex-grow h-screen overflow-y-auto'>
-        <Navbar />
-        <Outlet />
+    <>
+      <Navbar />
+
+      <div className='flex bg-[#F2F3F6]'>
+        <Sidebar />
+        <div className='flex-grow h-screen overflow-y-auto'>
+          <Outlet />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
