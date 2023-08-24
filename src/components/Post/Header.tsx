@@ -1,35 +1,27 @@
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from '@ui/dropdown-menu';
-import { CardHeader, CardTitle } from '@components/ui/card';
-import { Button } from '@ui/button';
+import { useState, useEffect, useCallback } from 'react';
+import { CardHeader } from '@components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
-import { Link } from 'react-router-dom';
-import { MoreHorizontal, Trash2, PenLine, Forward } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { useState, useEffect } from 'react';
-import usePostDialog from '@src/contextsHooks/usePostDialog';
-import { useVerifyToken } from '@src/hooks/useAuth';
-interface HeaderProps {
+import { Link } from 'react-router-dom';
+
+type HeaderProps = {
   data: PostAuthor;
-}
+};
 
 const Header: React.FC<HeaderProps> = ({ data }) => {
-  const verifiedUser = useVerifyToken();
-  const { handleDialog } = usePostDialog();
-
   const [postDate, setPostDate] = useState(
     formatDistanceToNow(new Date(data.createdAt), {
       addSuffix: true,
     })
   );
+
+  const nameRenderer = useCallback((): string => {
+    if (data.author.profile) {
+      return `${data.author.profile.firstName} ${data.author.profile.middleName} ${data.author.profile.lastName}`;
+    } else if (data.author.email) {
+      return `${data?.author.email}`;
+    } else return ``;
+  }, [data]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -42,86 +34,22 @@ const Header: React.FC<HeaderProps> = ({ data }) => {
   }, [data.createdAt]);
 
   return (
-    <CardHeader className='px-3 sm:px-6'>
-      <CardTitle className='relative'>
-        <div className='flex align-middle items-center py-1'>
-          <Avatar className='text-sm h-[55px] w-[55px]'>
-            <AvatarImage src={data.author.profile?.profilePhoto} />
-            <AvatarFallback>DP</AvatarFallback>
-          </Avatar>
+    <CardHeader>
+      <div className='flex align-middle items-center font-semibold'>
+        <Avatar className='text-sm h-[55px] w-[55px]'>
+          <AvatarImage src={data.author.profile?.profilePhoto} />
+          <AvatarFallback>DP</AvatarFallback>
+        </Avatar>
 
-          <div className='flex flex-col ml-2'>
-            <Link to={'/user/' + data.authorId} className='hover:underline'>
-              {data.author.profile
-                ? `${data.author.profile.firstName}
-                    ${data.author.profile?.middleName}
-                    ${data.author.profile.lastName}`
-                : data.author.email}
-            </Link>
-
-            <span className='font-normal text-xs mt-1'>{`${data.postType} ${postDate}`}</span>
-          </div>
+        <div className='flex flex-col ml-2'>
+          <Link to={'/user/' + data.authorId} className='hover:underline'>
+            {nameRenderer()}
+          </Link>
+          <span className='font-normal text-xs'>
+            {`${data.postType} ${postDate}`}
+          </span>
         </div>
-
-        {/* only show menu if post author id same as logged in user */}
-        {verifiedUser.data?.data.id === data.authorId && (
-          <div className='absolute right-0 top-1'>
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant='ghost'
-                  className='focus-visible:ring-0 focus-visible:ring-offset-0'
-                >
-                  <MoreHorizontal />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                sideOffset={-25}
-                className='w-40 absolute -right-3'
-              >
-                <DropdownMenuLabel>Settings</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      handleDialog({ id: data.id, type: 'delete' });
-                    }}
-                  >
-                    <span>Delete</span>
-                    <DropdownMenuShortcut>
-                      <Trash2 size={20} />
-                    </DropdownMenuShortcut>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      handleDialog({ id: data.id, type: 'update' });
-                    }}
-                  >
-                    <span>Edit</span>
-                    <DropdownMenuShortcut>
-                      <PenLine size={20} />
-                    </DropdownMenuShortcut>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      // if post is a shared post pass the sharedpost id
-                      handleDialog({
-                        id: data.sharedPostId ?? data.id,
-                        type: 'share',
-                      });
-                    }}
-                  >
-                    <span>Share</span>
-                    <DropdownMenuShortcut>
-                      <Forward size={20} />
-                    </DropdownMenuShortcut>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        )}
-      </CardTitle>
+      </div>
     </CardHeader>
   );
 };

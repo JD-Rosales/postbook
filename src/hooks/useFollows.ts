@@ -10,7 +10,11 @@ interface UserProfile {
   data: UserProfileType[];
 }
 
-export const useIsFollowing = (id: number) => {
+type isFollowingRes = {
+  data: boolean;
+};
+
+export const useIsFollowing = (id: string): UseQueryResult<isFollowingRes> => {
   const isFollowing = () => {
     return request({ url: `follow/${id}` });
   };
@@ -20,7 +24,7 @@ export const useIsFollowing = (id: number) => {
   });
 };
 
-const followUser = (data: { followingId: number }) => {
+const followUser = (data: { followingId: string }) => {
   return request({ url: '/follow', method: 'post', data });
 };
 
@@ -29,13 +33,14 @@ export const useFollowUser = () => {
   return useMutation({
     mutationFn: followUser,
     onSuccess: (data) => {
-      queryClient.invalidateQueries(['following', data?.data?.followingId]);
+      const id = data.data.followingId.toString();
+      queryClient.invalidateQueries(['following', id]);
     },
     onError: (error: ErrResponse) => error,
   });
 };
 
-const unFollowUser = (data: { followingId: number }) => {
+const unFollowUser = (data: { followingId: string }) => {
   return request({ url: '/follow', method: 'delete', data });
 };
 
@@ -44,14 +49,15 @@ export const useUnFollowUser = () => {
   return useMutation({
     mutationFn: unFollowUser,
     onSuccess: (data) => {
-      queryClient.invalidateQueries(['following', data?.data?.followingId]);
+      const id = data.data.followingId.toString();
+      queryClient.invalidateQueries(['following', id]);
     },
     onError: (error: ErrResponse) => error,
   });
 };
 
 export const useUserFollowers = (
-  id: number
+  id: string
 ): UseQueryResult<UserProfile, Error> => {
   const followers = () => request({ url: `/follow/followers/${id}` });
 

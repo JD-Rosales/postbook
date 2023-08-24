@@ -8,7 +8,7 @@ const Index = () => {
   const fetchPosts = usePosts();
   return (
     <ContainerXl>
-      <CreatePost />
+      <CreatePost className='mb-0' />
 
       <PostList
         isLoading={fetchPosts.isLoading}

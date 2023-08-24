@@ -1,116 +1,64 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import ContainerXl from '@components/ContainerXl';
+import CreatePost from '@components/CreatePost';
+import ActionBtn from './ActionBtn';
+import UserPosts from './UserPosts';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
-import { Skeleton } from '@ui/skeleton';
-import { Button } from '@ui/button';
-import { useGetProfile } from '@src/hooks/useProfile';
+import { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { Pencil } from 'lucide-react';
-import { parseJwtId } from '@lib/utils';
-import PageNotFound from '@pages/NotFound';
-import UpdateDialog from './UpdateDialog';
-import FollowButton from './FollowButton';
-import Followers from './Followers';
-import { useUserPosts } from '@src/hooks/usePost';
-import PostList from '@components/PostList';
+import { useGetProfile } from '@src/hooks/useProfile';
 
 const Index = () => {
   const { id } = useParams();
-  const userProfile = useGetProfile(id);
-  const userPosts = useUserPosts(id);
+  const profile = useGetProfile(id);
 
-  if (userProfile.isError) {
-    return <PageNotFound />;
-  }
+  const nameRenderer = useCallback((): string => {
+    if (profile.data?.data.profile) {
+      return `${profile.data.data.profile.firstName} ${profile.data.data.profile.middleName} ${profile.data.data.profile.lastName}`;
+    } else if (profile.data?.data.email) {
+      return `${profile.data.data.email}`;
+    } else return ``;
+  }, [profile.data]);
 
   return (
-    <ContainerXl>
-      <div className='pb-5'>
-        <div className='relative bg-slate-400 h-52 rounded-b-lg mb-[90px]'>
-          {userProfile.data?.data?.profile?.coverPhoto ? (
-            <img
-              className='object-cover w-full h-full rounded-b-lg'
-              src={userProfile.data?.data?.profile.coverPhoto}
-              alt='Profile Cover Photo'
-            />
-          ) : (
-            <span className='absolute inset-0 flex items-center justify-center text-white'>
-              COVER PHOTO
-            </span>
-          )}
-
-          <div className='absolute -bottom-20 right-0 left-0'>
-            <div className='text-black relative w-40 sm:w-44 h-40 sm:h-44  mx-auto p-1 rounded-full bg-slate-300'>
-              {userProfile.isLoading ? (
-                <Skeleton className='w-full h-full rounded-full' />
-              ) : (
-                <Avatar className='h-full w-full'>
-                  <AvatarImage
-                    src={userProfile.data?.data?.profile?.profilePhoto}
-                  />
-                  <AvatarFallback>DP</AvatarFallback>
-                </Avatar>
-              )}
-
-              {/* <button className='bg-gray-200 hover:bg-slate-300 p-2 rounded-full absolute bottom-5 right-1'>
-                <Camera size={20} />
-              </button> */}
-            </div>
-          </div>
-
-          {/* <button className='bg-gray-200 hover:bg-slate-300 p-2 rounded absolute bottom-3 right-3'>
-            <Camera size={20} />
-          </button> */}
-        </div>
-
-        {userProfile.isLoading ? (
-          <Skeleton className='w-[300px] h-[30px] mx-auto' />
+    <ContainerXl className='bg-white'>
+      {/* Cover Container*/}
+      <div className='relative bg-slate-200 w-full h-60 rounded-b-lg'>
+        {profile.data?.data.profile?.coverPhoto ? (
+          <img
+            className='w-full h-full object-cover rounded-b-lg'
+            src={profile.data?.data.profile?.coverPhoto}
+            alt='Post Photo'
+          />
         ) : (
-          <span className='text-center text-2xl sm:text-3xl font-medium block px-4 break-all'>
-            {userProfile.isSuccess &&
-              (userProfile.data?.data?.profile
-                ? `${userProfile.data?.data?.profile.firstName} 
-          ${userProfile.data?.data?.profile?.middleName} 
-          ${userProfile.data?.data?.profile.lastName}`
-                : `${userProfile.data?.data?.email}`)}
+          <span className='absolute inset-0 flex items-center justify-center text-slate-500'>
+            Cover Photo
           </span>
         )}
-
-        {userProfile.isSuccess &&
-          (parseJwtId()?.toString() === id ? (
-            <div className=' flex justify-center'>
-              <UpdateDialog queryData={userProfile.data?.data.profile}>
-                <Button
-                  className='mt-4 ml-1 py-5 font-bold'
-                  variant={'default'}
-                >
-                  <Pencil className='mr-2' size={20} />
-                  EDIT PROFILE
-                </Button>
-              </UpdateDialog>
-            </div>
-          ) : (
-            <div className=' flex justify-center'>
-              <FollowButton id={userProfile.data.data.id} />
-            </div>
-          ))}
-
-        {userProfile.isLoading ? (
-          <>Loading</>
-        ) : (
-          <Followers id={userProfile.data.data.id} />
-        )}
       </div>
+      {/* End Cover Container*/}
 
-      <span className='font-medium block mt-6'>Posts</span>
-      <PostList
-        className='mt-2'
-        isLoading={userPosts.isLoading}
-        data={userPosts.data?.pages}
-        hasNextPage={userPosts.hasNextPage}
-        isFetchingNextPage={userPosts.isFetchingNextPage}
-        nextPage={userPosts.fetchNextPage}
-      />
+      <div className='px-2'>
+        {/* Profile Container */}
+        <div className='relative flex flex-col sm:flex-row items-center sm:items-start'>
+          <div className='relative -top-7 sm:-top-7 sm:left-5 p-1 bg-slate-300 rounded-full w-fit'>
+            <Avatar className='w-[150px] h-[150px]'>
+              <AvatarImage src={profile.data?.data.profile?.profilePhoto} />
+              <AvatarFallback>DP</AvatarFallback>
+            </Avatar>
+          </div>
+
+          <div className='-mt-5 sm:ml-8 sm:mt-3'>
+            <h1 className='text-2xl sm:text-2xl text-center font-bold break-all text-gray-700'>
+              {nameRenderer()}
+            </h1>
+            <ActionBtn id={id ?? ''} />
+          </div>
+        </div>
+        {/* End Profile Container */}
+        <CreatePost className='mt-6' />
+
+        <UserPosts id={id ?? ''} />
+      </div>
     </ContainerXl>
   );
 };

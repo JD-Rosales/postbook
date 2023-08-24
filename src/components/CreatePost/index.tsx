@@ -15,11 +15,15 @@ import { Camera, Laugh, SendHorizontal, X } from 'lucide-react';
 import ContentEditable, { ContentEditableEvent } from 'react-contenteditable';
 import { useNavigate } from 'react-router-dom';
 import { useGetProfile } from '@src/hooks/useProfile';
-import { parseJwtId } from '@lib/utils';
+import { parseJwtId, cn } from '@lib/utils';
 import { useCreatePost } from '@src/hooks/usePost';
 import { useFileUpload } from '@src/hooks/useFileUpload';
 
-const Index = () => {
+type IndexProps = {
+  className?: string;
+};
+
+const Index: React.FC<IndexProps> = ({ className }) => {
   const [formData, setFormData] = useState({
     text: '',
     photo: '',
@@ -93,6 +97,7 @@ const Index = () => {
     }
 
     if (createPost.isError) {
+      createPost.reset();
       toast({
         variant: 'destructive',
         title: 'An error has occured!',
@@ -108,7 +113,7 @@ const Index = () => {
     toast,
   ]);
   return (
-    <Card className='mt-4'>
+    <Card className={cn('mb-4', className)}>
       <CardContent>
         <div className='flex mt-4'>
           <div>
@@ -123,7 +128,7 @@ const Index = () => {
             </Avatar>
           </div>
 
-          <div className='relative w-full mx-3 px-2 pb-2 pt-3 bg-slate-100 text-gray-600 rounded-xl'>
+          <div className='relative w-full ml-3 px-2 pb-2 pt-4 bg-slate-100 text-gray-600 rounded-xl'>
             <ContentEditable
               innerRef={inputTextRef}
               disabled={false}
@@ -135,7 +140,7 @@ const Index = () => {
 
             {/* Placeholder for the ContentEditable */}
             {formData.text === '' && (
-              <p className='absolute top-0 text-gray-500 pb-2 pt-3 pointer-events-none'>
+              <p className='absolute top-0 w-full pr-1 pb-2 pt-4 text-gray-500 truncate pointer-events-none'>
                 What's on your mind
                 {userProfile.data?.data.profile?.firstName &&
                   `, ${userProfile.data?.data.profile?.firstName}`}
@@ -226,7 +231,7 @@ const Index = () => {
           <div className='col-span-4'>
             <Button
               onClick={handleSubmit}
-              className='rounded-2xl px-3 sm:px-4'
+              className='rounded-2xl px-3 sm:px-4 bg-slate-200'
               variant={'outline'}
               fullWidth
               loading={fileUploader.isLoading || createPost.isLoading}

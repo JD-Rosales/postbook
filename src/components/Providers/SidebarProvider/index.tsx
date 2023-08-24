@@ -7,16 +7,16 @@ interface SidebarProviderProps {
 }
 
 const SidebarProvider: React.FC<SidebarProviderProps> = ({ children }) => {
+  const isDesktop = useMediaQuery({ query: '(min-width: 768px)' });
+
   const [toggled, setToggled] = useState(initialValue.toggled);
   const [collapsed, setCollapsed] = useState(initialValue.collapsed);
 
-  const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
-
   useEffect(() => {
-    if (isMobile) {
+    if (isDesktop) {
       setCollapsed(false);
     }
-  }, [isMobile]);
+  }, [isDesktop]);
 
   return (
     <SidebarContext.Provider

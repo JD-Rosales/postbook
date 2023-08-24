@@ -10,7 +10,7 @@ interface SidebarContextType {
 
 export const initialValue = {
   toggled: false,
-  collapsed: true,
+  collapsed: false,
 };
 
 export const SidebarContext = createContext<SidebarContextType>({

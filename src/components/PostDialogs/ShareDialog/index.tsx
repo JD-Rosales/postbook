@@ -102,9 +102,7 @@ const Index: React.FC<IndexProps> = ({ postId }) => {
           {getPost.isLoading ? (
             <PostLoader hasImg={false} />
           ) : (
-            getPost.data && (
-              <Post postId={postId} hasFooter={false} hasMenu={false} />
-            )
+            getPost.data && <Post postId={postId} />
           )}
 
           <DialogFooter className='mt-4'>

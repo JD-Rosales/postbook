@@ -5,11 +5,11 @@ import Navbar from '../Navbar';
 const Index: React.FC = () => {
   return (
     <>
-      <Navbar />
+      <Navbar className='h-16' />
 
       <div className='flex bg-[#F2F3F6]'>
         <Sidebar />
-        <div className='flex-grow h-screen overflow-y-auto'>
+        <div className='h-[calc(100vh-4rem)] flex-grow overflow-y-auto px-2'>
           <Outlet />
         </div>
       </div>

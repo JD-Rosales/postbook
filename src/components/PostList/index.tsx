@@ -1,13 +1,11 @@
+import { useCallback, useEffect, useRef, Suspense } from 'react';
+import { cn } from '@src/lib/utils';
 import { FetchNextPageOptions } from '@tanstack/react-query';
-import { cn } from '@lib/utils';
 import { InfiniteQueryPostResponse } from '@src/hooks/usePost';
 import PostLoader from '@components/Loader/PostLoader';
-import NoData from './NoData';
-import { useRef, useEffect, useCallback, lazy, Suspense } from 'react';
+import Post from '@src/components/Post';
 
-const Post = lazy(() => import('@components/Post'));
-
-type PostListProps = {
+type IndexProps = {
   className?: string;
   isLoading: boolean;
   data: InfiniteQueryPostResponse[] | undefined;
@@ -16,7 +14,7 @@ type PostListProps = {
   nextPage: (options?: FetchNextPageOptions) => void;
 };
 
-const Index: React.FC<PostListProps> = ({
+const Index: React.FC<IndexProps> = ({
   className,
   isLoading,
   data,
@@ -53,22 +51,19 @@ const Index: React.FC<PostListProps> = ({
       };
     }
   }, [handleIntersect]);
-
   return (
-    <div className={cn('pt-5', className)}>
+    <div className={cn('pt-4', className)}>
       {isLoading ? (
         <div className='w-full h-full mt-5'>
           <PostLoader />
           <PostLoader />
         </div>
       ) : !data ? (
-        <></>
+        ''
       ) : data[0].data.length === 0 ? (
-        <>
-          <NoData />
-        </>
+        ''
       ) : (
-        <div>
+        <>
           {data.map((group, i) => {
             return (
               <div key={i}>
@@ -88,25 +83,8 @@ const Index: React.FC<PostListProps> = ({
               </div>
             );
           })}
-        </div>
+        </>
       )}
-
-      {!isLoading &&
-        (isFetchingNextPage ? (
-          <div className='relative flex pb-4 items-center px-12'>
-            <div className='flex-grow border-t border-gray-200'></div>
-            <span className='flex-shrink mx-4 text-gray-400'>Loading</span>
-            <div className='flex-grow border-t border-gray-200'></div>
-          </div>
-        ) : !hasNextPage && data && data[0].data.length !== 0 ? (
-          <div className='relative flex pb-4 items-center px-12'>
-            <div className='flex-grow border-t border-gray-200'></div>
-            <span className='flex-shrink mx-4 text-gray-400'>
-              No more posts
-            </span>
-            <div className='flex-grow border-t border-gray-200'></div>
-          </div>
-        ) : null)}
     </div>
   );
 };

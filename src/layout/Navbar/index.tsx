@@ -9,20 +9,18 @@ import {
   DropdownMenuTrigger,
 } from '@ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
-import {
-  ArrowRightToLine,
-  ArrowLeftToLine,
-  Menu,
-  User,
-  LogOut,
-} from 'lucide-react';
+import { Menu, User, LogOut } from 'lucide-react';
 import { useGetProfile } from '@src/hooks/useProfile';
-import { parseJwtId } from '@lib/utils';
+import { parseJwtId, cn } from '@lib/utils';
 import { useNavigate } from 'react-router-dom';
 
-const Index = () => {
+type NavbarProps = {
+  className?: string;
+};
+
+const Index: React.FC<NavbarProps> = ({ className }) => {
   const navigate = useNavigate();
-  const { setToggled, setCollapsed, collapsed } = useSidebar();
+  const { setToggled } = useSidebar();
   const userProfile = useGetProfile(parseJwtId()?.toString() ?? '');
 
   const handleLogout = () => {
@@ -31,19 +29,17 @@ const Index = () => {
   };
 
   return (
-    <div className='flex items-center shadow-md bg-white p-2 h-16 sticky top-0 z-20'>
+    <div
+      className={cn(
+        'flex items-center shadow-md bg-white p-2 h-16 sticky top-0 z-20',
+        className
+      )}
+    >
       <button
         className='md:hidden ml-2 text-slate-600 p-2'
         onClick={() => setToggled((prev) => !prev)}
       >
         <Menu size={30} />
-      </button>
-
-      <button
-        className='hidden md:block ml-2 text-slate-600 p-2'
-        onClick={() => setCollapsed((prev) => !prev)}
-      >
-        {collapsed ? <ArrowRightToLine /> : <ArrowLeftToLine />}
       </button>
 
       <div className='ml-auto mr-2'>

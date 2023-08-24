@@ -1,57 +1,52 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import { Card, CardFooter } from '@components/ui/card';
-import { cn } from '@lib/utils';
-import { Suspense, lazy } from 'react';
+import { Card, CardContent } from '@ui/card';
+import { AspectRatio } from '@ui/aspect-ratio';
 import PostLoader from '@components/Loader/PostLoader';
 import { useGetPost } from '@src/hooks/usePost';
+import { cn } from '@lib/utils';
+import Header from './Header';
+import Footer from './Footer';
 
-const Header = lazy(() => import('./Header'));
-const Content = lazy(() => import('./Content'));
-const PostAction = lazy(() => import('./PostAction'));
-
-type PostProps = {
+type IndexProps = {
   postId: number;
-  hasFooter?: boolean;
   className?: string;
-  isEditable?: boolean;
 };
 
-const Index: React.FC<PostProps> = ({
-  className,
-  postId,
-  hasFooter = true,
-  isEditable = false,
-}) => {
+const Index: React.FC<IndexProps> = ({ postId, className }) => {
   const post = useGetPost(postId);
 
   return (
-    <Suspense fallback={<PostLoader />}>
+    <>
       {post.isLoading ? (
-        ''
+        <PostLoader />
       ) : (
-        <>
+        <Card className={cn('mb-2', className)}>
           {!post.data?.data ? (
-            <>Make a component for post not found</>
+            'Make a component for post not found'
           ) : (
             <>
-              <Card className={cn('mb-2', className)}>
-                <Header data={post.data.data} />
-                <Content data={post.data.data} isEditable={isEditable} />
-
-                {hasFooter && (
-                  <CardFooter className='px-3 sm:px-6 pb-2'>
-                    <PostAction
-                      postId={post.data.data.id}
-                      sharedPostId={post.data.data.sharedPostId}
-                    />
-                  </CardFooter>
+              <Header data={post.data.data} />
+              <CardContent className='pb-1'>
+                {post.data.data.text && (
+                  <p className='text-base sm:text-lg break-all mb-2'>
+                    {post.data.data.text}
+                  </p>
                 )}
-              </Card>
+                {post.data.data.photo && (
+                  <AspectRatio ratio={16 / 9}>
+                    <img
+                      className='rounded-lg w-full h-full object-cover'
+                      src={post.data.data.photo}
+                      alt='Post Photo'
+                    />
+                  </AspectRatio>
+                )}
+              </CardContent>
+              <Footer postId={postId} />
             </>
           )}
-        </>
+        </Card>
       )}
-    </Suspense>
+    </>
   );
 };
 

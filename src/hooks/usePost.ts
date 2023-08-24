@@ -15,9 +15,14 @@ const createPost = (data: {
 }) => request({ url: '/post', method: 'post', data });
 
 export const useCreatePost = () => {
+  const queryClient = useQueryClient();
   return useMutation(createPost, {
     onError: (error: ErrResponse) => {
       return error;
+    },
+    onSuccess: (data) => {
+      const authorId = data.data.authorId;
+      queryClient.prefetchInfiniteQuery(['posts', 'user', authorId.toString()]);
     },
   });
 };

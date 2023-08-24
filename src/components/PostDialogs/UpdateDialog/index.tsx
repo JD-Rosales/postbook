@@ -61,7 +61,7 @@ const Index: React.FC<IndexProps> = ({ postId }) => {
           <DialogTitle className='text-center'>EDIT POST</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className='relative w-full'>
-          <Post postId={postId} hasFooter={false} isEditable={true} />
+          <Post postId={postId} />
 
           {fileUpload.isLoading && (
             <Progress
