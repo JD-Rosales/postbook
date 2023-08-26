@@ -34,8 +34,10 @@ const Index: React.FC<IndexProps> = ({ postId }) => {
     // start uploading photo if photo is modified on submit
     if (post.data?.data.photo !== dialogData.photo && dialogData.photo) {
       const response = await fileUpload.mutateAsync(dialogData.photo);
-      data = { ...data, photo: response.data.secure_url };
-      data = { ...data, photoPublicId: response.data.public_id };
+      if (response.status === 200) {
+        data = { ...data, photo: response.data.secure_url };
+        data = { ...data, photoPublicId: response.data.public_id };
+      }
     }
 
     postUpdate.mutate(data);

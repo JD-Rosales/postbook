@@ -3,12 +3,14 @@ import { CardFooter } from '@ui/card';
 import { Button } from '@ui/button';
 import { useGetTotalLIkes, useLikePost } from '@src/hooks/usePost';
 import { useEffect } from 'react';
+import SharePost from '@src/components/SharePostDialog';
 
 type FooterProps = {
   postId: number;
+  originPostId?: number | null;
 };
 
-const Footer: React.FC<FooterProps> = ({ postId }) => {
+const Footer: React.FC<FooterProps> = ({ postId, originPostId }) => {
   const totalLikes = useGetTotalLIkes(postId);
   const likePost = useLikePost();
 
@@ -63,14 +65,16 @@ const Footer: React.FC<FooterProps> = ({ postId }) => {
         </div>
 
         <div className='col-span-4'>
-          <Button
-            className='rounded-2xl px-3 sm:px-4'
-            variant={'outline'}
-            fullWidth
-          >
-            <Repeat2 size={20} className='text-blue-700' />
-            <span className='ml-2 text-gray-600 truncate'>Share</span>
-          </Button>
+          <SharePost postId={postId} originPostId={originPostId}>
+            <Button
+              className='rounded-2xl px-3 sm:px-4'
+              variant={'outline'}
+              fullWidth
+            >
+              <Repeat2 size={20} className='text-blue-700' />
+              <span className='ml-2 text-gray-600 truncate'>Share</span>
+            </Button>
+          </SharePost>
         </div>
       </div>
     </CardFooter>

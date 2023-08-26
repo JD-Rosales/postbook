@@ -9,9 +9,9 @@ import {
 import { request, ErrResponse } from '@lib/axios-interceptor';
 
 const createPost = (data: {
-  text: string | null | undefined;
-  photo: string | null | undefined;
-  photoPublicId: string | undefined;
+  text?: string;
+  photo?: string;
+  photoPublicId?: string;
 }) => request({ url: '/post', method: 'post', data });
 
 export const useCreatePost = () => {
@@ -103,8 +103,12 @@ export const useLikePost = () => {
   });
 };
 
-const sharePost = (data: { text: string | null | undefined; postId: number }) =>
-  request({ url: '/post/share', method: 'post', data });
+const sharePost = (data: {
+  text?: string;
+  photo?: string;
+  photoPublicId?: string;
+  postId: number;
+}) => request({ url: '/post/share', method: 'post', data });
 
 export const useSharePost = () => {
   const queryClient = useQueryClient();

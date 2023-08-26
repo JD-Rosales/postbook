@@ -1,32 +1,27 @@
+import { useGetPost } from '@src/hooks/usePost';
 import { Card, CardContent } from '@ui/card';
 import { AspectRatio } from '@ui/aspect-ratio';
 import PostLoader from '@components/Loader/PostLoader';
-import { useGetPost } from '@src/hooks/usePost';
-import { cn } from '@lib/utils';
 import Header from './Header';
-import Footer from './Footer';
-import SharedPost from '@components/SharedPost';
 
 type IndexProps = {
   postId: number;
-  className?: string;
 };
 
-const Index: React.FC<IndexProps> = ({ postId, className }) => {
+const Index: React.FC<IndexProps> = ({ postId }) => {
   const post = useGetPost(postId);
-
   return (
     <>
       {post.isLoading ? (
         <PostLoader />
       ) : (
-        <Card className={cn('mb-2', className)}>
+        <Card className='mt-3'>
           {!post.data?.data ? (
             'Make a component for post not found'
           ) : (
             <>
               <Header data={post.data.data} />
-              <CardContent className='pb-1'>
+              <CardContent>
                 {post.data.data.text && (
                   <p className='text-base sm:text-lg break-all mb-2'>
                     {post.data.data.text}
@@ -41,15 +36,7 @@ const Index: React.FC<IndexProps> = ({ postId, className }) => {
                     />
                   </AspectRatio>
                 )}
-
-                {post.data.data.sharedPostId && (
-                  <SharedPost postId={post.data.data.sharedPostId} />
-                )}
               </CardContent>
-              <Footer
-                postId={postId}
-                originPostId={post.data.data?.sharedPostId}
-              />
             </>
           )}
         </Card>

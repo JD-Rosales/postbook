@@ -1,0 +1,21 @@
+type CloudinaryRes = {
+  access_mode: string;
+  asset_id: string;
+  bytes: 88107;
+  created_at: string;
+  etag: string;
+  folder: string;
+  format: string;
+  height: 750;
+  placeholder: false;
+  public_id: string;
+  resource_type: string;
+  secure_url: string;
+  signature: string;
+  tags: [];
+  type: string;
+  url: string;
+  version: number;
+  version_id: string;
+  width: number;
+};

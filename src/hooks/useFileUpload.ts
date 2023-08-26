@@ -8,7 +8,7 @@ export const useFileUpload = (key: number) => {
 
   const mutation = useMutation({
     mutationKey: ['fileUpload', key],
-    mutationFn: (img: string) => {
+    mutationFn: async (img: string) => {
       const cloudinaryForm = new FormData();
       const cloudName = 'dachbgiue';
       cloudinaryForm.append('file', img);
@@ -32,5 +32,8 @@ export const useFileUpload = (key: number) => {
     onError: (error: ErrResponse) => error,
   });
 
-  return { ...mutation, progress };
+  return {
+    ...mutation,
+    progress,
+  };
 };

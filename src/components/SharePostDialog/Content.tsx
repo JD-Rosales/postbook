@@ -11,25 +11,34 @@ import {
 } from '@ui/tooltip';
 import { Progress } from '@ui/progress';
 import { useToast } from '@ui/use-toast';
-import { Camera, Laugh, SendHorizontal, X } from 'lucide-react';
+import { Camera, Laugh, X, Repeat2 } from 'lucide-react';
 import ContentEditable, { ContentEditableEvent } from 'react-contenteditable';
 import { useNavigate } from 'react-router-dom';
 import { useGetProfile } from '@src/hooks/useProfile';
 import { parseJwtId, cn } from '@lib/utils';
-import { useCreatePost } from '@src/hooks/usePost';
+import { useSharePost } from '@src/hooks/usePost';
 import { useFileUpload } from '@src/hooks/useFileUpload';
+import SharedPost from '@components/SharedPost';
 
-type IndexProps = {
+type ContentProps = {
   className?: string;
+  postId: number;
+  originPostId?: number | null;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Index: React.FC<IndexProps> = ({ className }) => {
+const Content: React.FC<ContentProps> = ({
+  className,
+  postId,
+  originPostId,
+  setOpen,
+}) => {
   const [formData, setFormData] = useState({
     text: '',
     photo: '',
     photoPublicId: '',
   });
-  const createPost = useCreatePost();
+  const sharePost = useSharePost();
   const fileUploader = useFileUpload(1);
   const userProfile = useGetProfile(parseJwtId()?.toString() ?? '');
   const inputTextRef = useRef<HTMLParagraphElement>(null);
@@ -41,14 +50,14 @@ const Index: React.FC<IndexProps> = ({ className }) => {
     let data = { ...formData };
     if (formData.photo) {
       const response = await fileUploader.mutateAsync(formData.photo);
-      console.log(response);
       if (response.status === 200) {
         data = { ...data, photo: response.data.secure_url };
         data = { ...data, photoPublicId: response.data.public_id };
       }
     }
 
-    createPost.mutate(data);
+    // share the orignal post if the post is also a shared post
+    sharePost.mutate({ ...data, postId: originPostId ?? postId });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,39 +95,41 @@ const Index: React.FC<IndexProps> = ({ className }) => {
   };
 
   useEffect(() => {
-    if (createPost.isSuccess && !createPost.isError) {
+    if (sharePost.isSuccess && !sharePost.isError) {
       // reset states
       handleResetPhoto();
       setFormData({ text: '', photo: '', photoPublicId: '' });
       fileUploader.reset();
-      createPost.reset();
+      sharePost.reset();
+      setOpen(false);
       toast({
         variant: 'success',
         title: 'Sucess!',
-        description: 'Post created successfully',
+        description: 'Post shared successfully',
       });
     }
 
-    if (createPost.isError) {
-      createPost.reset();
+    if (sharePost.isError) {
+      sharePost.reset();
       toast({
         variant: 'destructive',
         title: 'An error has occured!',
-        description: createPost.error?.message,
+        description: sharePost.error?.message,
       });
     }
   }, [
-    createPost,
-    createPost.error?.message,
-    createPost.isError,
-    createPost.isSuccess,
+    sharePost,
+    sharePost.error?.message,
+    sharePost.isError,
+    sharePost.isSuccess,
     fileUploader,
     toast,
+    setOpen,
   ]);
   return (
     <Card className={cn('mb-4', className)}>
-      <CardContent className='px-2 md:px-4'>
-        <div className='flex mt-4'>
+      <CardContent className='px-2 md:px-4 pb-2'>
+        <div className='flex mt-4 mb-4'>
           <div>
             <Avatar
               onClick={() => {
@@ -152,9 +163,8 @@ const Index: React.FC<IndexProps> = ({ className }) => {
             )}
           </div>
         </div>
-
         {formData.photo && (
-          <div className='w-full rounded-lg mt-2 px-4 pl-[65px]'>
+          <div className='w-full rounded-lg mt-2 px-4 mb-4 pl-[65px]'>
             <div className='rounded-lg relative'>
               <AspectRatio ratio={16 / 9}>
                 <img
@@ -180,73 +190,74 @@ const Index: React.FC<IndexProps> = ({ className }) => {
             </div>
           </div>
         )}
-      </CardContent>
-      <CardFooter>
-        <div className='grid grid-cols-12 gap-1 sm:gap-3 w-full'>
-          <div className='col-span-4 relative'>
-            <Button
-              onClick={() => {
-                if (inputFileRef.current) inputFileRef.current.click();
-              }}
-              className='rounded-2xl px-3 sm:px-4'
-              variant={'outline'}
-              fullWidth
-            >
-              <Camera size={30} color='green' />
-              <span className='ml-2 text-gray-600 truncate'>Photo/Video</span>
-            </Button>
 
-            {/* hidden input */}
-            <input
-              ref={inputFileRef}
-              className='absolute right-[99999px] invisible'
-              type='file'
-              accept='.png, .jpg, .jpeg'
-              name='img-uploader'
-              id={`img-uploader`}
-              multiple={false}
-              onChange={handleFileChange}
-            />
-          </div>
+        <div className='flex justify-end mt-2 mb-2'>
+          <div className='grid grid-cols-12 gap-1'>
+            <div className='col-span-6 flex justify-end'>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span
+                      onClick={() => {
+                        if (inputFileRef.current) inputFileRef.current.click();
+                      }}
+                      className='p-1 cursor-pointer'
+                    >
+                      <Camera size={35} color='green' />
 
-          <div className='col-span-4'>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    className='rounded-2xl px-3 sm:px-4'
-                    variant={'outline'}
-                    fullWidth
-                  >
-                    <Laugh size={30} className='text-yellow-500' />
-                    <span className='ml-2 text-gray-600 truncate'>
-                      Feels/Emoji
+                      {/* hidden input */}
+                      <input
+                        ref={inputFileRef}
+                        className='absolute right-[99999px] invisible'
+                        type='file'
+                        accept='.png, .jpg, .jpeg'
+                        name='img-uploader'
+                        id={`img-uploader`}
+                        multiple={false}
+                        onChange={handleFileChange}
+                      />
                     </span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <span>Coming soon...</span>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-
-          <div className='col-span-4'>
-            <Button
-              onClick={handleSubmit}
-              className='rounded-2xl px-3 sm:px-4 bg-slate-200'
-              variant={'outline'}
-              fullWidth
-              loading={fileUploader.isLoading || createPost.isLoading}
-            >
-              <SendHorizontal size={30} className='text-primary' />
-              <span className='ml-2 text-gray-600 truncate'>Post/Create</span>
-            </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <span>Photo/Video</span>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <div className='col-span-6 flex justify-end'>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className='p-1 cursor-pointer'>
+                      <Laugh size={35} className='text-yellow-500' />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <span>Coming soon...</span>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
           </div>
         </div>
-      </CardFooter>
+
+        {/* Render the orignal post if the post is also a shared post */}
+        <SharedPost postId={originPostId ?? postId} />
+
+        <CardFooter className='p-0 pb-1 mt-1'>
+          <Button
+            onClick={handleSubmit}
+            className='px-3 sm:px-4 py-6 w-full md:w-56 md:ml-auto'
+            variant={'default'}
+            loading={fileUploader.isLoading || sharePost.isLoading}
+          >
+            <Repeat2 size={30} />
+            <span className='ml-2 text-white truncate'>Share now</span>
+          </Button>
+        </CardFooter>
+      </CardContent>
     </Card>
   );
 };
 
-export default Index;
+export default Content;
