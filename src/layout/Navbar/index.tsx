@@ -1,4 +1,4 @@
-import useSidebar from '@src/contextsHooks/useSidebar';
+import useSidebar from '@src/context/useSidebar';
 import {
   DropdownMenu,
   DropdownMenuContent,

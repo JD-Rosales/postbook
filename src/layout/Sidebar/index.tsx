@@ -1,6 +1,6 @@
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import { NavLink } from 'react-router-dom';
-import useSidebar from '@src/contextsHooks/useSidebar';
+import useSidebar from '@src/context/useSidebar';
 import { Home } from 'lucide-react';
 
 const Index: React.FC = () => {

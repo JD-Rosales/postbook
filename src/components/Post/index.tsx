@@ -1,11 +1,13 @@
+import { lazy, useState } from 'react';
 import { Card, CardContent } from '@ui/card';
 import { AspectRatio } from '@ui/aspect-ratio';
 import PostLoader from '@components/Loader/PostLoader';
 import { useGetPost } from '@src/hooks/usePost';
 import { cn } from '@lib/utils';
-import Header from './Header';
-import Footer from './Footer';
-import SharedPost from '@components/SharedPost';
+
+const Header = lazy(() => import('./Header'));
+const Footer = lazy(() => import('./Footer'));
+const SharedPost = lazy(() => import('@components/SharedPost'));
 
 type IndexProps = {
   postId: number;
@@ -14,6 +16,8 @@ type IndexProps = {
 
 const Index: React.FC<IndexProps> = ({ postId, className }) => {
   const post = useGetPost(postId);
+
+  const [isShareBtnClick, setShareBtnClick] = useState(false);
 
   return (
     <>
@@ -25,7 +29,10 @@ const Index: React.FC<IndexProps> = ({ postId, className }) => {
             'Make a component for post not found'
           ) : (
             <>
-              <Header data={post.data.data} />
+              <Header
+                data={post.data.data}
+                setShareBtnClick={setShareBtnClick}
+              />
               <CardContent className='pb-1'>
                 {post.data.data.text && (
                   <p className='text-base sm:text-lg break-all mb-2'>
@@ -49,6 +56,8 @@ const Index: React.FC<IndexProps> = ({ postId, className }) => {
               <Footer
                 postId={postId}
                 originPostId={post.data.data?.sharedPostId}
+                isShareBtnClick={isShareBtnClick}
+                setShareBtnClick={setShareBtnClick}
               />
             </>
           )}

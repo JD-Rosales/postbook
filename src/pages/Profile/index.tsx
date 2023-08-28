@@ -20,7 +20,7 @@ const Index = () => {
   }, [profile.data]);
 
   return (
-    <ContainerXl className='bg-white'>
+    <ContainerXl className='bg-white mb-4'>
       {/* Cover Container*/}
       <div className='relative bg-slate-200 w-full h-60 rounded-b-lg'>
         {profile.data?.data.profile?.coverPhoto ? (
@@ -55,9 +55,12 @@ const Index = () => {
           </div>
         </div>
         {/* End Profile Container */}
-        <CreatePost className='mt-6' />
 
-        <UserPosts id={id ?? ''} />
+        <div className='px-1 sm:px-2'>
+          <CreatePost className='mt-6' />
+
+          <UserPosts id={id ?? ''} />
+        </div>
       </div>
     </ContainerXl>
   );

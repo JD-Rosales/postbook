@@ -2,17 +2,26 @@ import { ThumbsUp, MessageSquare, Repeat2 } from 'lucide-react';
 import { CardFooter } from '@ui/card';
 import { Button } from '@ui/button';
 import { useGetTotalLIkes, useLikePost } from '@src/hooks/usePost';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import SharePost from '@src/components/SharePostDialog';
 
 type FooterProps = {
   postId: number;
   originPostId?: number | null;
+  isShareBtnClick: boolean;
+  setShareBtnClick: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Footer: React.FC<FooterProps> = ({ postId, originPostId }) => {
+const Footer: React.FC<FooterProps> = ({
+  postId,
+  originPostId,
+  isShareBtnClick,
+  setShareBtnClick,
+}) => {
   const totalLikes = useGetTotalLIkes(postId);
   const likePost = useLikePost();
+
+  const shareBtnRef = useRef<HTMLButtonElement>(null);
 
   const handleLikePost = () => {
     likePost.mutate({ postId });
@@ -23,6 +32,16 @@ const Footer: React.FC<FooterProps> = ({ postId, originPostId }) => {
       likePost.reset();
     }
   }, [likePost]);
+
+  useEffect(() => {
+    if (isShareBtnClick) {
+      if (shareBtnRef.current) {
+        shareBtnRef.current.click();
+        // reset state after showing share post dialog
+        setShareBtnClick(false);
+      }
+    }
+  }, [isShareBtnClick, setShareBtnClick]);
 
   return (
     <CardFooter className='pb-4'>
@@ -67,6 +86,7 @@ const Footer: React.FC<FooterProps> = ({ postId, originPostId }) => {
         <div className='col-span-4'>
           <SharePost postId={postId} originPostId={originPostId}>
             <Button
+              ref={shareBtnRef}
               className='rounded-2xl px-3 sm:px-4'
               variant={'outline'}
               fullWidth
