@@ -27,6 +27,8 @@ import { MoreHorizontal, Trash2, PenLine, Forward } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { useDeletePost } from '@src/hooks/usePost';
+import { useToast } from '@ui/use-toast';
+import { getErrorMessage } from '@src/lib/utils';
 
 type HeaderProps = {
   data: PostAuthor;
@@ -36,6 +38,7 @@ type HeaderProps = {
 const Header: React.FC<HeaderProps> = ({ data, setShareBtnClick }) => {
   const deletePost = useDeletePost();
   const delRef = useRef<HTMLButtonElement>(null);
+  const { toast } = useToast();
 
   const [postDate, setPostDate] = useState(
     formatDistanceToNow(new Date(data.createdAt), {
@@ -64,6 +67,26 @@ const Header: React.FC<HeaderProps> = ({ data, setShareBtnClick }) => {
 
     return () => clearInterval(intervalId);
   }, [data.createdAt]);
+
+  useEffect(() => {
+    if (deletePost.isSuccess) {
+      deletePost.reset();
+      toast({
+        variant: 'success',
+        title: 'Sucess!',
+        description: 'Post deleted successfully',
+      });
+    }
+
+    if (deletePost.isError) {
+      deletePost.reset();
+      toast({
+        variant: 'destructive',
+        title: 'Error!',
+        description: getErrorMessage(deletePost.error?.message),
+      });
+    }
+  }, [deletePost, toast]);
 
   return (
     <CardHeader>

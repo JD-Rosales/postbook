@@ -1,6 +1,5 @@
 import { lazy, useState } from 'react';
 import { Card, CardContent } from '@ui/card';
-import { AspectRatio } from '@ui/aspect-ratio';
 import PostLoader from '@components/Loader/PostLoader';
 import { useGetPost } from '@src/hooks/usePost';
 import { cn } from '@lib/utils';
@@ -40,13 +39,15 @@ const Index: React.FC<IndexProps> = ({ postId, className }) => {
                   </p>
                 )}
                 {post.data.data.photo && (
-                  <AspectRatio ratio={16 / 9}>
-                    <img
-                      className='rounded-lg w-full h-full object-cover'
-                      src={post.data.data.photo}
-                      alt='Post Photo'
-                    />
-                  </AspectRatio>
+                  <div className='flex justify-center'>
+                    <div className='min-h-[100px] max-h-[400px]'>
+                      <img
+                        src={post.data.data.photo}
+                        alt='Post'
+                        className='max-w-full h-auto max-h-[100%] rounded-md'
+                      />
+                    </div>
+                  </div>
                 )}
 
                 {post.data.data.sharedPostId && (

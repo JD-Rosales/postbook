@@ -15,7 +15,7 @@ import { Camera, Laugh, SendHorizontal, X } from 'lucide-react';
 import ContentEditable, { ContentEditableEvent } from 'react-contenteditable';
 import { useNavigate } from 'react-router-dom';
 import { useGetProfile } from '@src/hooks/useProfile';
-import { parseJwtId, cn } from '@lib/utils';
+import { parseJwtId, cn, getErrorMessage } from '@lib/utils';
 import { useCreatePost } from '@src/hooks/usePost';
 import { useFileUpload } from '@src/hooks/useFileUpload';
 
@@ -103,8 +103,8 @@ const Index: React.FC<IndexProps> = ({ className }) => {
       createPost.reset();
       toast({
         variant: 'destructive',
-        title: 'An error has occured!',
-        description: createPost.error?.message,
+        title: 'Error!',
+        description: getErrorMessage(createPost.error?.message),
       });
     }
   }, [

@@ -15,7 +15,7 @@ import { Camera, Laugh, X, Repeat2 } from 'lucide-react';
 import ContentEditable, { ContentEditableEvent } from 'react-contenteditable';
 import { useNavigate } from 'react-router-dom';
 import { useGetProfile } from '@src/hooks/useProfile';
-import { parseJwtId, cn } from '@lib/utils';
+import { parseJwtId, cn, getErrorMessage } from '@lib/utils';
 import { useSharePost } from '@src/hooks/usePost';
 import { useFileUpload } from '@src/hooks/useFileUpload';
 import SharedPost from '@components/SharedPost';
@@ -113,8 +113,8 @@ const Content: React.FC<ContentProps> = ({
       sharePost.reset();
       toast({
         variant: 'destructive',
-        title: 'An error has occured!',
-        description: sharePost.error?.message,
+        title: 'Error!',
+        description: getErrorMessage(sharePost.error?.message),
       });
     }
   }, [
@@ -247,11 +247,11 @@ const Content: React.FC<ContentProps> = ({
         <CardFooter className='p-0 pb-1 mt-1'>
           <Button
             onClick={handleSubmit}
-            className='px-3 sm:px-4 py-6 w-full md:w-56 md:ml-auto'
+            className='px-3 sm:px-4 py-6 w-full md:w-40 md:ml-auto'
             variant={'default'}
             loading={fileUploader.isLoading || sharePost.isLoading}
           >
-            <Repeat2 size={30} />
+            <Repeat2 size={25} />
             <span className='ml-2 text-white truncate'>Share now</span>
           </Button>
         </CardFooter>

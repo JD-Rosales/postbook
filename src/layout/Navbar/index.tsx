@@ -13,6 +13,7 @@ import { Menu, User, LogOut } from 'lucide-react';
 import { useGetProfile } from '@src/hooks/useProfile';
 import { parseJwtId, cn } from '@lib/utils';
 import { useNavigate } from 'react-router-dom';
+import Search from '@components/Search';
 
 type NavbarProps = {
   className?: string;
@@ -41,6 +42,8 @@ const Index: React.FC<NavbarProps> = ({ className }) => {
       >
         <Menu size={30} />
       </button>
+
+      <Search />
 
       <div className='ml-auto mr-2'>
         <DropdownMenu modal={false}>

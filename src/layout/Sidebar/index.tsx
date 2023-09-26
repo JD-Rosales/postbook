@@ -33,7 +33,7 @@ const Index: React.FC = () => {
           }}
         >
           <MenuItem icon={<Home />} component={<NavLink to='/' />}>
-            POSTBOOK
+            HOME
           </MenuItem>
         </Menu>
       </Sidebar>
