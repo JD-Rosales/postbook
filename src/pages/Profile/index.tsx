@@ -19,6 +19,10 @@ const Index = () => {
     } else return ``;
   }, [profile.data]);
 
+  if (profile.isStale && !profile.data) {
+    return null;
+  }
+
   return (
     <ContainerXl className='bg-white mb-4'>
       {/* Cover Container*/}

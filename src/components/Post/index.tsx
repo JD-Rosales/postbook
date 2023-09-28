@@ -44,7 +44,7 @@ const Index: React.FC<IndexProps> = ({ postId, className }) => {
                       <img
                         src={post.data.data.photo}
                         alt='Post'
-                        className='max-w-full h-auto max-h-[100%] rounded-md'
+                        className='max-w-full h-auto max-h-[100%] mx-auto rounded-md'
                       />
                     </div>
                   </div>

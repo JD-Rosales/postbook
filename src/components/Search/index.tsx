@@ -20,7 +20,7 @@ const Index = () => {
         <Search className='text-gray-500' />
         <input
           type='text'
-          className='w-[200px] ml-2 bg-inherit focus-visible:outline-none'
+          className='w-full ml-2 bg-inherit focus-visible:outline-none'
           placeholder='Search'
           value={value}
           onChange={handleChange}
@@ -31,12 +31,12 @@ const Index = () => {
 
       {/* Search result */}
       <div
-        className={`absolute top-[50px] left-0 min-w-[400px] bg-white transform transition-transform ease-in-out duration-300 ${
+        className={`absolute top-[50px] left-[-4.3rem] sm:left-0 w-screen sm:w-[400px] bg-slate-100 transform transition-transform ease-in-out duration-300 ${
           isFocus ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {isFocus && (
-          <div className='h-[300px] w-[500px]'>
+          <div className='h-[300px] w-full bg-red-200'>
             <Loader />
           </div>
         )}

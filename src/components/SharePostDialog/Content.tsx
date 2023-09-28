@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Card, CardFooter, CardContent } from '@components/ui/card';
+import { Card, CardContent } from '@components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
-import { AspectRatio } from '@ui/aspect-ratio';
 import { Button } from '@ui/button';
 import {
   Tooltip,
@@ -127,136 +126,141 @@ const Content: React.FC<ContentProps> = ({
     setOpen,
   ]);
   return (
-    <Card className={cn('mb-4', className)}>
-      <CardContent className='px-2 md:px-4 pb-2'>
-        <div className='flex mt-4 mb-4'>
-          <div>
-            <Avatar
-              onClick={() => {
-                navigate('/user/' + userProfile.data?.data.id);
-              }}
-              className='w-[55px] h-[55px] cursor-pointer hover:scale-110 transform transition-transform duration-300 ease-out'
-            >
-              <AvatarImage src={userProfile.data?.data.profile?.profilePhoto} />
-              <AvatarFallback>DP</AvatarFallback>
-            </Avatar>
-          </div>
-
-          <div className='relative w-full ml-3 px-2 pb-2 pt-4 bg-slate-100 text-gray-600 rounded-xl'>
-            <ContentEditable
-              innerRef={inputTextRef}
-              disabled={false}
-              className={`mb-2 focus-visible:outline-none bg-transparent break-all`}
-              html={formData.text}
-              onChange={handleChange}
-              tagName='p'
-            />
-
-            {/* Placeholder for the ContentEditable */}
-            {formData.text === '' && (
-              <p className='absolute top-0 w-full pr-1 pb-2 pt-4 text-gray-500 truncate pointer-events-none'>
-                What's on your mind
-                {userProfile.data?.data.profile?.firstName &&
-                  `, ${userProfile.data?.data.profile?.firstName}`}
-                ?
-              </p>
-            )}
-          </div>
-        </div>
-        {formData.photo && (
-          <div className='w-full rounded-lg mt-2 px-4 mb-4 pl-[65px]'>
-            <div className='rounded-lg relative'>
-              <AspectRatio ratio={16 / 9}>
-                <img
-                  className='rounded-lg w-full h-full object-cover'
-                  src={formData.photo}
-                  alt='Post Photo'
-                />
-              </AspectRatio>
-
-              <span
-                onClick={handleResetPhoto}
-                className='absolute top-3 right-3 bg-slate-100 rounded-xl p-1 cursor-pointer hover:scale-110 transform transition-transform duration-300 ease-out'
+    <>
+      <Card className={cn('', className)}>
+        <CardContent className='px-2 md:px-4 pb-4'>
+          <div className='flex mt-4 mb-4'>
+            <div>
+              <Avatar
+                onClick={() => {
+                  navigate('/user/' + userProfile.data?.data.id);
+                }}
+                className='w-[55px] h-[55px] cursor-pointer hover:scale-110 transform transition-transform duration-300 ease-out'
               >
-                <X className='text-green-600' />
-              </span>
-
-              {fileUploader.isLoading && (
-                <Progress
-                  value={fileUploader.progress}
-                  className='w-full mt-3 mb-2 h-3'
+                <AvatarImage
+                  src={userProfile.data?.data.profile?.profilePhoto}
                 />
+                <AvatarFallback>DP</AvatarFallback>
+              </Avatar>
+            </div>
+
+            <div className='relative w-full ml-3 px-2 pb-2 pt-4 bg-slate-100 text-gray-600 rounded-xl'>
+              <ContentEditable
+                innerRef={inputTextRef}
+                disabled={false}
+                className={`mb-2 focus-visible:outline-none bg-transparent break-all`}
+                html={formData.text}
+                onChange={handleChange}
+                tagName='p'
+              />
+
+              {/* Placeholder for the ContentEditable */}
+              {formData.text === '' && (
+                <p className='absolute top-0 w-full pr-1 pb-2 pt-4 text-gray-500 truncate pointer-events-none'>
+                  What's on your mind
+                  {userProfile.data?.data.profile?.firstName &&
+                    `, ${userProfile.data?.data.profile?.firstName}`}
+                  ?
+                </p>
               )}
             </div>
           </div>
-        )}
+          {formData.photo && (
+            <div className='w-full rounded-lg mt-2 px-4 mb-4 pl-[65px]'>
+              <div className='rounded-lg relative'>
+                <div className='flex justify-center'>
+                  <div className='min-h-[100px] max-h-[400px]'>
+                    <img
+                      src={formData.photo}
+                      alt='Post'
+                      className='max-w-full h-auto max-h-[100%] mx-auto rounded-md'
+                    />
+                  </div>
+                </div>
 
-        <div className='flex justify-end mt-2 mb-2'>
-          <div className='grid grid-cols-12 gap-1'>
-            <div className='col-span-6 flex justify-end'>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span
-                      onClick={() => {
-                        if (inputFileRef.current) inputFileRef.current.click();
-                      }}
-                      className='p-1 cursor-pointer'
-                    >
-                      <Camera size={35} color='green' />
+                <span
+                  onClick={handleResetPhoto}
+                  className='absolute top-3 right-3 bg-slate-100 rounded-xl p-1 cursor-pointer hover:scale-110 transform transition-transform duration-300 ease-out'
+                >
+                  <X className='text-green-600' />
+                </span>
 
-                      {/* hidden input */}
-                      <input
-                        ref={inputFileRef}
-                        className='absolute right-[99999px] invisible'
-                        type='file'
-                        accept='.png, .jpg, .jpeg'
-                        name='img-uploader'
-                        id={`img-uploader`}
-                        multiple={false}
-                        onChange={handleFileChange}
-                      />
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <span>Photo/Video</span>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+                {fileUploader.isLoading && (
+                  <Progress
+                    value={fileUploader.progress}
+                    className='w-full mt-3 mb-2 h-3'
+                  />
+                )}
+              </div>
             </div>
-            <div className='col-span-6 flex justify-end'>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span className='p-1 cursor-pointer'>
-                      <Laugh size={35} className='text-yellow-500' />
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <span>Coming soon...</span>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+          )}
+
+          <div className='flex justify-end mt-2 mb-2'>
+            <div className='grid grid-cols-12 gap-1'>
+              <div className='col-span-6 flex justify-end'>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span
+                        onClick={() => {
+                          if (inputFileRef.current)
+                            inputFileRef.current.click();
+                        }}
+                        className='p-1 cursor-pointer'
+                      >
+                        <Camera size={35} color='green' />
+
+                        {/* hidden input */}
+                        <input
+                          ref={inputFileRef}
+                          className='absolute right-[99999px] invisible'
+                          type='file'
+                          accept='.png, .jpg, .jpeg'
+                          name='img-uploader'
+                          id={`img-uploader`}
+                          multiple={false}
+                          onChange={handleFileChange}
+                        />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <span>Photo/Video</span>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <div className='col-span-6 flex justify-end'>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className='p-1 cursor-pointer'>
+                        <Laugh size={35} className='text-yellow-500' />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <span>Coming soon...</span>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Render the orignal post if the post is also a shared post */}
-        <SharedPost postId={originPostId ?? postId} />
+          {/* Render the orignal post if the post is also a shared post */}
+          <SharedPost postId={originPostId ?? postId} />
+        </CardContent>
+      </Card>
 
-        <CardFooter className='p-0 pb-1 mt-1'>
-          <Button
-            onClick={handleSubmit}
-            className='px-3 sm:px-4 py-6 w-full md:w-40 md:ml-auto'
-            variant={'default'}
-            loading={fileUploader.isLoading || sharePost.isLoading}
-          >
-            <Repeat2 size={25} />
-            <span className='ml-2 text-white truncate'>Share now</span>
-          </Button>
-        </CardFooter>
-      </CardContent>
-    </Card>
+      <Button
+        onClick={handleSubmit}
+        className='px-3 sm:px-4 py-6 mb-3 -mt-1 w-full md:w-40 md:ml-auto'
+        variant={'default'}
+        loading={fileUploader.isLoading || sharePost.isLoading}
+      >
+        <Repeat2 size={25} />
+        <span className='ml-2 text-white truncate'>Share now</span>
+      </Button>
+    </>
   );
 };
 

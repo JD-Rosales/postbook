@@ -21,7 +21,7 @@ type NavbarProps = {
 
 const Index: React.FC<NavbarProps> = ({ className }) => {
   const navigate = useNavigate();
-  const { setToggled } = useSidebar();
+  const { setToggled, setCollapsed } = useSidebar();
   const userProfile = useGetProfile(parseJwtId()?.toString() ?? '');
 
   const handleLogout = () => {
@@ -32,7 +32,7 @@ const Index: React.FC<NavbarProps> = ({ className }) => {
   return (
     <div
       className={cn(
-        'flex items-center shadow-md bg-white p-2 h-16 sticky top-0 z-20',
+        'flex items-center gap-2 shadow-md bg-white p-2 h-16 w-full fixed top-0 z-20',
         className
       )}
     >
@@ -44,6 +44,8 @@ const Index: React.FC<NavbarProps> = ({ className }) => {
       </button>
 
       <Search />
+
+      {/* <button onClick={() => setCollapsed((prev) => !prev)}>Toggle</button> */}
 
       <div className='ml-auto mr-2'>
         <DropdownMenu modal={false}>

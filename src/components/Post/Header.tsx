@@ -96,7 +96,7 @@ const Header: React.FC<HeaderProps> = ({ data, setShareBtnClick }) => {
           <AvatarFallback>DP</AvatarFallback>
         </Avatar>
 
-        <div className='flex flex-col ml-2'>
+        <div className='flex flex-col ml-2 '>
           <Link to={'/user/' + data.authorId} className='hover:underline'>
             {nameRenderer()}
           </Link>
@@ -105,7 +105,7 @@ const Header: React.FC<HeaderProps> = ({ data, setShareBtnClick }) => {
           </span>
         </div>
 
-        <div className='absolute right-0 top-0'>
+        <div className='ml-auto'>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant='ghost'>

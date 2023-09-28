@@ -11,7 +11,7 @@ type verifiedTokenResult = {
 };
 
 const verifyToken = () => {
-  return request({ url: '/user' });
+  return request({ url: '/auth' });
 };
 
 export const useVerifyToken = (): UseQueryResult<verifiedTokenResult> => {
@@ -25,7 +25,7 @@ export const useVerifyToken = (): UseQueryResult<verifiedTokenResult> => {
 };
 
 const login = (data: { email: string; password: string }) => {
-  return request({ url: '/user/login', method: 'post', data });
+  return request({ url: '/auth/login', method: 'post', data });
 };
 
 export const useLogin = () => {
@@ -43,7 +43,7 @@ export const useLogin = () => {
 };
 
 const register = (data: { email: string; password: string }) => {
-  return request({ url: '/user/register', method: 'post', data });
+  return request({ url: '/auth/register', method: 'post', data });
 };
 
 export const useRegister = () => {

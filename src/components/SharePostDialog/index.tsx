@@ -26,7 +26,6 @@ const Index: React.FC<IndexProps> = ({ children, postId, originPostId }) => {
             Share post
           </DialogTitle>
         </DialogHeader>
-
         <Content
           postId={postId}
           originPostId={originPostId}
