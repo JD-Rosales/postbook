@@ -1,10 +1,12 @@
 import { Search } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Loader from './Loader';
+import { useSearchUser } from '@src/hooks/useUser';
 
 const Index = () => {
   const [value, setvalue] = useState('');
   const [isInputFocused, setInputFocus] = useState(false);
+  const searchUser = useSearchUser(value);
 
   const isFocus = useMemo(() => {
     if (isInputFocused && value) return true;
@@ -14,6 +16,12 @@ const Index = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setvalue(e.target.value);
   };
+
+  useEffect(() => {
+    if (searchUser.data) {
+      console.log('user search: ', searchUser.data);
+    }
+  }, [searchUser]);
   return (
     <div className='relative'>
       <div className='flex bg-slate-100 p-2 rounded-2xl'>

@@ -10,7 +10,7 @@ import {
 } from '@ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import { Menu, User, LogOut } from 'lucide-react';
-import { useGetProfile } from '@src/hooks/useProfile';
+import { useGetProfile } from '@src/hooks/useUser';
 import { parseJwtId, cn } from '@lib/utils';
 import { useNavigate } from 'react-router-dom';
 import Search from '@components/Search';
@@ -21,7 +21,7 @@ type NavbarProps = {
 
 const Index: React.FC<NavbarProps> = ({ className }) => {
   const navigate = useNavigate();
-  const { setToggled, setCollapsed } = useSidebar();
+  const { setToggled } = useSidebar();
   const userProfile = useGetProfile(parseJwtId()?.toString() ?? '');
 
   const handleLogout = () => {

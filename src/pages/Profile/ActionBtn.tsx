@@ -9,6 +9,7 @@ import {
 } from '@src/hooks/useFollows';
 import { parseJwtId } from '@lib/utils';
 import { UserPlus2, UserCheck2, Settings } from 'lucide-react';
+import EditProfileDialog from './EditProfile';
 
 type ActionBtnProps = {
   id: string;
@@ -44,13 +45,15 @@ const ActionBtn: React.FC<ActionBtnProps> = ({ id }) => {
         )}
 
         {parseJwtId()?.toString() === id ? (
-          <Button
-            disabled={unFollowUser.isLoading || followUser.isLoading}
-            variant={'default'}
-            className='w-[190px]'
-          >
-            <Settings className='mr-2' /> Edit Profile
-          </Button>
+          <EditProfileDialog>
+            <Button
+              disabled={unFollowUser.isLoading || followUser.isLoading}
+              variant={'default'}
+              className='w-[190px]'
+            >
+              <Settings className='mr-2' /> Edit Profile
+            </Button>
+          </EditProfileDialog>
         ) : isFollowing.data?.data ? (
           <Button
             onClick={() => {

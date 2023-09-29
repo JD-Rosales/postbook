@@ -13,7 +13,7 @@ import { useToast } from '@ui/use-toast';
 import { Camera, Laugh, X, Repeat2 } from 'lucide-react';
 import ContentEditable, { ContentEditableEvent } from 'react-contenteditable';
 import { useNavigate } from 'react-router-dom';
-import { useGetProfile } from '@src/hooks/useProfile';
+import { useGetProfile } from '@src/hooks/useUser';
 import { parseJwtId, cn, getErrorMessage } from '@lib/utils';
 import { useSharePost } from '@src/hooks/usePost';
 import { useFileUpload } from '@src/hooks/useFileUpload';
@@ -195,7 +195,7 @@ const Content: React.FC<ContentProps> = ({
             </div>
           )}
 
-          <div className='flex justify-end mt-2 mb-2'>
+          <div className='flex justify-end mb-2'>
             <div className='grid grid-cols-12 gap-1'>
               <div className='col-span-6 flex justify-end'>
                 <TooltipProvider>
@@ -208,7 +208,7 @@ const Content: React.FC<ContentProps> = ({
                         }}
                         className='p-1 cursor-pointer'
                       >
-                        <Camera size={35} color='green' />
+                        <Camera size={30} color='green' />
 
                         {/* hidden input */}
                         <input
@@ -234,11 +234,11 @@ const Content: React.FC<ContentProps> = ({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <span className='p-1 cursor-pointer'>
-                        <Laugh size={35} className='text-yellow-500' />
+                        <Laugh size={30} className='text-yellow-500' />
                       </span>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <span>Coming soon...</span>
+                      <span>Emoji (Coming soon...)</span>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>

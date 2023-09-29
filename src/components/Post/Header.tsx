@@ -108,7 +108,7 @@ const Header: React.FC<HeaderProps> = ({ data, setShareBtnClick }) => {
         <div className='ml-auto'>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant='ghost'>
+              <Button variant='ghost' className='p-0 h-fit'>
                 <MoreHorizontal />
               </Button>
             </DropdownMenuTrigger>

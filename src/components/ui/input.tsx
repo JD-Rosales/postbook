@@ -9,6 +9,7 @@ export interface InputProps
   icon?: LucideIcon;
   iconPosition?: 'start' | 'end';
   iconClick?: () => void;
+  fullWidth?: boolean;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -20,39 +21,39 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       icon: Icon,
       iconPosition = 'start',
       iconClick,
+      fullWidth = false,
       ...props
     },
     ref
   ) => {
     return (
-      <>
-        <div className='relative'>
-          <input
-            type={type}
-            name={name}
-            className={cn(
-              'flex h-12 w-full rounded-md border border-input bg-transparent mt-2 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-              `${Icon && iconPosition === 'start' ? 'ps-11' : 'pr-11'}`,
-              className
-            )}
-            ref={ref}
-            {...props}
-          />
-          {Icon && (
-            <Icon
-              size={20}
-              onClick={iconClick}
-              className={`
+      <div className={`relative ${fullWidth && 'w-full'}`}>
+        <input
+          type={type}
+          name={name}
+          className={cn(
+            'flex h-12 w-full rounded-md border border-input bg-transparent mt-2 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+            `${Icon && iconPosition === 'start' ? 'ps-11' : 'pr-11'}`,
+            fullWidth && 'w-full',
+            className
+          )}
+          ref={ref}
+          {...props}
+        />
+        {Icon && (
+          <Icon
+            size={20}
+            onClick={iconClick}
+            className={`
               absolute
               text-slate-400
               top-3.5
               ${iconPosition === 'start' ? 'left-3' : 'right-3'}
               ${iconClick && 'cursor-pointer'}
               `}
-            />
-          )}
-        </div>
-      </>
+          />
+        )}
+      </div>
     );
   }
 );

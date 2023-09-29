@@ -5,7 +5,7 @@ import UserPosts from './UserPosts';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { useGetProfile } from '@src/hooks/useProfile';
+import { useGetProfile } from '@src/hooks/useUser';
 
 const Index = () => {
   const { id } = useParams();

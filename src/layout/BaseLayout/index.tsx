@@ -16,7 +16,7 @@ const Index: React.FC = () => {
         <div
           className={`flex-1 ${
             collapsed ? 'md:ml-[80px]' : 'md:ml-[250px]'
-          } transition-all duration-500 ease-in-out `}
+          } transition-all duration-300 ease-in-out `}
         >
           <Outlet />
         </div>

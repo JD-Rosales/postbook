@@ -14,7 +14,7 @@ import { useToast } from '@ui/use-toast';
 import { Camera, Laugh, SendHorizontal, X } from 'lucide-react';
 import ContentEditable, { ContentEditableEvent } from 'react-contenteditable';
 import { useNavigate } from 'react-router-dom';
-import { useGetProfile } from '@src/hooks/useProfile';
+import { useGetProfile } from '@src/hooks/useUser';
 import { parseJwtId, cn, getErrorMessage } from '@lib/utils';
 import { useCreatePost } from '@src/hooks/usePost';
 import { useFileUpload } from '@src/hooks/useFileUpload';
@@ -41,7 +41,6 @@ const Index: React.FC<IndexProps> = ({ className }) => {
     let data = { ...formData };
     if (formData.photo) {
       const response = await fileUploader.mutateAsync(formData.photo);
-      console.log(response);
       if (response.status === 200) {
         data = { ...data, photo: response.data.secure_url };
         data = { ...data, photoPublicId: response.data.public_id };
