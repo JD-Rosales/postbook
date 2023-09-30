@@ -52,7 +52,7 @@ const Index = () => {
           </div>
 
           <div className='-mt-5 sm:ml-8 sm:mt-3'>
-            <h1 className='text-2xl sm:text-2xl text-center font-bold break-all text-gray-700'>
+            <h1 className='text-2xl sm:text-2xl text-center sm:text-left font-bold break-all text-gray-700'>
               {nameRenderer()}
             </h1>
             <ActionBtn id={id ?? ''} />

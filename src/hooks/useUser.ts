@@ -40,6 +40,52 @@ export const useUpdateProfile = () => {
   });
 };
 
+const updateProfilePhoto = (data: {
+  profilePhoto: string;
+  profilePublicId: string;
+}) => {
+  return request({ url: '/user/profile-photo', method: 'put', data });
+};
+
+export const useUpdateProfilePhoto = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateProfilePhoto,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(['user', data?.data?.userId.toString()]);
+      queryClient.prefetchInfiniteQuery([
+        'posts',
+        'user',
+        data?.data?.userId.toString(),
+      ]);
+    },
+    onError: (error: ErrResponse) => error,
+  });
+};
+
+const updateCoverPhoto = (data: {
+  coverPhoto: string;
+  coverPublicId: string;
+}) => {
+  return request({ url: '/user/cover-photo', method: 'put', data });
+};
+
+export const useUpdateCoverPhoto = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateCoverPhoto,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(['user', data?.data?.userId.toString()]);
+      queryClient.prefetchInfiniteQuery([
+        'posts',
+        'user',
+        data?.data?.userId.toString(),
+      ]);
+    },
+    onError: (error: ErrResponse) => error,
+  });
+};
+
 const searchUser = ({
   pageParam = undefined,
   filter = '',
