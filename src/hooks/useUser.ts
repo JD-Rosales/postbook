@@ -8,9 +8,13 @@ import {
 } from '@tanstack/react-query';
 import { request, ErrResponse } from '@lib/axios-interceptor';
 
-interface UserProfile {
+type UserProfile = {
   data: UserProfileType;
-}
+};
+
+type InfiniteQueryUserProfile = {
+  data: UserProfileType[];
+};
 
 export const useGetProfile = (id?: string): UseQueryResult<UserProfile> => {
   const getProfile = () => request({ url: `user/${id}` });
@@ -92,11 +96,11 @@ const searchUser = ({
 }: {
   pageParam?: unknown;
   filter?: string;
-}) => request({ url: `/user/search?cursor=${pageParam}&filter=${filter}` });
+}) => request({ url: `/user/search/?cursor=${pageParam}&filter=${filter}` });
 
 export const useSearchUser = (
   filter: string
-): UseInfiniteQueryResult<UserProfile, Error> =>
+): UseInfiniteQueryResult<InfiniteQueryUserProfile, Error> =>
   useInfiniteQuery({
     queryKey: ['searched', 'user'],
     queryFn: (context) => searchUser({ ...context, filter }),
