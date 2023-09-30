@@ -71,8 +71,8 @@ export default function CoverPhoto({ photo }: CoverPhotoProps) {
       <div className='flex flex-row font-medium'>
         <span>Cover photo</span>
       </div>
-      <div className='w-full flex flex-col justify-center px-16 pt-2'>
-        <div className='relative bg-slate-100 w-full h-44 rounded-lg'>
+      <div className='w-full flex flex-col justify-center px-6 sm:px-16 pt-2'>
+        <div className='relative bg-slate-100 w-full h-48 rounded-lg'>
           {photo ? (
             <img
               className='w-full h-full object-cover rounded-lg'

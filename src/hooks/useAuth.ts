@@ -5,6 +5,7 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 import { request, ErrResponse } from '@lib/axios-interceptor';
+import { useNavigate } from 'react-router-dom';
 
 type verifiedTokenResult = {
   data: { id: number; email: string };
@@ -15,9 +16,13 @@ const verifyToken = () => {
 };
 
 export const useVerifyToken = (): UseQueryResult<verifiedTokenResult> => {
+  const navigate = useNavigate();
   return useQuery(['user'], verifyToken, {
     onError: () => {
       localStorage.removeItem('token');
+
+      // navigate to login if not authenticated
+      navigate('/login');
     },
     refetchOnWindowFocus: false,
     retry: false,

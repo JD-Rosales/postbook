@@ -6,10 +6,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useGetProfile } from '@src/hooks/useUser';
+import { useVerifyToken } from '@src/hooks/useAuth';
 
 const Index = () => {
   const { id } = useParams();
   const profile = useGetProfile(id);
+  const auth = useVerifyToken();
 
   const nameRenderer = useCallback((): string => {
     if (profile.data?.data.profile) {
@@ -61,7 +63,9 @@ const Index = () => {
         {/* End Profile Container */}
 
         <div className='px-1 sm:px-2'>
-          <CreatePost className='mt-6' />
+          {auth.data?.data.id === parseInt(id ?? '') && (
+            <CreatePost className='mt-6' />
+          )}
 
           <UserPosts id={id ?? ''} />
         </div>

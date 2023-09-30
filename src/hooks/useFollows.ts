@@ -35,6 +35,7 @@ export const useFollowUser = () => {
     onSuccess: (data) => {
       const id = data.data.followingId.toString();
       queryClient.invalidateQueries(['following', id]);
+      queryClient.invalidateQueries(['followers', id]);
     },
     onError: (error: ErrResponse) => error,
   });
@@ -51,6 +52,7 @@ export const useUnFollowUser = () => {
     onSuccess: (data) => {
       const id = data.data.followingId.toString();
       queryClient.invalidateQueries(['following', id]);
+      queryClient.invalidateQueries(['followers', id]);
     },
     onError: (error: ErrResponse) => error,
   });

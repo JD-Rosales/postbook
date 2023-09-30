@@ -28,8 +28,8 @@ function User({ data }: UserProps) {
         </Avatar>
       </div>
 
-      <div className='flex flex-col ml-1'>
-        <span>{nameRenderer()}</span>
+      <div className='flex flex-col ml-1 overflow-hidden'>
+        <span className='truncate max-w-full'>{nameRenderer()}</span>
         {data.id === parseJwtId() ? (
           <span className='text-xs italic text-slate-500'>You</span>
         ) : (

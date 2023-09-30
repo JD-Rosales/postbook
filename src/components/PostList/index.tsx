@@ -1,9 +1,12 @@
-import { useCallback, useEffect, useRef, Suspense } from 'react';
+import { useEffect, Suspense } from 'react';
 import { cn } from '@src/lib/utils';
 import { FetchNextPageOptions } from '@tanstack/react-query';
 import { InfiniteQueryPostResponse } from '@src/hooks/usePost';
 import PostLoader from '@components/Loader/PostLoader';
 import Post from '@src/components/Post';
+import { useInView } from 'react-intersection-observer';
+import React from 'react';
+import NoPost from './NoPost';
 
 type IndexProps = {
   className?: string;
@@ -22,35 +25,15 @@ const Index: React.FC<IndexProps> = ({
   isFetchingNextPage,
   nextPage,
 }) => {
-  const lastPostRef = useRef<HTMLDivElement | null>(null);
-
-  const handleIntersect: IntersectionObserverCallback = useCallback(
-    (entries, observer) => {
-      const lastPostEntry = entries[0];
-      if (lastPostEntry.isIntersecting && hasNextPage && !isFetchingNextPage) {
-        nextPage();
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        observer.unobserve(lastPostRef.current!); // Stop observing after triggering nextPage()
-      }
-    },
-    [hasNextPage, isFetchingNextPage, nextPage]
-  );
+  const { ref, inView } = useInView();
 
   useEffect(() => {
-    if (lastPostRef.current) {
-      const observer = new IntersectionObserver(handleIntersect, {
-        root: null,
-        rootMargin: '20px',
-        threshold: 1,
-      });
-
-      observer.observe(lastPostRef.current);
-
-      return () => {
-        observer.disconnect();
-      };
+    if (inView) {
+      nextPage();
     }
-  }, [handleIntersect]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView]);
+
   return (
     <div className={cn('pt-4', className)}>
       {isLoading ? (
@@ -58,31 +41,25 @@ const Index: React.FC<IndexProps> = ({
           <PostLoader />
           <PostLoader />
         </div>
-      ) : !data ? (
-        ''
-      ) : data[0].data.length === 0 ? (
-        ''
+      ) : !data || data[0].data.length === 0 ? (
+        <NoPost />
       ) : (
         <>
-          {data.map((group, i) => {
-            return (
-              <div key={i}>
-                {group.data.map((post, i) => {
-                  return (
-                    <div
-                      className='mb-5'
-                      key={post.id}
-                      ref={i === group.data.length - 1 ? lastPostRef : null}
-                    >
-                      <Suspense fallback={<PostLoader />}>
-                        <Post postId={post.id} />
-                      </Suspense>
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
+          {data.map((group, i) => (
+            <React.Fragment key={i}>
+              {group.data.map((post) => {
+                return (
+                  <React.Fragment key={post.id}>
+                    <Suspense fallback={<PostLoader />}>
+                      <Post postId={post.id} />
+                    </Suspense>
+                  </React.Fragment>
+                );
+              })}
+
+              <div ref={ref}></div>
+            </React.Fragment>
+          ))}
         </>
       )}
 
