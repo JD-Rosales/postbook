@@ -29,15 +29,18 @@ import { Link } from 'react-router-dom';
 import { useDeletePost } from '@src/hooks/usePost';
 import { useToast } from '@ui/use-toast';
 import { getErrorMessage } from '@src/lib/utils';
+import EditPostDialog from '../EditPostDialog';
 
 type HeaderProps = {
   data: PostAuthor;
   setShareBtnClick: React.Dispatch<React.SetStateAction<boolean>>;
+  hasMenu: boolean;
 };
 
-const Header: React.FC<HeaderProps> = ({ data, setShareBtnClick }) => {
+const Header: React.FC<HeaderProps> = ({ data, setShareBtnClick, hasMenu }) => {
   const deletePost = useDeletePost();
   const delRef = useRef<HTMLButtonElement>(null);
+  const editRef = useRef<HTMLButtonElement>(null);
   const { toast } = useToast();
 
   const [postDate, setPostDate] = useState(
@@ -91,10 +94,12 @@ const Header: React.FC<HeaderProps> = ({ data, setShareBtnClick }) => {
   return (
     <CardHeader>
       <div className='relative flex align-middle items-center font-semibold'>
-        <Avatar className='text-sm h-[55px] w-[55px]'>
-          <AvatarImage src={data.author.profile?.profilePhoto} />
-          <AvatarFallback>DP</AvatarFallback>
-        </Avatar>
+        <div className='bg-slate-300 p-[2px] rounded-full'>
+          <Avatar className='text-sm h-[55px] w-[55px]'>
+            <AvatarImage src={data.author.profile?.profilePhoto} />
+            <AvatarFallback>DP</AvatarFallback>
+          </Avatar>
+        </div>
 
         <div className='flex flex-col ml-2 '>
           <Link to={'/user/' + data.authorId} className='hover:underline'>
@@ -105,56 +110,63 @@ const Header: React.FC<HeaderProps> = ({ data, setShareBtnClick }) => {
           </span>
         </div>
 
-        <div className='ml-auto'>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant='ghost' className='p-0 h-fit'>
-                <MoreHorizontal />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              sideOffset={-25}
-              className='w-40 absolute -right-3'
-            >
-              <DropdownMenuLabel>Options</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem
-                  onClick={() => {
-                    if (delRef.current) {
-                      delRef.current.click();
-                    }
-                  }}
-                >
-                  <span>Delete</span>
-                  <DropdownMenuShortcut>
-                    <Trash2 size={20} />
-                  </DropdownMenuShortcut>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Edit</span>
-                  <DropdownMenuShortcut>
-                    <PenLine size={20} />
-                  </DropdownMenuShortcut>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setShareBtnClick(true)}>
-                  <span>Share</span>
-                  <DropdownMenuShortcut>
-                    <Forward size={20} />
-                  </DropdownMenuShortcut>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        {hasMenu && (
+          <div className='ml-auto'>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant='ghost' className='p-0 h-fit'>
+                  <MoreHorizontal />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                sideOffset={-25}
+                className='w-40 absolute -right-3'
+              >
+                <DropdownMenuLabel>Options</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      if (delRef.current) {
+                        delRef.current.click();
+                      }
+                    }}
+                  >
+                    <span>Delete</span>
+                    <DropdownMenuShortcut>
+                      <Trash2 size={20} />
+                    </DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      if (editRef.current) {
+                        editRef.current.click();
+                      }
+                    }}
+                  >
+                    <span>Edit</span>
+                    <DropdownMenuShortcut>
+                      <PenLine size={20} />
+                    </DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShareBtnClick(true)}>
+                    <span>Share</span>
+                    <DropdownMenuShortcut>
+                      <Forward size={20} />
+                    </DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )}
 
         {/* Delete dialog */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button
               ref={delRef}
-              variant='outline'
               className='absolute right-0 opacity-0 pointer-events-none'
             ></Button>
           </AlertDialogTrigger>
@@ -174,6 +186,14 @@ const Header: React.FC<HeaderProps> = ({ data, setShareBtnClick }) => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        {/* Edit Dialog */}
+        <EditPostDialog postId={data.id} originPostId={data.sharedPostId}>
+          <Button
+            ref={editRef}
+            className='absolute right-0 opacity-0 pointer-events-none'
+          ></Button>
+        </EditPostDialog>
       </div>
     </CardHeader>
   );

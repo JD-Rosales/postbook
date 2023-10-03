@@ -257,7 +257,7 @@ const Content: React.FC<ContentProps> = ({
         variant={'default'}
         loading={fileUploader.isLoading || sharePost.isLoading}
       >
-        <Repeat2 size={25} />
+        <Repeat2 size={22} />
         <span className='ml-2 text-white truncate'>Share now</span>
       </Button>
     </>

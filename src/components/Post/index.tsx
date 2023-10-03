@@ -11,9 +11,14 @@ const SharedPost = lazy(() => import('@components/SharedPost'));
 type IndexProps = {
   postId: number;
   className?: string;
+  hasMenu?: boolean;
 };
 
-const Index: React.FC<IndexProps> = ({ postId, className }) => {
+const Index: React.FC<IndexProps> = ({
+  postId,
+  className,
+  hasMenu = false,
+}) => {
   const post = useGetPost(postId);
 
   const [isShareBtnClick, setShareBtnClick] = useState(false);
@@ -31,6 +36,7 @@ const Index: React.FC<IndexProps> = ({ postId, className }) => {
               <Header
                 data={post.data.data}
                 setShareBtnClick={setShareBtnClick}
+                hasMenu={hasMenu}
               />
               <CardContent className='pb-1'>
                 {post.data.data.text && (

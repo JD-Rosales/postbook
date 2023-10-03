@@ -1,14 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
 import { CardHeader } from '@components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
-import { Link } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
 
 type HeaderProps = {
   data: PostAuthor;
 };
 
-const Header: React.FC<HeaderProps> = ({ data }) => {
+export default function Header({ data }: HeaderProps) {
   const [postDate, setPostDate] = useState(
     formatDistanceToNow(new Date(data.createdAt), {
       addSuffix: true,
@@ -32,10 +31,9 @@ const Header: React.FC<HeaderProps> = ({ data }) => {
 
     return () => clearInterval(intervalId);
   }, [data.createdAt]);
-
   return (
     <CardHeader>
-      <div className='flex align-middle items-center font-semibold'>
+      <div className='relative flex align-middle items-center font-semibold'>
         <div className='bg-slate-300 p-[2px] rounded-full'>
           <Avatar className='text-sm h-[55px] w-[55px]'>
             <AvatarImage src={data.author.profile?.profilePhoto} />
@@ -43,10 +41,8 @@ const Header: React.FC<HeaderProps> = ({ data }) => {
           </Avatar>
         </div>
 
-        <div className='flex flex-col ml-2'>
-          <Link to={'/user/' + data.authorId} className='hover:underline'>
-            {nameRenderer()}
-          </Link>
+        <div className='flex flex-col ml-2 '>
+          <span>{nameRenderer()}</span>
           <span className='font-normal text-xs'>
             {`${data.postType} ${postDate}`}
           </span>
@@ -54,6 +50,4 @@ const Header: React.FC<HeaderProps> = ({ data }) => {
       </div>
     </CardHeader>
   );
-};
-
-export default Header;
+}

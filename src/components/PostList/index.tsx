@@ -15,6 +15,7 @@ type IndexProps = {
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
   nextPage: (options?: FetchNextPageOptions) => void;
+  hasMenu?: boolean;
 };
 
 const Index: React.FC<IndexProps> = ({
@@ -24,6 +25,7 @@ const Index: React.FC<IndexProps> = ({
   hasNextPage,
   isFetchingNextPage,
   nextPage,
+  hasMenu = false,
 }) => {
   const { ref, inView } = useInView();
 
@@ -51,7 +53,7 @@ const Index: React.FC<IndexProps> = ({
                 return (
                   <React.Fragment key={post.id}>
                     <Suspense fallback={<PostLoader />}>
-                      <Post postId={post.id} />
+                      <Post postId={post.id} hasMenu={hasMenu} />
                     </Suspense>
                   </React.Fragment>
                 );

@@ -118,7 +118,7 @@ const Index: React.FC<IndexProps> = ({ className }) => {
     <Card className={cn('mb-4', className)}>
       <CardContent className='px-2 md:px-4'>
         <div className='flex mt-4'>
-          <div>
+          <div className='bg-slate-300 p-[2px] rounded-full'>
             <Avatar
               onClick={() => {
                 navigate('/user/' + userProfile.data?.data.id);

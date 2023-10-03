@@ -12,8 +12,8 @@ const index: React.FC = () => {
           <h1 className='text-2xl text-primary font-bold'>
             Create your Account
           </h1>
-          <p className='mt-3 leading-tight'>
-            Lorem ipsum, dolor sit amet consectetur adipisicing.
+          <p className='mt-3 px-4 leading-tight'>
+            Create your account now and start posting!
           </p>
           <Form />
         </div>
