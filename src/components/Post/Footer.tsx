@@ -1,3 +1,9 @@
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@ui/tooltip';
 import { ThumbsUp, MessageSquare, Repeat2 } from 'lucide-react';
 import { CardFooter } from '@ui/card';
 import { Button } from '@ui/button';
@@ -73,14 +79,23 @@ const Footer: React.FC<FooterProps> = ({
         </div>
 
         <div className='col-span-4'>
-          <Button
-            className='rounded-2xl px-3 sm:px-4'
-            variant={'outline'}
-            fullWidth
-          >
-            <MessageSquare size={20} className='text-blue-700' />
-            <span className='ml-2 text-gray-600 truncate'>Comment</span>
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  className='rounded-2xl px-3 sm:px-4'
+                  variant={'outline'}
+                  fullWidth
+                >
+                  <MessageSquare size={20} className='text-blue-700' />
+                  <span className='ml-2 text-gray-600 truncate'>Comment</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <span>Coming soon...</span>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
 
         <div className='col-span-4'>

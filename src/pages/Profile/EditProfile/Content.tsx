@@ -63,8 +63,13 @@ export default function Content({ setOpen }: ContentProps) {
 
   return (
     <div>
-      <ProfilePhoto photo={profile.data?.data.profile?.profilePhoto} />
-      <CoverPhoto photo={profile.data?.data.profile?.coverPhoto} />
+      {/* only show profile and cover upload if user has already first name and last */}
+      {profile.data?.data.profile && (
+        <>
+          <ProfilePhoto photo={profile.data?.data.profile?.profilePhoto} />
+          <CoverPhoto photo={profile.data?.data.profile?.coverPhoto} />
+        </>
+      )}
 
       <section className='flex flex-col mt-6 mb-4'>
         <div className='flex flex-row font-medium'>

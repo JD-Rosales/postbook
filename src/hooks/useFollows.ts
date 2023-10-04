@@ -6,9 +6,9 @@ import {
 } from '@tanstack/react-query';
 import { request, ErrResponse } from '@lib/axios-interceptor';
 
-interface UserProfile {
+export type UserProfile = {
   data: UserProfileType[];
-}
+};
 
 type isFollowingRes = {
   data: boolean;
@@ -63,5 +63,7 @@ export const useUserFollowers = (
 ): UseQueryResult<UserProfile, Error> => {
   const followers = () => request({ url: `/follow/followers/${id}` });
 
-  return useQuery(['followers', id], followers);
+  return useQuery(['followers', id], followers, {
+    onSuccess: (data) => console.log('followers: ', data),
+  });
 };
