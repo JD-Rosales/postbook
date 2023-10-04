@@ -1,4 +1,3 @@
-import { parseJwtId } from '@src/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
